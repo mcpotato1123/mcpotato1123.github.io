@@ -15,7 +15,6 @@
             background: #fafbfc;
         }
         
-        /* 头部装饰 */
         .logo {
             font-size: 2rem;
             margin-bottom: 8px;
@@ -36,8 +35,7 @@
             font-size: 1rem;
         }
         
-        /* 链接区域 */
-        .links-section {
+        .card {
             background: white;
             border-radius: 12px;
             padding: 24px;
@@ -78,7 +76,72 @@
             text-decoration: underline;
         }
         
-        /* 备注框 */
+        .project-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .project-list li {
+            margin: 16px 0;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .project-list li:hover {
+            background: #f1f5f9;
+        }
+        
+        .project-name {
+            font-weight: 600;
+            color: #1e293b;
+            display: block;
+            margin-bottom: 6px;
+        }
+        
+        .project-name a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+        
+        .project-name a:hover {
+            text-decoration: underline;
+        }
+        
+        .project-desc {
+            font-size: 0.85rem;
+            color: #64748b;
+            line-height: 1.4;
+        }
+        
+        .project-credit {
+            font-size: 0.75rem;
+            color: #8b5cf6;
+            margin-top: 6px;
+        }
+        
+        .project-status {
+            display: inline-block;
+            font-size: 0.7rem;
+            background: #e2e8f0;
+            color: #475569;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-top: 8px;
+        }
+        
+        .project-status.abandoned {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .project-status.future {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
         .note {
             background: #fef9e6;
             border-left: 4px solid #f59e0b;
@@ -87,16 +150,6 @@
             border-radius: 8px;
             color: #92400e;
             font-style: italic;
-        }
-        
-        /* 下载区域 */
-        .download-section {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            margin: 24px 0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border: 1px solid #e2e8f0;
         }
         
         .download-buttons {
@@ -136,7 +189,6 @@
             transform: translateY(-1px);
         }
         
-        /* 页脚 */
         footer {
             margin-top: 48px;
             text-align: center;
@@ -146,12 +198,11 @@
             padding-top: 24px;
         }
         
-        /* 响应式 */
         @media (max-width: 500px) {
             body {
                 padding: 32px 20px;
             }
-            .links-section, .download-section {
+            .card {
                 padding: 20px;
             }
         }
@@ -165,8 +216,7 @@
         很高兴你来到这里，欢迎访问
     </div>
 
-    <!-- 快速链接区域 -->
-    <div class="links-section">
+    <div class="card">
         <div class="section-title">🔗 快速链接</div>
         <ul class="link-list">
             <li>🏠 <a href="https://www.mcbbs.net/home.php?mod=space&uid=4099681" target="_blank" rel="noopener noreferrer">mcbbs主页</a></li>
@@ -175,13 +225,50 @@
         </ul>
     </div>
 
-    <!-- 网站说明 -->
+    <div class="card">
+        <div class="section-title">🚧 正在开发的项目</div>
+        <ul class="project-list">
+            <li>
+                <span class="project-name">
+                    🦆 <a href="https://github.com/mcpotato1123/DuckCity-server" target="_blank" rel="noopener noreferrer">DuckServer 客户端</a>
+                </span>
+                <span class="project-desc">DuckCity 服务器客户端，提供稳定的连接体验与专属功能</span>
+                <span class="project-status abandoned">⚠️ 弃更模式</span>
+            </li>
+            <li>
+                <span class="project-name">
+                    💡 <a href="https://github.com/mcpotato1123/limelight-lemonade-jam-miband" target="_blank" rel="noopener noreferrer">limelight lemonade jam miband9p 移植版</a>
+                </span>
+                <span class="project-desc">Limelight Lemonade Jam 快应用，适配小米手环 9 Pro</span>
+                <div class="project-credit">📌 原作者：hezd</div>
+                <span class="project-status">移植完成 · 可用</span>
+            </li>
+            <li>
+                <span class="project-name">📝 Cenilla Blog</span>
+                <span class="project-desc">技术分享与运维笔记，记录 Linux、GitHub Pages 等相关内容</span>
+                <span class="project-status">筹备中</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="section-title">🔮 未来开发项目</div>
+        <ul class="project-list">
+            <li>
+                <span class="project-name">
+                    ⛏️ Cenilla Minecraft 服务器
+                </span>
+                <span class="project-desc">原版生存向 Minecraft 服务器，纯净体验，社区共建</span>
+                <span class="project-status future">📅 预计启用：2026 Q3</span>
+            </li>
+        </ul>
+    </div>
+
     <div class="note">
         💭 “网站有点简陋，对吧！没事，我继续会做”
     </div>
 
-    <!-- Linux 镜像下载区域 -->
-    <div class="download-section">
+    <div class="card">
         <div class="section-title">🐧 Linux 镜像下载</div>
         <p style="margin: 0 0 16px 0; color: #4a5568;">
             这里提供一些 Linux 镜像下载链接
