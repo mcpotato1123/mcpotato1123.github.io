@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Cenilla Minecraft · 纯粹原版生存服务器</title>
+    <!-- 干净现代风格，突出原版氛围 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f7f9fc;
+            background-image: radial-gradient(circle at 10% 30%, rgba(200, 220, 240, 0.3) 0%, #eef2f7 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            color: #1e2a36;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+
+        /* 草方块点缀装饰 */
+        .grass-pattern {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: repeating-linear-gradient(45deg, #6b8c5c22 0px, #6b8c5c22 30px, #8aae7422 30px, #8aae7422 60px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 头部区域 */
+        .hero {
+            text-align: center;
+            padding: 2rem 1rem 3rem;
+            border-bottom: 2px solid #cbdde9;
+            margin-bottom: 2.5rem;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 48px;
+            backdrop-filter: blur(4px);
+        }
+        .logo-wrapper {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #2c4b32;
+            width: 90px;
+            height: 90px;
+            border-radius: 32px;
+            margin-bottom: 1rem;
+            box-shadow: 0 12px 18px -8px rgba(0,0,0,0.1);
+            background: linear-gradient(145deg, #3a5e42, #26412c);
+        }
+        .logo-wrapper svg {
+            width: 60px;
+            height: 60px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            background: linear-gradient(135deg, #2b5e3b, #1f3d2c);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .subhead {
+            font-size: 1.2rem;
+            color: #4b5e6c;
+            max-width: 600px;
+            margin: 0.75rem auto;
+            font-weight: 400;
+        }
+        .ip-badge {
+            background: white;
+            border-radius: 100px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.5rem 1.8rem 0.5rem 2rem;
+            margin-top: 1.5rem;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+            border: 1px solid #c9dfe8;
+            backdrop-filter: blur(4px);
+        }
+        .ip-text {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1a4d2a;
+            letter-spacing: 0.5px;
+        }
+        .copy-btn {
+            background: #2c7840;
+            border: none;
+            color: white;
+            padding: 0.4rem 1.2rem;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .copy-btn:hover {
+            background: #1f5a31;
+            transform: scale(0.98);
+        }
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #eaf5e7;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 1rem;
+        }
+        .green-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #2b8c4a;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 0 2px #b0e0c0;
+            animation: pulse 1.8s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.6; transform: scale(0.9);}
+            100% { opacity: 1; transform: scale(1.2);}
+        }
+
+        /* 板块通用 */
+        .section {
+            margin: 3rem 0;
+        }
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            border-left: 5px solid #2f7a45;
+            padding-left: 1rem;
+            margin-bottom: 1.8rem;
+        }
+        .grid-2col {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 1.6rem;
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s;
+            border: 1px solid #dee9ef;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.1);
+            border-color: #bcd5c2;
+        }
+        .card-icon {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+        .card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+        .card p {
+            color: #3e5568;
+            font-size: 0.95rem;
+        }
+
+        /* 服务器详情列表 */
+        .info-list {
+            background: white;
+            border-radius: 28px;
+            padding: 1.8rem;
+            border: 1px solid #dee9ef;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 0.9rem 0;
+            border-bottom: 1px solid #e6edf2;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #1f3b2c;
+        }
+        .info-value {
+            color: #3f5a6b;
+            font-family: monospace;
+        }
+        .badge-light {
+            background: #eef3e9;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* 规则区域 */
+        .rule-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .rule-list li {
+            padding: 0.6rem 0;
+            display: flex;
+            align-items: baseline;
+            gap: 0.6rem;
+        }
+        .rule-list li::before {
+            content: "▹";
+            color: #2f7a45;
+            font-weight: bold;
+        }
+
+        /* 加入区块 */
+        .join-area {
+            background: linear-gradient(120deg, #eef4ea, #ffffff);
+            border-radius: 32px;
+            padding: 2rem 2rem;
+            text-align: center;
+            border: 1px solid #cde0d4;
+            margin: 2rem 0;
+        }
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 1.5rem 0 0.5rem;
+        }
+        .btn-primary {
+            background: #2f7a45;
+            color: white;
+            padding: 0.7rem 1.8rem;
+            border-radius: 60px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-secondary {
+            background: transparent;
+            border: 1.5px solid #2f7a45;
+            color: #2f7a45;
+            padding: 0.7rem 1.8rem;
+            border-radius: 60px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .btn-primary:hover {
+            background: #1f5a34;
+            transform: translateY(-2px);
+        }
+        .btn-secondary:hover {
+            background: #ebf7e6;
+            transform: translateY(-2px);
+        }
+
+        /* 截图画廊（模拟原版风格） */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+            margin: 1.5rem 0;
+        }
+        .preview-card {
+            background: #eef3f0;
+            border-radius: 20px;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #cddfd3, #b7cfc0);
+            color: #2b5c38;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-align: center;
+            flex-direction: column;
+            gap: 8px;
+            border: 1px solid #c2d5c5;
+            transition: 0.1s;
+        }
+        .preview-card svg {
+            opacity: 0.7;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #cddfd5;
+            font-size: 0.8rem;
+            color: #5b7a6a;
+        }
+        @media (max-width: 680px) {
+            .container {
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            .ip-text {
+                font-size: 1rem;
+            }
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="grass-pattern"></div>
+<div class="container">
+    <!-- 英雄区 -->
+    <div class="hero">
+        <div class="logo-wrapper">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#8bb56a" stroke="#3f6442" stroke-width="0.8"/>
+                <path d="M2 17L12 22L22 17" fill="#7ca35e" stroke="#3f6442" stroke-width="0.8"/>
+                <path d="M2 12L12 17L22 12" fill="#9dc47a" stroke="#3f6442" stroke-width="0.8"/>
+                <rect x="10" y="8" width="4" height="6" fill="#f5d742" rx="1"/>
+                <circle cx="12" cy="11" r="1.2" fill="#c97e2a"/>
+            </svg>
+        </div>
+        <h1>Cenilla  Minecraft</h1>
+        <div class="subhead">✦ 纯粹原版生存 · 轻量社群 · 红石自由 ✦</div>
+        <div class="ip-badge">
+            <span class="green-dot"></span>
+            <span class="ip-text" id="serverIp">play.cenilla.cc</span>
+            <button class="copy-btn" id="copyIpBtn">复制地址</button>
+        </div>
+        <div class="status">
+            <span class="green-dot"></span> 原版 1.21.4 · 正版验证 · 在线状态 稳定
+        </div>
+    </div>
+
+    <!-- 核心理念 + 特色 -->
+    <div class="section">
+        <div class="section-title">🌿 原版之粹 · 社区之心</div>
+        <div class="grid-2col">
+            <div class="card">
+                <div class="card-icon">⛏️</div>
+                <h3>纯净原版生存</h3>
+                <p>无任何插件/模组改变核心机制，完全遵循 Mojang 原版体验，红石、生电、建筑均原汁原味。</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🏡</div>
+                <h3>领地 & 信任机制</h3>
+                <p>轻量级领地保护 (仅防止破坏) + 玩家互信，鼓励协作，不干涉原版游戏规则。</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">⚡</div>
+                <h3>高性能 · 稳定刻</h3>
+                <p>服务器搭载 Paper 核心但保持原版特性，红石流畅，24h 备份，拒绝卡顿回档。</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🎮</div>
+                <h3>公平社区</h3>
+                <p>无付费特权、无 OP 商店，所有资源来自探索与交易，每月建筑&生电大赛。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 服务器档案 -->
+    <div class="section">
+        <div class="section-title">📡 服务器档案</div>
+        <div class="info-list">
+            <div class="info-row">
+                <span class="info-label">🎯 游戏版本</span>
+                <span class="info-value">Minecraft Java Edition 1.21.4 (最新原版)</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">🌍 世界类型</span>
+                <span class="info-value">默认世界 + 下界/末地重置 (每半年可选重置末地)</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">🔐 连接方式</span>
+                <span class="info-value">正版验证 (Microsoft / Mojang 账户)</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">📅 开服时间</span>
+                <span class="info-value">2025年1月开启 | 长期周目，永不换档 (除非版本大更迁移)</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">🧰 辅助特性</span>
+                <span class="info-value">坐标记录 / 简单传送请求 / 防疲劳假人 (无原版冲突)</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">💾 备份频率</span>
+                <span class="info-value">每日自动备份 + 快照回滚</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 特色玩法与原版坚守 -->
+    <div class="section">
+        <div class="section-title">✨ Cenilla 特色亮点</div>
+        <div class="grid-2col">
+            <div class="card">
+                <div class="card-icon">🧱</div>
+                <h3>建筑师殿堂</h3>
+                <p>每周举办“小镇建设”活动，玩家共建主城、交易所、地铁，优秀作品永久展示于服务器大厅。</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🤝</div>
+                <h3>生电友善</h3>
+                <p>允许高效机器、刷怪塔，但需遵循“不恶意卡服”原则，管理员协助优化性能。</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">📦</div>
+                <h3>玩家自由交易</h3>
+                <p>主城设有箱子商店街区，用绿宝石或物物交换，经济完全由玩家主导。</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🎉</div>
+                <h3>节日活动</h3>
+                <p>复活节寻蛋、夏日UHC、建筑大赛，以及年末大型烟花汇演。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 社区规则 + 加入引导 -->
+    <div class="join-area">
+        <h2 style="margin-bottom: 0.5rem;">📢 加入 Cenilla 原版大家庭</h2>
+        <p style="max-width: 550px; margin: 0 auto;">服务器QQ群 / Discord 实时交流，获取最新地图及活动资讯</p>
+        <div class="btn-group">
+            <button id="qqGroupBtn" class="btn-primary">💬 加入QQ群 (玩家聚集地)</button>
+            <button id="discordBtn" class="btn-secondary">🎙️ Discord 社区</button>
+            <button id="wikiBtn" class="btn-secondary">📘 玩家指南&规则书</button>
+        </div>
+        <p style="margin-top: 1.2rem; font-size: 0.8rem;">💡 客户端无需任何模组，直接使用官方启动器或第三方启动器添加服务器即可！</p>
+    </div>
+
+    <!-- 规则简述区块 + 截图示意 -->
+    <div class="section">
+        <div class="section-title">📜 社区公约 · 简单纯粹</div>
+        <div class="grid-2col">
+            <div class="info-list" style="background: #fefef7;">
+                <h3 style="margin-bottom: 0.8rem;">✅ 我们鼓励</h3>
+                <ul class="rule-list">
+                    <li>友好协作，共同建造聚落</li>
+                    <li>红石机器与大型工程分享设计</li>
+                    <li>在 Discord 分享建筑截图</li>
+                    <li>善待新玩家，提供帮助</li>
+                </ul>
+                <h3 style="margin: 1.5rem 0 0.8rem;">❌ 禁止行为</h3>
+                <ul class="rule-list">
+                    <li>恶意破坏、偷窃、高频红石恶意卡服</li>
+                    <li>利用外挂、透视、刷物品漏洞</li>
+                    <li>骚扰他人或引战言论</li>
+                    <li>未经许可建造大型低效刷怪塔影响tps</li>
+                </ul>
+            </div>
+            <div>
+                <div class="card" style="background: #f9fdf9;">
+                    <h3>🎬 服务器风采 (原版景观)</h3>
+                    <div class="gallery">
+                        <div class="preview-card">
+                            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2f6a42" stroke-width="1">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <circle cx="8.5" cy="8.5" r="1.5" fill="#5f8b5f"/>
+                                <path d="M21 16L16 10L5 21" stroke="#5f8b5f" />
+                            </svg>
+                            <span>主城 · 中央喷泉</span>
+                        </div>
+                        <div class="preview-card">
+                            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2f6a42">
+                                <path d="M12 3L20 7.5L12 12L4 7.5L12 3Z" />
+                                <path d="M4 12L12 16.5L20 12" />
+                                <path d="M4 16.5L12 21L20 16.5" />
+                            </svg>
+                            <span>下界交通枢纽</span>
+                        </div>
+                        <div class="preview-card">
+                            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2f6a42">
+                                <polygon points="12,4 20,9 20,19 12,24 4,19 4,9 12,4" />
+                                <line x1="12" y1="24" x2="12" y2="16" />
+                            </svg>
+                            <span>末地空岛建筑</span>
+                        </div>
+                    </div>
+                    <p style="margin-top: 1rem; font-size: 0.8rem; background: #e2f0e2; border-radius: 20px; padding: 0.5rem; text-align: center;">✨ 更多截图见社区相册 ✨</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 服务器常见问题 -->
+    <div class="section">
+        <div class="section-title">❓ 冒险者 FAQ</div>
+        <div class="grid-2col">
+            <div class="card">
+                <h3>🔹 需要特定客户端或模组吗？</h3>
+                <p>完全不需要！服务器为纯净原版，使用官方启动器或任意第三方启动器，添加服务器地址即可加入。</p>
+            </div>
+            <div class="card">
+                <h3>🔸 如何获取白名单？</h3>
+                <p>服务器为正版验证，无需额外申请白名单，首次进入即自动注册。进入后请遵守规则~</p>
+            </div>
+            <div class="card">
+                <h3>🔹 有地皮/领地指令吗？</h3>
+                <p>有轻量级领地插件 /lands 用于核心建筑保护，不破坏原版机制，防止恶意破坏。</p>
+            </div>
+            <div class="card">
+                <h3>🔸 服务器会重置地图吗？</h3>
+                <p>主世界永不重置，下界和末地会根据社区投票决定重置频率（保持资源刷新）。</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>🌱 Cenilla Minecraft 服务器 · 原版生存乌托邦 🌱</p>
+        <p>Minecraft 版权归 Mojang Studios 所有，本服务器为玩家公益社群，无商业盈利。</p>
+        <p style="margin-top: 8px;">✨ 服务器地址: play.cenilla.cc | 推荐 Java 1.21.4 ✨</p>
+    </footer>
+</div>
+
+<script>
+    // 复制服务器IP
+    const copyBtn = document.getElementById('copyIpBtn');
+    const ipSpan = document.getElementById('serverIp');
+    if(copyBtn) {
+        copyBtn.addEventListener('click', () => {
+            const ip = ipSpan.innerText;
+            navigator.clipboard.writeText(ip).then(() => {
+                const original = copyBtn.innerText;
+                copyBtn.innerText = '✅ 已复制！';
+                setTimeout(() => {
+                    copyBtn.innerText = original;
+                }, 2000);
+            }).catch(() => {
+                alert('手动复制服务器地址: ' + ip);
+            });
+        });
+    }
+
+    // 按钮交互 - QQ群，Discord，玩家指南演示信息
+    const qqButton = document.getElementById('qqGroupBtn');
+    const discordButton = document.getElementById('discordBtn');
+    const wikiButton = document.getElementById('wikiBtn');
+
+    if(qqButton) {
+        qqButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('🐧 Cenilla 官方QQ群: 845236719 \n欢迎加入交流，获取最新公告与活动信息！');
+            // 真实场景可替换为群链接 window.open("https://qm.qq.com/q/xxxx");
+        });
+    }
+    if(discordButton) {
+        discordButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('🎙️ Discord 邀请链接建设中，请先加入QQ群获取邀请～\n期待社区相遇！');
+        });
+    }
+    if(wikiButton) {
+        wikiButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('📖 Cenilla 玩家规则书及入门指南：\n1. 出生地请阅读公告牌\n2. 输入 /help 查看辅助指令\n3. 严禁偷窃与破坏，共建友好原版世界');
+        });
+    }
+
+    // 动态展示随机在线人数 (仅示意，保持活泼)
+    const statusDiv = document.querySelector('.status');
+    if(statusDiv && !statusDiv.innerHTML.includes('在线')) {
+        const fakeCount = Math.floor(Math.random() * (42 - 18 + 1) + 18);
+        const countSpan = document.createElement('span');
+        countSpan.style.marginLeft = '12px';
+        countSpan.style.fontSize = '0.8rem';
+        countSpan.style.fontWeight = '500';
+        countSpan.innerHTML = `✨ 当前在线 ${fakeCount} 人`;
+        statusDiv.appendChild(countSpan);
+    } else if(statusDiv) {
+        // 避免重复
+        if(!statusDiv.querySelector('.dynamic-online')) {
+            const dyn = document.createElement('span');
+            dyn.className = 'dynamic-online';
+            dyn.style.marginLeft = '12px';
+            dyn.style.fontSize = '0.8rem';
+            const onlineNum = Math.floor(Math.random() * (38 - 15 + 1) + 15);
+            dyn.innerHTML = `✨ 当前在线 ${onlineNum} 人`;
+            statusDiv.appendChild(dyn);
+        }
+    }
+
+    // 控制台彩蛋
+    console.log('%c欢迎来到 Cenilla 原版服务器宣传页 | 生存，建筑，友谊 — 一切纯粹如初', 'color: #2b7a44; font-size: 14px; font-weight: bold;');
+    console.log('服务器IP: play.cenilla.cc | 1.21.4 纯净生存期待你的加入');
+</script>
+</body>
+</html>
