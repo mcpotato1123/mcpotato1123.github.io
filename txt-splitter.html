@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>TXT 切割器 · 本地文本分割工具</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg1:#eef2ff;--bg2:#fdf4ff;
+  --card:#ffffff;--text:#1e293b;--muted:#64748b;
+  --border:#e2e8f0;--border2:#cbd5e1;
+  --p1:#6366f1;--p2:#8b5cf6;
+  --hover:#f1f5f9;--accent:#eef2ff;
+  --pre-bg:#0f172a;--pre-tx:#e2e8f0;
+  --danger:#ef4444;--ok:#10b981;
+  --shadow:0 1px 3px rgba(15,23,42,.08),0 8px 24px rgba(79,70,229,.07);
+}
+html[data-theme=dark]{
+  --bg1:#0b1020;--bg2:#141a30;
+  --card:#171e33;--text:#e2e8f0;--muted:#94a3b8;
+  --border:#2a3450;--border2:#3b4666;
+  --hover:#1e2846;--accent:#232e52;
+  --pre-bg:#0a0f1e;--pre-tx:#dbe4f3;
+  --shadow:0 1px 3px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  background:linear-gradient(160deg,var(--bg1),var(--bg2)) fixed;
+  color:var(--text);min-height:100vh;
+  transition:background .3s,color .3s;
+  line-height:1.6;
+}
+.wrap{max-width:920px;margin:0 auto;padding:28px 18px 60px}
+header{display:flex;align-items:center;gap:16px;margin-bottom:26px}
+.logo{
+  width:52px;height:52px;border-radius:14px;flex:none;
+  background:linear-gradient(135deg,var(--p1),var(--p2));
+  display:flex;align-items:center;justify-content:center;font-size:26px;
+  box-shadow:0 6px 18px rgba(99,102,241,.35);
+}
+header h1{font-size:22px;letter-spacing:.5px}
+header .sub{color:var(--muted);font-size:13px;margin-top:2px}
+#themeBtn{
+  margin-left:auto;border:1px solid var(--border);background:var(--card);
+  width:40px;height:40px;border-radius:10px;cursor:pointer;font-size:18px;
+  color:var(--text);transition:.2s;
+}
+#themeBtn:hover{border-color:var(--p1);transform:translateY(-1px)}
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  box-shadow:var(--shadow);padding:22px;margin-bottom:20px;
+  animation:fadeUp .35s ease both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card h2{font-size:16px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card h2::before{content:"";width:4px;height:16px;border-radius:2px;background:linear-gradient(var(--p1),var(--p2))}
+#dropZone{
+  border:2px dashed var(--border2);border-radius:14px;padding:44px 20px;
+  text-align:center;cursor:pointer;transition:.2s;
+}
+#dropZone:hover,#dropZone.drag{
+  border-color:var(--p1);background:var(--accent);
+  transform:scale(1.005);
+}
+.dz-icon{font-size:40px;margin-bottom:8px}
+.dz-title{font-weight:600;font-size:15px}
+.dz-sub{color:var(--muted);font-size:13px;margin-top:4px}
+.fi-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.fi-icon{font-size:28px}
+.fi-main{min-width:0;flex:1}
+.fi-main strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fi-main span{color:var(--muted);font-size:12.5px}
+.enc-label{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+select,input[type=text],input[type=number]{
+  border:1px solid var(--border);border-radius:8px;background:var(--card);
+  color:var(--text);padding:7px 10px;font-size:14px;font-family:inherit;
+  transition:border-color .2s;
+}
+select:focus,input:focus{outline:none;border-color:var(--p1);box-shadow:0 0 0 3px rgba(99,102,241,.15)}
+#removeBtn{
+  border:none;background:none;color:var(--muted);font-size:16px;cursor:pointer;
+  width:34px;height:34px;border-radius:8px;transition:.2s;
+}
+#removeBtn:hover{background:var(--hover);color:var(--danger)}
+details{margin-top:12px}
+summary{cursor:pointer;font-size:13px;color:var(--muted);user-select:none}
+summary:hover{color:var(--p1)}
+#fPreview{
+  margin-top:8px;background:var(--pre-bg);color:var(--pre-tx);
+  border-radius:10px;padding:12px 14px;font-size:12.5px;line-height:1.55;
+  max-height:130px;overflow:auto;white-space:pre-wrap;word-break:break-all;
+  font-family:ui-monospace,Consolas,"Courier New",monospace;
+}
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--border);margin-bottom:16px}
+.tabs button{
+  flex:1;border:none;background:none;cursor:pointer;padding:10px 4px;
+  font-size:14px;color:var(--muted);font-family:inherit;position:relative;transition:.2s;
+  border-radius:8px 8px 0 0;
+}
+.tabs button:hover{color:var(--text);background:var(--hover)}
+.tabs button.active{color:var(--p1);font-weight:600}
+.tabs button.active::after{
+  content:"";position:absolute;left:12%;right:12%;bottom:-2px;height:2px;
+  background:linear-gradient(90deg,var(--p1),var(--p2));border-radius:2px;
+}
+.pane{display:none;padding:4px 0 2px}
+.pane.on{display:block;animation:fadeUp .25s ease both}
+.pane .inline{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.pane input[type=number]{width:110px;text-align:center}
+.pane input.wide{flex:1;min-width:220px}
+.pane .chk{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:8px 0;color:var(--text)}
+.pane .chk input{accent-color:var(--p1)}
+.hint{color:var(--muted);font-size:12.5px;margin-top:6px}
+.common-row{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  border-top:1px dashed var(--border);padding-top:14px;margin-top:16px;
+}
+.common-row label{display:flex;align-items:center;gap:8px;font-size:13.5px}
+#prefixInput{width:240px}
+.primary{
+  display:block;width:100%;margin-top:18px;padding:12px;border:none;border-radius:12px;
+  background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;
+  font-size:15.5px;font-weight:600;letter-spacing:2px;cursor:pointer;font-family:inherit;
+  box-shadow:0 6px 18px rgba(99,102,241,.35);transition:.2s;
+}
+.primary:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 24px rgba(99,102,241,.45)}
+.primary:disabled{opacity:.6;cursor:not-allowed}
+.btn{
+  padding:9px 18px;border-radius:10px;border:1px solid var(--border2);
+  background:var(--card);color:var(--text);cursor:pointer;font-size:13.5px;
+  font-family:inherit;transition:.2s;
+}
+.btn:hover:not(:disabled){border-color:var(--p1);color:var(--p1);transform:translateY(-1px)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn.ok{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;border:none;box-shadow:0 4px 14px rgba(99,102,241,.35)}
+.btn.ok:hover:not(:disabled){color:#fff}
+.result-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.result-head h2{margin-bottom:0;flex:1}
+#resultSummary{color:var(--muted);font-size:13px;font-weight:400}
+.rwrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;margin-top:12px}
+table.rtab{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+.rtab th{
+  text-align:left;padding:10px 14px;color:var(--muted);font-weight:600;font-size:12.5px;
+  background:var(--hover);border-bottom:1px solid var(--border);white-space:nowrap;
+}
+.rtab td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+.rtab tr:last-child td{border-bottom:none}
+.rtab tbody tr{transition:background .15s}
+.rtab tbody tr:hover{background:var(--hover)}
+.mono{font-family:ui-monospace,Consolas,"Courier New",monospace;font-size:12.5px;word-break:break-all}
+.num{font-family:ui-monospace,Consolas,monospace;font-size:12px;color:var(--muted)}
+.badge{
+  margin-left:6px;font-size:11px;padding:1px 7px;border-radius:99px;
+  background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;
+}
+button.mini{
+  border:1px solid var(--border2);background:var(--card);color:var(--text);
+  border-radius:7px;padding:4px 12px;font-size:12.5px;cursor:pointer;
+  transition:.2s;font-family:inherit;margin-right:6px;
+}
+button.mini:hover{border-color:var(--p1);color:var(--p1)}
+tr.preview-row td{background:var(--pre-bg);padding:0}
+tr.preview-row pre{
+  color:var(--pre-tx);padding:14px 16px;font-size:12.5px;line-height:1.6;
+  max-height:280px;overflow:auto;white-space:pre-wrap;word-break:break-all;
+  font-family:ui-monospace,Consolas,"Courier New",monospace;
+}
+footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:26px}
+#toastWrap{position:fixed;top:20px;right:20px;z-index:99;display:flex;flex-direction:column;gap:8px}
+.toast{
+  background:var(--card);border:1px solid var(--border);border-left:4px solid var(--p1);
+  border-radius:10px;padding:10px 16px;font-size:13.5px;box-shadow:var(--shadow);
+  max-width:320px;animation:slideIn .3s ease both;
+}
+.toast.error{border-left-color:var(--danger)}
+.toast.success{border-left-color:var(--ok)}
+.toast.out{opacity:0;transform:translateX(20px);transition:.3s}
+@keyframes slideIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+@media (max-width:640px){
+  header{flex-wrap:wrap}
+  .tabs{flex-wrap:wrap}
+  .tabs button{flex:1 1 45%}
+  .result-head{flex-direction:column;align-items:stretch}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">✂️</div>
+    <div>
+      <h1>TXT 切割器</h1>
+      <div class="sub">按大小 · 行数 · 块数 · 章节分隔符切割文本文件，纯本地处理</div>
+    </div>
+    <button id="themeBtn" title="切换明暗主题">🌙</button>
+  </header>
+
+  <section class="card">
+    <div id="dropZone">
+      <div class="dz-icon">📄</div>
+      <div class="dz-title">拖入 TXT 文件，或点击选择</div>
+      <div class="dz-sub">支持超大文本文件 · 文件不会离开你的浏览器</div>
+      <input type="file" id="fileInput" accept=".txt,.log,.md,.csv,.text,text/plain" hidden>
+    </div>
+    <div id="fileInfo" hidden>
+      <div class="fi-row">
+        <span class="fi-icon">📄</span>
+        <div class="fi-main">
+          <strong id="fName"></strong>
+          <span id="fMeta"></span>
+        </div>
+        <label class="enc-label">编码
+          <select id="encSel">
+            <option value="auto">自动检测</option>
+            <option value="utf-8">UTF-8</option>
+            <option value="gbk">GBK / GB2312</option>
+            <option value="big5">Big5</option>
+          </select>
+        </label>
+        <button id="removeBtn" title="移除文件">✕</button>
+      </div>
+      <details>
+        <summary>预览文件开头（用于确认编码是否正确）</summary>
+        <pre id="fPreview"></pre>
+      </details>
+    </div>
+  </section>
+
+  <section class="card" id="settingsCard" hidden>
+    <h2>切割方式</h2>
+    <div class="tabs" id="modeTabs">
+      <button data-mode="count">📦 平均分块</button>
+      <button data-mode="size">💾 按大小</button>
+      <button data-mode="lines" class="active">📝 按行数</button>
+      <button data-mode="sep">📖 按分隔符</button>
+    </div>
+
+    <div class="pane" id="pane-count">
+      <label class="inline">将文件平均分为
+        <input type="number" id="countInput" value="3" min="2" max="99999"> 块
+      </label>
+      <p class="hint">按字节均分，并自动对齐到行边界（不切断一行）。</p>
+    </div>
+
+    <div class="pane" id="pane-size">
+      <label class="inline">每块大小
+        <input type="number" id="sizeInput" value="1" min="0.001" step="any">
+        <select id="sizeUnit">
+          <option value="1048576" selected>MB</option>
+          <option value="1024">KB</option>
+          <option value="1">B</option>
+        </select>
+      </label>
+      <label class="chk"><input type="checkbox" id="truncChk"> 严格按大小截断（允许把一行切成两半）</label>
+      <p class="hint">默认在不超过设定大小的前提下对齐到行边界，实际块大小可能略小。</p>
+    </div>
+
+    <div class="pane on" id="pane-lines">
+      <label class="inline">每块
+        <input type="number" id="linesInput" value="1000" min="1"> 行
+      </label>
+      <p class="hint">按换行符计数；最后一块可能不足设定的行数。</p>
+    </div>
+
+    <div class="pane" id="pane-sep">
+      <label class="inline">预设
+        <select id="sepPreset">
+          <option value="">— 选择预设 —</option>
+          <option value="^\s*(第[0-9一二三四五六七八九十百千万零两]+[章节卷回部]|序章|楔子|尾声|后记|番外)[^\n]*">中文小说章节</option>
+          <option value="^\s*Chapter\s+\d+[^\n]*">英文 Chapter</option>
+          <option value="^#{1,6}\s+.*">Markdown 标题</option>
+          <option value="^[-=*_]{3,}\s*$">分隔线（--- / ===）</option>
+        </select>
+      </label>
+      <label class="inline">分隔符
+        <input type="text" id="sepInput" class="wide" value="^\s*(第[0-9一二三四五六七八九十百千万零两]+[章节卷回部]|序章|楔子|尾声|后记|番外)[^\n]*">
+      </label>
+      <label class="chk"><input type="checkbox" id="sepRegexChk" checked> 按正则表达式匹配（使用多行模式 ^ $）</label>
+      <label class="chk"><input type="checkbox" id="prefaceChk" checked> 分隔符之前的内容（前言）单独成块</label>
+      <p class="hint">每块从分隔符所在行开始；此模式输出编码为 UTF-8，其余模式保持原文件编码。</p>
+    </div>
+
+    <div class="common-row">
+      <label>文件名前缀
+        <input type="text" id="prefixInput" placeholder="默认为原文件名">
+      </label>
+      <span class="hint">生成文件名形如：前缀_part001.txt</span>
+    </div>
+
+    <button class="primary" id="splitBtn">✂ 开始切割</button>
+  </section>
+
+  <section class="card" id="resultCard" hidden>
+    <div class="result-head">
+      <h2>切割结果 <span id="resultSummary"></span></h2>
+      <button class="btn ok" id="zipBtn">⬇ 下载全部（ZIP）</button>
+      <button class="btn" id="resetBtn">重新开始</button>
+    </div>
+    <div class="rwrap">
+      <table class="rtab">
+        <thead>
+          <tr><th style="width:86px">#</th><th>文件名</th><th style="width:100px">大小</th><th style="width:90px">行数</th><th style="width:140px">操作</th></tr>
+        </thead>
+        <tbody id="resultBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>🔒 所有处理均在你的浏览器本地完成，文件不会被上传到任何服务器。</footer>
+</div>
+<div id="toastWrap"></div>
+
+<script>
+'use strict';
+/* ================= 工具 ================= */
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+const state = {
+  file: null,
+  bytes: null,
+  encoding: 'utf-8',
+  encNote: '',
+  chunks: [],
+  mode: 'lines'
+};
+
+function fmtSize(n){
+  if (n < 1024) return n + ' B';
+  if (n < 1024 * 1024) return (n / 1024).toFixed(n < 10240 ? 1 : 0) + ' KB';
+  if (n < 1024 * 1024 * 1024) return (n / 1024 / 1024).toFixed(1) + ' MB';
+  return (n / 1024 / 1024 / 1024).toFixed(2) + ' GB';
+}
+function countNL(u8){
+  let c = 0;
+  for (let i = 0; i < u8.length; i++) if (u8[i] === 10) c++;
+  return c;
+}
+function toast(msg, type){
+  const t = document.createElement('div');
+  t.className = 'toast ' + (type || '');
+  t.textContent = msg;
+  document.getElementById('toastWrap').appendChild(t);
+  setTimeout(function(){ t.classList.add('out'); setTimeout(function(){ t.remove(); }, 350); }, 2800);
+}
+function downloadBlob(blob, name){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 10000);
+}
+
+/* ================= 编码 ================= */
+function detectEncoding(u8){
+  if (u8.length >= 3 && u8[0] === 0xEF && u8[1] === 0xBB && u8[2] === 0xBF) return 'utf-8';
+  if (u8.length >= 2 && u8[0] === 0xFF && u8[1] === 0xFE) return 'utf-16le';
+  if (u8.length >= 2 && u8[0] === 0xFE && u8[1] === 0xFF) return 'utf-16be';
+  try { new TextDecoder('utf-8', { fatal: true }).decode(u8); return 'utf-8'; }
+  catch (e) { return 'gbk'; }
+}
+function previewText(u8, enc, maxBytes, maxLines){
+  maxBytes = maxBytes || 4000; maxLines = maxLines || 50;
+  const part = u8.subarray(0, Math.min(maxBytes, u8.length));
+  let t = '';
+  try { t = new TextDecoder(enc).decode(part); } catch (e) { t = new TextDecoder('utf-8').decode(part); }
+  return t.split('\n').slice(0, maxLines).join('\n');
+}
+
+/* ================= 切割算法 ================= */
+function splitBySize(u8, target, align){
+  const n = u8.length, res = [];
+  let pos = 0;
+  while (pos < n){
+    if (n - pos <= target){ res.push([pos, n]); break; }
+    const end = pos + target;
+    if (align){
+      let cut = -1;
+      for (let i = end - 1; i >= pos; i--){ if (u8[i] === 10){ cut = i; break; } }
+      if (cut <= pos){
+        cut = -1;
+        for (let i = end; i < n; i++){ if (u8[i] === 10){ cut = i; break; } }
+        if (cut === -1) cut = n - 1;
+      }
+      res.push([pos, cut + 1]); pos = cut + 1;
+    } else {
+      res.push([pos, end]); pos = end;
+    }
+  }
+  return res;
+}
+function splitByLines(u8, per){
+  const n = u8.length, res = [];
+  let pos = 0, cnt = 0;
+  for (let i = 0; i < n; i++){
+    if (u8[i] === 10){
+      cnt++;
+      if (cnt === per){ res.push([pos, i + 1]); pos = i + 1; cnt = 0; }
+    }
+  }
+  if (pos < n) res.push([pos, n]);
+  return res;
+}
+
+/* ================= ZIP（STORE 模式，无外部依赖） ================= */
+const CRC_TABLE = (function(){
+  const t = new Int32Array(256);
+  for (let i = 0; i < 256; i++){
+    let c = i;
+    for (let j = 0; j < 8; j++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+    t[i] = c;
+  }
+  return t;
+})();
+function crc32(u8){
+  let c = -1;
+  for (let i = 0; i < u8.length; i++) c = CRC_TABLE[(c ^ u8[i]) & 0xff] ^ (c >>> 8);
+  return (c ^ -1) >>> 0;
+}
+async function buildZip(files, onProgress){
+  const enc = new TextEncoder();
+  const parts = [], central = [];
+  let offset = 0, cdSize = 0;
+  const d = new Date();
+  const dosTime = (d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >>> 1);
+  const dosDate = ((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate();
+
+  for (let i = 0; i < files.length; i++){
+    const f = files[i];
+    const nameB = enc.encode(f.name);
+    const crc = crc32(f.data);
+
+    const lh = new DataView(new ArrayBuffer(30));
+    lh.setUint32(0, 0x04034b50, true);
+    lh.setUint16(4, 20, true);
+    lh.setUint16(6, 0x0800, true);
+    lh.setUint16(8, 0, true);
+    lh.setUint16(10, dosTime, true);
+    lh.setUint16(12, dosDate, true);
+    lh.setUint32(14, crc, true);
+    lh.setUint32(18, f.data.length, true);
+    lh.setUint32(22, f.data.length, true);
+    lh.setUint16(26, nameB.length, true);
+    lh.setUint16(28, 0, true);
+    parts.push(new Uint8Array(lh.buffer), nameB, f.data);
+
+    const ch = new DataView(new ArrayBuffer(46));
+    ch.setUint32(0, 0x02014b50, true);
+    ch.setUint16(4, 20, true);
+    ch.setUint16(6, 20, true);
+    ch.setUint16(8, 0x0800, true);
+    ch.setUint16(10, 0, true);
+    ch.setUint16(12, dosTime, true);
+    ch.setUint16(14, dosDate, true);
+    ch.setUint32(16, crc, true);
+    ch.setUint32(20, f.data.length, true);
+    ch.setUint32(24, f.data.length, true);
+    ch.setUint16(28, nameB.length, true);
+    ch.setUint32(42, offset, true);
+    central.push(new Uint8Array(ch.buffer), nameB);
+
+    offset += 30 + nameB.length + f.data.length;
+    cdSize += 46 + nameB.length;
+    if (onProgress){ onProgress(i + 1, files.length); await new Promise(function(r){ setTimeout(r); }); }
+  }
+  const eocd = new DataView(new ArrayBuffer(22));
+  eocd.setUint32(0, 0x06054b50, true);
+  eocd.setUint16(8, files.length, true);
+  eocd.setUint16(10, files.length, true);
+  eocd.setUint32(12, cdSize, true);
+  eocd.setUint32(16, offset, true);
+  return new Blob(parts.concat(central).concat([new Uint8Array(eocd.buffer)]), { type: 'application/zip' });
+}
+
+/* ================= 文件加载 ================= */
+async function loadFile(file){
+  state.file = file;
+  let u8;
+  try { u8 = new Uint8Array(await file.arrayBuffer()); }
+  catch (e){ toast('文件读取失败：' + e.message, 'error'); return; }
+
+  let det = detectEncoding(u8);
+  state.encNote = '';
+  if (det === 'utf-16le' || det === 'utf-16be'){
+    const text = new TextDecoder(det).decode(u8);
+    u8 = new TextEncoder().encode(text);
+    det = 'utf-8';
+    state.encNote = '（原 UTF-16 已自动转换为 UTF-8）';
+    toast('检测到 UTF-16 编码，已自动转换为 UTF-8', 'info');
+  }
+  state.bytes = u8;
+  state.encoding = det;
+  document.getElementById('encSel').value = det;
+
+  const head = u8.subarray(0, Math.min(65536, u8.length));
+  for (let i = 0; i < head.length; i++){
+    if (head[i] === 0){ toast('提示：文件包含空字节，可能是二进制文件', 'info'); break; }
+  }
+
+  document.getElementById('dropZone').hidden = true;
+  document.getElementById('fileInfo').hidden = false;
+  document.getElementById('settingsCard').hidden = false;
+  clearResults();
+  document.getElementById('fName').textContent = file.name;
+  document.getElementById('fMeta').textContent = fmtSize(u8.length) + ' · 正在统计行数…';
+  document.getElementById('prefixInput').value = file.name.replace(/\.[^.]*$/, '') || 'txt';
+  document.getElementById('fPreview').textContent = previewText(u8, state.encoding, 2048, 30);
+
+  const cur = u8;
+  setTimeout(function(){
+    if (state.bytes === cur) document.getElementById('fMeta').textContent =
+      fmtSize(cur.length) + ' · ' + countNL(cur).toLocaleString() + ' 行 · ' + state.encoding.toUpperCase() + state.encNote;
+  }, 30);
+
+  if (u8.length > 100 * 1024 * 1024) toast('文件较大，切割和打包可能需要一些时间', 'info');
+  document.getElementById('settingsCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function clearResults(){
+  state.chunks = [];
+  document.getElementById('resultCard').hidden = true;
+  document.getElementById('resultBody').innerHTML = '';
+}
+
+/* ================= 执行切割 ================= */
+function doSplit(){
+  const u8 = state.bytes, n = u8.length;
+  if (!n){ toast('文件为空', 'error'); return; }
+  const prefix = (document.getElementById('prefixInput').value.trim() || 'txt');
+  const mode = state.mode;
+
+  let ranges = null, segs = null;
+
+  if (mode === 'count'){
+    const c = Math.floor(+document.getElementById('countInput').value);
+    if (!(c >= 2) || c > 99999){ toast('请输入 2 ~ 99999 之间的块数', 'error'); return; }
+    ranges = splitBySize(u8, Math.max(1, Math.ceil(n / c)), true);
+
+  } else if (mode === 'size'){
+    const t = Math.round(+document.getElementById('sizeInput').value * (+document.getElementById('sizeUnit').value));
+    if (!(t >= 1)){ toast('请输入有效的块大小', 'error'); return; }
+    ranges = splitBySize(u8, t, !document.getElementById('truncChk').checked);
+
+  } else if (mode === 'lines'){
+    const p = Math.floor(+document.getElementById('linesInput').value);
+    if (!(p >= 1)){ toast('请输入有效的行数', 'error'); return; }
+    ranges = splitByLines(u8, p);
+
+  } else {
+    const pattern = document.getElementById('sepInput').value;
+    if (!pattern.trim()){ toast('请输入分隔符', 'error'); return; }
+    let text;
+    try { text = new TextDecoder(state.encoding).decode(u8); }
+    catch (e){ toast('解码失败，请检查编码设置', 'error'); return; }
+
+    let cuts = [];
+    if (document.getElementById('sepRegexChk').checked){
+      let re;
+      try { re = new RegExp(pattern, 'gm'); }
+      catch (e){ toast('正则表达式无效：' + e.message, 'error'); return; }
+      let m;
+      while ((m = re.exec(text)) !== null){
+        // 将切点前移到匹配内容的第一个非空白字符（如 ^\s*第 中的 \s* 不属于分隔符本体）
+        let idx = m.index, k = 0;
+        while (k < m[0].length && /\s/.test(m[0][k])) k++;
+        if (k > 0 && k < m[0].length) idx += k;
+        if (idx > 0) cuts.push(idx);
+        if (re.lastIndex === m.index) re.lastIndex++;
+      }
+    } else {
+      let i = 0;
+      while ((i = text.indexOf(pattern, i)) !== -1){
+        if (i > 0) cuts.push(i);
+        i += pattern.length;
+      }
+    }
+    cuts = cuts.filter(function(v, j){ return cuts.indexOf(v) === j; });
+    if (!cuts.length){ toast('未找到匹配的分隔符', 'error'); return; }
+
+    const head = text.slice(0, cuts[0]);
+    const wantPreface = document.getElementById('prefaceChk').checked && head.trim() !== '';
+    let points = wantPreface ? [0].concat(cuts) : [0].concat(cuts.slice(1));
+    if (points[points.length - 1] !== text.length) points.push(text.length);
+    if (points.length < 2){ toast('分隔符数量不足，无法切分', 'error'); return; }
+
+    segs = [];
+    for (let i = 0; i < points.length - 1; i++){
+      segs.push({ text: text.slice(points[i], points[i + 1]), preface: i === 0 && wantPreface });
+    }
+  }
+
+  const total = segs ? segs.length : ranges.length;
+  const digits = Math.max(2, String(total).length);
+  const chunks = [];
+
+  if (segs){
+    const enc = new TextEncoder();
+    segs.forEach(function(s, i){
+      const bytes = enc.encode(s.text);
+      const body = s.text.replace(/\n$/, '');
+      chunks.push({
+        name: prefix + '_part' + String(i).padStart(digits, '0') + '.txt',
+        bytes: bytes,
+        encName: 'utf-8',
+        preface: s.preface,
+        lines: body === '' ? 0 : body.split('\n').length
+      });
+    });
+  } else {
+    ranges.forEach(function(r, i){
+      const bytes = u8.subarray(r[0], r[1]);
+      chunks.push({
+        name: prefix + '_part' + String(i + 1).padStart(digits, '0') + '.txt',
+        bytes: bytes,
+        encName: state.encoding,
+        preface: false,
+        lines: countNL(bytes)
+      });
+    });
+  }
+
+  if (!chunks.length){ toast('未切出任何内容', 'error'); return; }
+  state.chunks = chunks;
+  renderResults();
+}
+
+/* ================= 渲染结果 ================= */
+function mkBtn(label, act, idx){
+  const b = document.createElement('button');
+  b.className = 'mini';
+  b.textContent = label;
+  b.dataset.act = act;
+  b.dataset.idx = idx;
+  return b;
+}
+function renderResults(){
+  const chunks = state.chunks;
+  let total = 0;
+  chunks.forEach(function(c){ total += c.bytes.length; });
+
+  document.getElementById('resultSummary').textContent =
+    '共 ' + chunks.length + ' 块 · 总计 ' + fmtSize(total) +
+    ' · 输出编码 ' + chunks[0].encName.toUpperCase() +
+    (chunks[0].encName === state.encoding ? '（与原文件一致）' : '');
+
+  const body = document.getElementById('resultBody');
+  body.innerHTML = '';
+  const frag = document.createDocumentFragment();
+
+  chunks.forEach(function(c, i){
+    const tr = document.createElement('tr');
+    const td0 = document.createElement('td');
+    const num = document.createElement('span');
+    num.className = 'num';
+    num.textContent = String(i + 1).padStart(3, '0');
+    td0.appendChild(num);
+    if (c.preface){
+      const b = document.createElement('span');
+      b.className = 'badge';
+      b.textContent = '前言';
+      td0.appendChild(b);
+    }
+    const td1 = document.createElement('td');
+    td1.className = 'mono';
+    td1.textContent = c.name;
+    const td2 = document.createElement('td');
+    td2.textContent = fmtSize(c.bytes.length);
+    const td3 = document.createElement('td');
+    td3.textContent = c.lines.toLocaleString();
+    const td4 = document.createElement('td');
+    td4.appendChild(mkBtn('预览', 'pv', i));
+    td4.appendChild(mkBtn('下载', 'dl', i));
+    tr.append(td0, td1, td2, td3, td4);
+    frag.appendChild(tr);
+  });
+  body.appendChild(frag);
+  document.getElementById('resultCard').hidden = false;
+  document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ================= 事件绑定 ================= */
+// 主题
+const themeBtn = document.getElementById('themeBtn');
+function applyTheme(t){
+  document.documentElement.dataset.theme = t;
+  themeBtn.textContent = t === 'dark' ? '☀️' : '🌙';
+  try { localStorage.setItem('ts-theme', t); } catch (e) {}
+}
+try { const s = localStorage.getItem('ts-theme'); if (s) applyTheme(s); } catch (e) {}
+themeBtn.addEventListener('click', function(){
+  applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+});
+
+// 上传
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+dropZone.addEventListener('click', function(){ fileInput.click(); });
+fileInput.addEventListener('change', function(){
+  if (fileInput.files && fileInput.files[0]) loadFile(fileInput.files[0]);
+  fileInput.value = '';
+});
+['dragenter', 'dragover'].forEach(function(ev){
+  dropZone.addEventListener(ev, function(e){ e.preventDefault(); dropZone.classList.add('drag'); });
+});
+['dragleave', 'drop'].forEach(function(ev){
+  dropZone.addEventListener(ev, function(e){ e.preventDefault(); dropZone.classList.remove('drag'); });
+});
+dropZone.addEventListener('drop', function(e){
+  const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) loadFile(f);
+});
+
+// 移除 / 编码切换
+document.getElementById('removeBtn').addEventListener('click', resetAll);
+document.getElementById('encSel').addEventListener('change', function(){
+  const v = this.value;
+  if (!state.bytes) return;
+  state.encoding = v === 'auto' ? detectEncoding(state.bytes) : v;
+  document.getElementById('fPreview').textContent = previewText(state.bytes, state.encoding, 2048, 30);
+  document.getElementById('fMeta').textContent =
+    fmtSize(state.bytes.length) + ' · ' + countNL(state.bytes).toLocaleString() + ' 行 · ' + state.encoding.toUpperCase() + state.encNote;
+  if (state.chunks.length) toast('编码已更改，请重新切割', 'info');
+});
+
+// 模式 tabs
+function setMode(m){
+  state.mode = m;
+  document.querySelectorAll('#modeTabs button').forEach(function(b){
+    b.classList.toggle('active', b.dataset.mode === m);
+  });
+  ['count', 'size', 'lines', 'sep'].forEach(function(k){
+    document.getElementById('pane-' + k).classList.toggle('on', k === m);
+  });
+}
+document.querySelectorAll('#modeTabs button').forEach(function(b){
+  b.addEventListener('click', function(){ setMode(this.dataset.mode); });
+});
+
+// 预设
+document.getElementById('sepPreset').addEventListener('change', function(){
+  if (this.value) document.getElementById('sepInput').value = this.value;
+});
+
+// 切割
+document.getElementById('splitBtn').addEventListener('click', function(){
+  const btn = this;
+  btn.disabled = true;
+  btn.textContent = '处理中…';
+  setTimeout(function(){
+    try { doSplit(); }
+    catch (e){ toast('切割失败：' + e.message, 'error'); console.error(e); }
+    btn.disabled = false;
+    btn.textContent = '✂ 开始切割';
+  }, 30);
+});
+
+// 结果操作（事件委托）
+document.getElementById('resultBody').addEventListener('click', function(e){
+  const btn = e.target.closest('[data-act]');
+  if (!btn) return;
+  const idx = +btn.dataset.idx;
+  const chunk = state.chunks[idx];
+  if (!chunk) return;
+  if (btn.dataset.act === 'dl'){
+    downloadBlob(new Blob([chunk.bytes], { type: 'text/plain' }), chunk.name);
+    return;
+  }
+  const tr = btn.closest('tr');
+  const next = tr.nextElementSibling;
+  if (next && next.classList.contains('preview-row')){ next.remove(); return; }
+  document.querySelectorAll('tr.preview-row').forEach(function(r){ r.remove(); });
+  const pr = document.createElement('tr');
+  pr.className = 'preview-row';
+  const td = document.createElement('td');
+  td.colSpan = 5;
+  const pre = document.createElement('pre');
+  pre.textContent = previewText(chunk.bytes, chunk.encName, 4000, 60) || '（空内容）';
+  td.appendChild(pre);
+  pr.appendChild(td);
+  tr.after(pr);
+});
+
+// ZIP 下载
+document.getElementById('zipBtn').addEventListener('click', async function(){
+  if (!state.chunks.length) return;
+  const btn = this;
+  const name = (document.getElementById('prefixInput').value.trim() || 'txt') + '_split.zip';
+  btn.disabled = true;
+  try {
+    const blob = await buildZip(
+      state.chunks.map(function(c){ return { name: c.name, data: c.bytes }; }),
+      function(a, b){ btn.textContent = '打包中 ' + a + '/' + b + '…'; }
+    );
+    downloadBlob(blob, name);
+    toast('已生成 ZIP 压缩包', 'success');
+  } catch (e){
+    toast('打包失败：' + e.message, 'error');
+  }
+  btn.textContent = '⬇ 下载全部（ZIP）';
+  btn.disabled = false;
+});
+
+// 重新开始
+function resetAll(){
+  state.file = null; state.bytes = null; state.chunks = [];
+  document.getElementById('dropZone').hidden = false;
+  document.getElementById('fileInfo').hidden = true;
+  document.getElementById('settingsCard').hidden = true;
+  clearResults();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+document.getElementById('resetBtn').addEventListener('click', resetAll);
+</script>
+</body>
+</html>
