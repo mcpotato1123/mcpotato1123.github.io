@@ -89,6 +89,48 @@
   <div class="grid-lines"></div>
   <div class="grain"></div>
 </div>
+
+<!-- ===================== 折射滤镜（iOS 26 Liquid Glass 那层） =====================
+     原理：feDisplacementMap 用一张「位移贴图」把每个像素按图里的值挪开 ——
+     贴图的 R 通道管横向位移、G 通道管纵向位移，128 表示不偏移。
+     下面这张贴图是纵向的：上沿往下推、下沿往上推、中间不动，
+     于是玻璃边缘会把背后内容「拉」进来，形成凸透镜的放大感。
+
+     两个硬约束（改之前先读）：
+     1. 贴图必须内联成 data URI。<feImage> 引用外部图片会被 Chrome 拦掉（跨源限制），
+        用 URL() 指向 .svg 文件同样不可靠。
+     2. 三个滤镜只是 scale 不同（8 / 16 / 28），用哪个由 CSS 的 --glass-refract 决定，
+        这样切换强度不用改 HTML。 -->
+<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="f-refract-s" x="0" y="0" width="100%" height="100%"
+            filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse"
+            color-interpolation-filters="sRGB">
+      <feImage href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAACACAIAAABr1yBdAAABKElEQVR42u3XiQkAIAwEwSgWbi326VOGhMyUEFhO21wzoKoR2xGoHMBxBAQAAgABQKkAriNgAUAAIADwBwALABYABACeQGABQAAgABAACAAEAAKAZLoTYAHAAoAFAAsAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAOCrEdcRsAAgAPAEAgsAFgAsAFgAEAAIAAQAAgABgAAgcQDHEbAAIADwBAILABYABAACAH8AsAAgABAACAAEAGk9ZkgxvB0b1oIAAAAASUVORK5CYII="
+              x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="8"
+                         xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+
+    <filter id="f-refract-m" x="0" y="0" width="100%" height="100%"
+            filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse"
+            color-interpolation-filters="sRGB">
+      <feImage href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAACACAIAAABr1yBdAAABKElEQVR42u3XiQkAIAwEwSgWbi326VOGhMyUEFhO21wzoKoR2xGoHMBxBAQAAgABQKkAriNgAUAAIADwBwALABYABACeQGABQAAgABAACAAEAAKAZLoTYAHAAoAFAAsAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAOCrEdcRsAAgAPAEAgsAFgAsAFgAEAAIAAQAAgABgAAgcQDHEbAAIADwBAILABYABAACAH8AsAAgABAACAAEAGk9ZkgxvB0b1oIAAAAASUVORK5CYII="
+              x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="16"
+                         xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+
+    <filter id="f-refract-l" x="0" y="0" width="100%" height="100%"
+            filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse"
+            color-interpolation-filters="sRGB">
+      <feImage href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAACACAIAAABr1yBdAAABKElEQVR42u3XiQkAIAwEwSgWbi326VOGhMyUEFhO21wzoKoR2xGoHMBxBAQAAgABQKkAriNgAUAAIADwBwALABYABACeQGABQAAgABAACAAEAAKAZLoTYAHAAoAFAAsAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAOCrEdcRsAAgAPAEAgsAFgAsAFgAEAAIAAQAAgABgAAgcQDHEbAAIADwBAILABYABAACAH8AsAAgABAACAAEAGk9ZkgxvB0b1oIAAAAASUVORK5CYII="
+              x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="28"
+                         xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
 <div class="spotlight" aria-hidden="true"></div>
 <div class="cursor" aria-hidden="true"><span class="cursor-ring"></span><span class="cursor-dot"></span></div>
 <div class="progress" aria-hidden="true"><i id="progressBar"></i></div>

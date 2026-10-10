@@ -43,6 +43,43 @@
     };
   }
 
+  /* ---------- 折射层开关（Liquid Glass 的「真折射」）----------------------
+     默认关闭。?refract=s|m|l 打开并选择强度，?refract=off 关闭；
+     选择会记住，之后不用再带参数。
+     为什么不默认开：SVG 滤镜作用在 backdrop 上是全站最贵的一层 ——
+     顶栏常驻，滚动时逐帧对整条顶栏做位移采样。
+     为什么放这里而不是 CSS：滤镜名得由 CSS 变量拼，且要能记忆用户选择。 */
+  function initRefraction() {
+    var KEY = 'cenilla-refract';
+    var MAP = { s: 'f-refract-s', m: 'f-refract-m', l: 'f-refract-l' };
+    var param = new URLSearchParams(location.search).get('refract');
+    var choice = null;
+
+    if (param === 'off' || param === '0') {
+      choice = null;
+      try { localStorage.setItem(KEY, 'off'); } catch (e) {}
+    } else if (param && MAP[param]) {
+      choice = param;
+      try { localStorage.setItem(KEY, param); } catch (e) {}
+    } else {
+      try {
+        var saved = localStorage.getItem(KEY);
+        if (saved && MAP[saved]) choice = saved;
+      } catch (e) {}
+    }
+
+    var apply = function (level) {
+      if (level && MAP[level]) {
+        d.style.setProperty('--glass-refract', 'url(#' + MAP[level] + ')');
+        d.dataset.refract = level;
+      } else {
+        d.style.setProperty('--glass-refract', 'none');
+        d.dataset.refract = 'off';
+      }
+    };
+    apply(choice);
+  }
+
   /* ---------- 提前接管的变量（init 与收尾都要用） ---------- */
   var header = document.getElementById('siteHeader');
   var progressBar = document.getElementById('progressBar');
@@ -882,6 +919,12 @@
     L.push('card    ' + rect(card) + '  max-width=' + cs(card, 'max-width'));
     L.push('viewport' + rect(vp) + '  overflow=' + cs(vp, 'overflow'));
     L.push('         inline-height="' + (vp.style.height || '(空)') + '"');
+    L.push('-- 玻璃/折射 --');
+    L.push('data-refract=' + (d.dataset.refract || '(未设置)') +
+      '  --glass-refract=' + (d.style.getPropertyValue('--glass-refract') || '(空)'));
+    L.push('顶栏 backdrop-filter=' + cs(document.querySelector('.site-header'), 'backdrop-filter'));
+    L.push('SVG 滤镜存在: ' + ['f-refract-s', 'f-refract-m', 'f-refract-l']
+      .map(function (id) { return id + ':' + !!document.getElementById(id); }).join(' '));
     L.push('-- 每一页 --');
     pages.forEach(function (p, i) {
       L.push('page' + i + '   ' + rect(p));
@@ -941,6 +984,7 @@
   /* ---------- 启动：任何异常都退回到静态可见形态，绝不留下空白页 ---------- */
   try {
     init();
+    initRefraction();
     if (new URLSearchParams(location.search).get('diag') === '1') runDiagnostics();
   } catch (err) {
     showAll();
