@@ -166,6 +166,17 @@
       return pref === 'auto' ? (prefersDark() ? 'dark' : 'light') : pref;
     }
 
+    /* 主题切换按钮有两枚：顶栏一枚（桌面）、移动菜单里一枚。
+       窄屏时顶栏那枚被 CSS 隐藏、菜单那枚顶上（见 styles.css 顶栏段）。
+       两枚走同一套逻辑，状态也一起同步，避免出现「两处按钮说法不一致」。 */
+    var themeToggles = [themeToggle, document.getElementById('themeToggleMenu')]
+      .filter(Boolean);
+
+    function syncToggleLabels(pref) {
+      var label = THEME_LABEL[pref] || THEME_LABEL.auto;
+      themeToggles.forEach(function (btn) { btn.setAttribute('aria-label', label); });
+    }
+
     /* 只改「生效主题」相关的副作用，不碰 pref、不写存储。
        系统主题变化时走这条，不能走 applyTheme —— 那会把 auto 覆盖成具体值。 */
     function paintTheme(resolved) {
@@ -180,9 +191,7 @@
         metaL.setAttribute('media', isLight ? 'all' : 'not all');
         metaD.setAttribute('media', isLight ? 'not all' : 'all');
       }
-      if (themeToggle) {
-        themeToggle.setAttribute('aria-label', THEME_LABEL[currentPref()] || THEME_LABEL.auto);
-      }
+      syncToggleLabels(currentPref());
     }
 
     /* 写入用户选择（点按钮走这条），带圆形揭示动效 */
@@ -217,19 +226,19 @@
       }
     }
 
-    if (themeToggle) {
+    themeToggles.forEach(function (btn) {
       /* 支持右键/长按「直接回到跟随系统」，不用转一圈 */
-      themeToggle.addEventListener('contextmenu', function (e) {
+      btn.addEventListener('contextmenu', function (e) {
         e.preventDefault();
         if (currentPref() !== 'auto') applyTheme('auto');
       });
-      themeToggle.addEventListener('click', function () {
+      btn.addEventListener('click', function () {
         var p = currentPref();
         var next = THEME_CYCLE[(THEME_CYCLE.indexOf(p) + 1) % THEME_CYCLE.length];
-        var r = themeToggle.getBoundingClientRect();
+        var r = btn.getBoundingClientRect();
         applyTheme(next, { x: r.left + r.width / 2, y: r.top + r.height / 2 });
       });
-    }
+    });
 
     /* 系统主题变化：只有 pref 是 auto 时才跟。
        走 paintTheme —— 它不改 pref、不写存储，用户的「跟随系统」选择得以保留。 */
