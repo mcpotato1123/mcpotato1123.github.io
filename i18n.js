@@ -293,9 +293,15 @@ window.I18N = (function () {
     'footer.copyright': { zh: '持续更新中', en: 'updated regularly', ja: '随時更新中' },
     'footer.builtWith': { zh: '用 HTML / CSS / JS 手写，没有框架', en: 'Hand-written in HTML / CSS / JS — no framework', ja: 'HTML / CSS / JS で手書き。フレームワーク不使用' },
 
-    /* ---------- GINKA 预告横幅 ---------- */
+    /* ---------- 移植预告横幅 ----------
+       键名仍用 ginka.* —— 那是这枚横幅最初的代号，换文案不必动键名
+       （改名要同时改 HTML、CSS、JS 三处，收益为零）。 */
     'ginka.tag':  { zh: '移植预告', en: 'Coming next', ja: '移植予告' },
-    'ginka.text': { zh: '下一部：<strong>GINKA</strong> —— 正在做小米手环移植，做好会在这里上线。', en: 'Next up: <strong>GINKA</strong> — a Mi Band port is in the works and will appear here when it is ready.', ja: '次は <strong>GINKA</strong> — スマートバンド移植を進めています。完成したらここに公開します。' },
+    'ginka.text': {
+      zh: '下一部：<strong>黄莓C</strong> demo —— 正在做小米手环移植，做好会在这里上线。',
+      en: 'Next up: the <strong>HUANGMEI C</strong> demo — a Mi Band port is in the works and will appear here when it is ready.',
+      ja: '次は <strong>黄莓C</strong> の demo — スマートバンド移植を進めています。完成したらここに公開します。'
+    },
 
 
   };

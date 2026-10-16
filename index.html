@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>mcpotato1123的主页 · 小米手环移植与本地工具</title>
-<meta name="description" content="mcpotato1123 的主页 —— 小米手环快应用非官方移植，以及几个纯前端本地运行的在线工具。《小小的身影，重叠的内心》《想成为 Galgame 领域大神！！！》手环移植版、Galgame 剧本编辑器与格式转换器、Linux 镜像下载。下一部移植预告：GINKA。">
+<meta name="description" content="mcpotato1123 的主页 —— 小米手环快应用非官方移植，以及几个纯前端本地运行的在线工具。《小小的身影，重叠的内心》《想成为 Galgame 领域大神！！！》手环移植版、Galgame 剧本编辑器与格式转换器、Linux 镜像下载。下一部移植预告：黄莓C（HUANGMEI C）demo。">
 <!-- 主题色。给两个 meta 各一个 id，交给首帧脚本按「已生效的主题」写死，
      不再依赖 media 属性 —— JS 用 querySelector 改带 media 的那对时会互相打架
      （浏览器按文档顺序取第一条匹配的，改错那条等于没生效）。
@@ -148,14 +148,19 @@
      固定在视口**顶部、顶栏下方**，整块**不可点击** —— 只做预告，不做跳转入口。
      用 <div> 而不是 <a>，并且刻意没有写 cursor、也没有 hover 反馈，
      所以鼠标移上去就是普通箭头、点了没有任何反应（不要改成链接）。
-     唯一可交互的是右侧的关闭按钮：按下去收起来，选择记在 localStorage。
+     唯一可交互的是右侧的关闭按钮：按下去静默一段时间，之后自动回来。
+
+     类名/ID 里的 ginka 是这枚横幅最初的代号（当时预告的是 GINKA）。
+     现在预告内容换成了黄莓C，但**没有跟着改名** —— 改名要同时动
+     HTML、CSS、i18n.js 三处，而它只是个内部标识，收益为零。
+     换预告内容只需要改 i18n.js 里 ginka.tag / ginka.text 两个键。
 
      注意：这段注释里不能出现连续两个连字符（中文破折号、CSS 自定义属性名都是那个形状），
      HTML 注释遇到连续两个连字符会提前闭合，后面的内容会变成正文。 -->
 <div class="ginka-banner" id="ginkaBanner" role="status">
   <div class="ginka-inner">
     <span class="ginka-tag" data-i18n="ginka.tag">移植预告</span>
-    <span class="ginka-text" data-i18n-html="ginka.text">下一部：<strong>GINKA</strong> —— 正在做小米手环移植，做好会在这里上线。</span>
+    <span class="ginka-text" data-i18n-html="ginka.text">下一部：<strong>黄莓C</strong> demo —— 正在做小米手环移植，做好会在这里上线。</span>
     <button class="ginka-close" id="ginkaClose" type="button" aria-label="关闭预告横幅">
       <svg class="ic" aria-hidden="true"><use href="#i-x"/></svg>
     </button>
@@ -827,7 +832,7 @@
             <a class="contact-chip" data-brand="bili" href="https://space.bilibili.com/1538255138?spm_id_from=333.1007.0.0" target="_blank" rel="noopener noreferrer">
               <svg class="ic" aria-hidden="true"><use href="#i-bili"/></svg><span data-i18n="footer.bili">哔哩哔哩 · mcpotato</span>
             </a>
-            <a class="contact-chip" data-brand="qq" href="https://qm.qq.com/q/nWQMzxYR4A" target="_blank" rel="noopener noreferrer">
+            <a class="contact-chip" data-brand="qq" href="https://qun.qq.com/universal-share/share?ac=1&authKey=GIA8Op10KxVj0XcOAsNTIg0PbrTMEbiypWzlPZ21oQblPzY5Ov9PepDRFSEEGaot&busi_data=eyJncm91cENvZGUiOiI2NjE1MzU1OTYiLCJ0b2tlbiI6InlsZDduQ21PbGcxYXEybldJWXd4a0JERmRlTDNpMzQ4UGhSVHN0Q01JSDBXS3g5NVFCeDFNTUdkTVZSQ3F5c1UiLCJ1aW4iOiIyNDM2MzcwMDgxIn0%3D&data=F8WMjKCp2u3zdj7CWvMPiR-VIbsW0199rYrXBC6td8uJ-DEEb0InUVHG3xSYNZAqgmV6s0YVxQhcPnGqVq6LCA&svctype=4&tempid=h5_group_info" target="_blank" rel="noopener noreferrer">
               <svg class="ic" aria-hidden="true"><use href="#i-qq"/></svg><span data-i18n="footer.qq">玩家交流 QQ 群</span>
             </a>
           </div>
