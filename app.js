@@ -86,17 +86,25 @@
      而 CSS 读不到 localStorage。 */
   function initBanner() {
     var KEY = 'cenilla-ginka-banner';
+    var MUTE_DAYS = 14;          /* 关掉后静默多久再出现 */
     var el = document.getElementById('ginkaBanner');
     if (!el) return;
 
-    var closed = false;
-    try { closed = localStorage.getItem(KEY) === 'closed'; } catch (e) {}
-    if (closed) { el.remove(); return; }
+    /* 存的是**时间戳**而不是 'closed' 布尔值。
+       为什么改：之前存 'closed' 就是永久关闭 —— 预告横幅是「常设公告」性质，
+       而永久隐藏意味着一旦关掉，除了清站点数据再也回不来，
+       连站主自己都看不到（这个坑在自测时真的撞上了）。
+       现在改成「静默 N 天」，到期自动回来，仍然不打扰。 */
+    var until = 0;
+    try { until = parseInt(localStorage.getItem(KEY), 10) || 0; } catch (e) {}
+    if (until > Date.now()) { el.remove(); return; }
 
     var btn = document.getElementById('ginkaClose');
     if (!btn) return;
     btn.addEventListener('click', function () {
-      try { localStorage.setItem(KEY, 'closed'); } catch (e) {}
+      try {
+        localStorage.setItem(KEY, String(Date.now() + MUTE_DAYS * 864e5));
+      } catch (e) {}
       el.remove();
     });
   }
@@ -1005,6 +1013,24 @@
     L.push('card    ' + rect(card) + '  max-width=' + cs(card, 'max-width'));
     L.push('viewport' + rect(vp) + '  overflow=' + cs(vp, 'overflow'));
     L.push('         inline-height="' + (vp.style.height || '(空)') + '"');
+    /* 启动阶段有没有失败 —— 这一栏能直接回答「横幅为什么没出现 / 语言为什么切不了」 */
+    L.push('-- 启动阶段 --');
+    L.push(window.__initErrors.length
+      ? '失败的阶段: ' + window.__initErrors.join(' | ')
+      : '四个阶段全部成功 (init / refraction / banner / i18n)');
+    L.push('语言: I18N=' + (window.I18N ? window.I18N.get() : '未加载') +
+      '  html[data-lang]=' + (d.getAttribute('data-lang') || '(空)') +
+      '  html[lang]=' + (d.getAttribute('lang') || '(空)'));
+    L.push('横幅元素: ' + (document.getElementById('ginkaBanner') ? '在 DOM' : '已被移除(曾关过)'));
+    L.push('本地记忆: 语言=' + (ls('cenilla-lang') || '(未设置)') +
+      '  横幅=' + (ls('cenilla-ginka-banner') || '(未设置)') +
+      '  主题=' + (ls('cenilla-theme') || '(未设置)'));
+    var lt = document.getElementById('langToggle');
+    L.push('语言按钮: ' + (lt
+      ? 'width=' + Math.round(lt.getBoundingClientRect().width) +
+        '  display=' + cs(lt, 'display') + '  align-items=' + cs(lt, 'align-items')
+      : '未找到'));
+    L.push('  当前生效的 CSS 版本标记: ' + cs(document.documentElement, '--css-rev'));
     L.push('-- 玻璃/折射 --');
     L.push('data-refract=' + (d.dataset.refract || '(未设置)') +
       '  --glass-refract=' + (d.style.getPropertyValue('--glass-refract') || '(空)'));
@@ -1067,17 +1093,26 @@
     document.body.appendChild(box);
   }
 
-  /* ---------- 启动：任何异常都退回到静态可见形态，绝不留下空白页 ---------- */
-  try {
-    init();
-    initRefraction();
-    initBanner();
-    initLang();
-    if (new URLSearchParams(location.search).get('diag') === '1') runDiagnostics();
-  } catch (err) {
-    showAll();
-    if (window.console && console.warn) console.warn('[cenilla] 动效初始化失败，已退回静态显示：', err);
+  /* ---------- 启动 --------------------------------------------------------
+     每个阶段各自 try/catch，**不能共用一个**。
+     之前四步套在同一个 try 里，结果 init() 里任何一处抛错都会把
+     initBanner() 和 initLang() 一起带走 —— 表现为「横幅不显示、语言切不了」，
+     而这两件事跟出错的那一步毫无关系，排查时极难定位。
+     现在一步崩了只影响它自己，并且把原因记在 window.__initErrors 里。 */
+  window.__initErrors = [];
+  function stage(name, fn) {
+    try { fn(); }
+    catch (err) {
+      window.__initErrors.push(name + ': ' + (err && err.message ? err.message : err));
+      if (window.console && console.warn) console.warn('[cenilla] ' + name + ' 失败：', err);
+    }
   }
+
+  stage('init', init);
+  stage('refraction', initRefraction);
+  stage('banner', initBanner);
+  stage('i18n', initLang);
+  if (new URLSearchParams(location.search).get('diag') === '1') runDiagnostics();
 
   /* 保险丝：无论 init 是否成功，只要正文还处于隐藏态就把元素放出来 */
   setTimeout(function () {
