@@ -80,9 +80,89 @@
     apply(choice);
   }
 
+  /* ---------- 预告横幅 --------------------------------------------------
+     关掉之后记住选择，不再打扰。
+     为什么用 JS 而不是 CSS 的 :has()：关闭状态要跨会话保持，
+     而 CSS 读不到 localStorage。 */
+  function initBanner() {
+    var KEY = 'cenilla-ginka-banner';
+    var el = document.getElementById('ginkaBanner');
+    if (!el) return;
+
+    var closed = false;
+    try { closed = localStorage.getItem(KEY) === 'closed'; } catch (e) {}
+    if (closed) { el.remove(); return; }
+
+    var btn = document.getElementById('ginkaClose');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      try { localStorage.setItem(KEY, 'closed'); } catch (e) {}
+      el.remove();
+    });
+  }
+
+  /* ---------- 语言切换 --------------------------------------------------
+     语言本身由 i18n.js 管理（含词典与首帧判定）。这里只负责两件事：
+       1. 首帧把 DOM 按当前语言写一遍（i18n.js 的 boot 只定了语言）
+       2. 顶栏那枚按钮的弹层交互
+     主题按钮的 aria-label 也要跟着语言重画 —— 它是 JS 动态写的，
+     不归 data-i18n-attr 管，所以监听 langchange 事件重设。 */
+  function initLang() {
+    if (!window.I18N) return;
+    var i18n = window.I18N;
+
+    i18n.apply(document);
+    var code = document.getElementById('langCode');
+    var short = { zh: '中', en: 'EN', ja: '日' };
+    function paintCode() {
+      if (code) code.textContent = short[i18n.get()] || '中';
+      document.querySelectorAll('[data-lang]').forEach(function (b) {
+        b.setAttribute('aria-checked', String(b.getAttribute('data-lang') === i18n.get()));
+      });
+      /* 主题按钮的说明文字是动态的，重画一次 */
+      if (window.__paintThemeLabels) window.__paintThemeLabels();
+    }
+    paintCode();
+    document.addEventListener('langchange', paintCode);
+
+    var btn = document.getElementById('langToggle');
+    var menu = document.getElementById('langMenu');
+    function close() {
+      if (menu) menu.hidden = true;
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    }
+    if (btn && menu) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var open = menu.hidden;
+        menu.hidden = !open;
+        btn.setAttribute('aria-expanded', String(open));
+      });
+      menu.addEventListener('click', function (e) {
+        var b = e.target.closest ? e.target.closest('button[data-lang]') : null;
+        if (!b) return;
+        i18n.set(b.getAttribute('data-lang'), true);   /* true = 记住选择 */
+        close();
+      });
+      /* 点空白处 / Esc 关闭 */
+      document.addEventListener('click', function (e) {
+        if (!menu.hidden && !menu.contains(e.target) && e.target !== btn) close();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') close();
+      });
+    }
+
+    /* 手机菜单里的三个语言按钮 */
+    document.querySelectorAll('.mobile-menu-lang .lang-pick').forEach(function (b) {
+      b.addEventListener('click', function () {
+        i18n.set(b.getAttribute('data-lang'), true);
+      });
+    });
+  }
+
   /* ---------- 提前接管的变量（init 与收尾都要用） ---------- */
   var header = document.getElementById('siteHeader');
-  var progressBar = document.getElementById('progressBar');
   var toTop = document.getElementById('toTop');
   var nav = document.getElementById('siteNav');
   var navInd = document.getElementById('navInd');
@@ -213,6 +293,16 @@
       var label = THEME_LABEL[pref] || THEME_LABEL.auto;
       themeToggles.forEach(function (btn) { btn.setAttribute('aria-label', label); });
     }
+    /* 语言切了之后，主题按钮的说明文字也要重写成对应语言。
+       i18n.js 的 data-i18n-attr 只能处理静态文案，这枚是动态的，所以单独暴露。 */
+    window.__paintThemeLabels = function () {
+      var I = window.I18N;
+      if (!I) return;
+      var pref = currentPref();
+      var key = pref === 'light' ? 'theme.light' : pref === 'dark' ? 'theme.dark' : 'theme.auto';
+      var label = I.t(key) || THEME_LABEL[pref] || THEME_LABEL.auto;
+      themeToggles.forEach(function (btn) { btn.setAttribute('aria-label', label); });
+    };
 
     /* 只改「生效主题」相关的副作用，不碰 pref、不写存储。
        系统主题变化时走这条，不能走 applyTheme —— 那会把 auto 覆盖成具体值。 */
@@ -327,11 +417,7 @@
 
     var onScroll = frame(function () {
       var y = window.pageYOffset || d.scrollTop;
-      var docH = d.scrollHeight - window.innerHeight;
 
-      if (progressBar) {
-        progressBar.style.transform = 'scaleX(' + (docH > 0 ? Math.min(y / docH, 1) : 0) + ')';
-      }
       if (header) header.classList.toggle('is-stuck', y > 8);
       if (toTop) toTop.classList.toggle('show', y > window.innerHeight * 0.9);
 
@@ -985,6 +1071,8 @@
   try {
     init();
     initRefraction();
+    initBanner();
+    initLang();
     if (new URLSearchParams(location.search).get('diag') === '1') runDiagnostics();
   } catch (err) {
     showAll();
