@@ -354,16 +354,19 @@
         hexInput.value = hex.replace('#', '').toUpperCase();
       }
 
-      /* 面板标题行显示当前色名；自定义色显示十六进制而不是名字 */
-      var nameEl = document.getElementById('accentName');
-      if (nameEl) {
-        var I = window.I18N;
-        if (custom) nameEl.textContent = hex.toUpperCase();
-        else {
-          var label = I ? I.t('accent.' + cur) : null;
-          if (label) nameEl.textContent = label;
-        }
+      /* 当前色名：桌面显示在面板标题行，手机显示在色珠下方的名条里。
+         自定义色一律显示色号 —— 用户自己挑的颜色没有名字。 */
+      var I2 = window.I18N;
+      var shownName;
+      if (custom) {
+        shownName = hex.toUpperCase();
+      } else {
+        shownName = (I2 ? I2.t('accent.' + cur) : '') || '';
       }
+      var nameEl = document.getElementById('accentName');
+      if (nameEl && shownName) nameEl.textContent = shownName;
+      var mNameEl = document.getElementById('mobileAccentName');
+      if (mNameEl && shownName) mNameEl.textContent = shownName;
     }
 
     function apply(name, remember) {

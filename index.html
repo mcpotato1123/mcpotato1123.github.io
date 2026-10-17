@@ -357,6 +357,7 @@
   </div>
   <!-- 主色选择（手机）：与顶栏那枚浮层是同一批按钮，只是换了摆放位置 -->
   <div class="mobile-menu-accent">
+    <div class="mobile-accent-grid">
     <button class="accent-swatch" type="button" data-accent="blue"
             aria-checked="true" data-i18n-attr="aria-label:accent.blue" aria-label="品牌蓝"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
     <button class="accent-swatch" type="button" data-accent="sky"
@@ -381,14 +382,18 @@
             aria-checked="false" data-i18n-attr="aria-label:accent.indigo" aria-label="靛蓝"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
     <button class="accent-swatch" type="button" data-accent="graphite"
             aria-checked="false" data-i18n-attr="aria-label:accent.graphite" aria-label="石墨"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
-    <!-- 手机端的自由取色：一枚彩虹色块，点开在菜单里展开同一个取色器 -->
-    <button class="accent-custom-pick is-mini" id="accentMiniBtn" type="button"
-            aria-expanded="false" aria-controls="accentPicker"
-            data-i18n-attr="aria-label:accent.custom" aria-label="自定义主色">
-      <span class="accent-custom-face" aria-hidden="true">
-        <svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg>
-      </span>
-    </button>
+      <!-- 手机端的自由取色：一枚彩虹色块，点开在菜单里展开同一个取色器 -->
+      <button class="accent-custom-pick is-mini" id="accentMiniBtn" type="button"
+              aria-expanded="false" aria-controls="accentPicker"
+              data-i18n-attr="aria-label:accent.custom" aria-label="自定义主色">
+        <span class="accent-custom-face" aria-hidden="true">
+          <svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg>
+        </span>
+      </button>
+    </div>
+    <!-- 颜色名条：小圆角药丸形，显示当前主色的名称（自定义时显示色号）。
+         aria-live 让读屏器在切换颜色时主动播报新名字。 -->
+    <span class="mobile-accent-name" id="mobileAccentName" aria-live="polite">品牌蓝</span>
   </div>
   <nav data-i18n-attr="aria-label:a11y.navMobile" aria-label="移动端导航">
     <a href="#works" data-i18n="nav.works">作品下载</a>

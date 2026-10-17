@@ -34,7 +34,7 @@
      作用是把「浏览器拿到的到底是哪一版 CSS」变成可读的事实 ——
      否则一遇到「改了没生效」，只能在缓存 / 编码 / 嵌套之间瞎猜。
      **每次改完这个文件记得更新这里的日期。** */
-  --css-rev:"2026-10-11 static-hero";
+  --css-rev:"2026-10-11 glass-menu";
 
   /* ---------- 主色 ----------
      站点主色沿用原有品牌蓝 #2563eb。派生令牌一律 color-mix，
@@ -111,6 +111,11 @@
   --glass-tint-bar:color-mix(in srgb, var(--bg) 30%, transparent);
   --glass-tint-bar-stuck:color-mix(in srgb, var(--bg) 40%, transparent);
   --glass-tint-strong:color-mix(in srgb, var(--bg) 78%, transparent);
+  /* 手机那个大的展开菜单专用：比浮层再透一档。
+     78% 的面板盖住整屏时看起来就是一块实心板子 —— 面积越大越需要透，
+     否则背后的插画完全看不出，玻璃感就没了。
+     40px 模糊配 58% 底色：能看见背后的颜色流动，但文字仍然清楚。 */
+  --glass-tint-menu:color-mix(in srgb, var(--bg) 58%, transparent);
   --glass-hi-soft:rgba(255,255,255,.14);
   --glass-rim:rgba(255,255,255,.22);
   --glass-blur:var(--fx-glass-56);
@@ -362,6 +367,7 @@ html[data-accent="coral"][data-theme="dark"]{
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
   :root{
     --glass-tint-strong:color-mix(in srgb, var(--bg) 97%, transparent);
+    --glass-tint-menu:color-mix(in srgb, var(--bg) 96%, transparent);
     /* 没有模糊时，34% 的顶栏等于「整条透明天窗」，文字会直接和正文叠在一起。
        这里必须顶回接近不透明 —— 玻璃是增强，可读性是底线。 */
     --glass-tint-bar:color-mix(in srgb, var(--bg) 96%, transparent);
@@ -704,11 +710,21 @@ body.cursor-hidden .cursor-dot,body.cursor-hidden .cursor-ring{opacity:0}
 .mobile-menu{
   position:fixed;z-index:49;top:72px;left:16px;right:16px;
   padding:12px;border-radius:var(--r-m);
-  background:var(--glass-tint-strong);
-  border:1px solid var(--line);
-  backdrop-filter:var(--glass-blur);
-  -webkit-backdrop-filter:var(--glass-blur);
+  /* 手机菜单是整个站点里面积最大的一块玻璃，所以用单独一档更透的底色
+     （--glass-tint-menu 58%）。用原来 78% 的浮层底色，盖住整屏后
+     看起来就是一块实心板子，背后的插画完全透不出来。 */
+  background:var(--glass-tint-menu);
+  border:1px solid var(--glass-rim);
+  backdrop-filter:var(--fx-glass-40);
+  -webkit-backdrop-filter:var(--fx-glass-40);
   box-shadow:inset 0 1px 0 var(--glass-hi-soft),var(--shadow-2);
+  /* 菜单项（语言 + 13 个色珠 + 导航）叠起来比手机屏幕还高，
+     不给最大高度的话底部条目会直接超出视口、怎么划都够不着。 */
+  max-height:calc(100vh - 92px);
+  max-height:calc(100dvh - 92px);
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
   transform-origin:top center;
   animation:menuIn .28s var(--ease) both;
 }
@@ -1701,11 +1717,13 @@ html:has(#ginkaBanner) .hero{padding-top:168px}
 }
 .accent-swatch:hover{transform:translateY(-2px) scale(1.06);box-shadow:inset 0 1px 1px rgba(255,255,255,.5), 0 4px 10px -3px rgba(0,0,0,.3)}
 .accent-swatch:active{transform:translateY(0) scale(.96)}
-/* 选中态：内圈留出面板底色、外圈用墨色收边 —— 双层环在深浅两套主题下都成立 */
+/* 选中态：内圈留出面板底色、外圈用**主色**收边。
+   早先用的是墨色（--ink），在浅色面板上就是一圈粗黑框，看着像把圆点框住了；
+   换成主色细环后既轻，也顺便强化了「这就是当前主题色」。 */
 .accent-swatch[aria-checked="true"]{
   box-shadow:
     0 0 0 2px var(--glass-tint-strong),
-    0 0 0 4px var(--ink),
+    0 0 0 3.5px var(--accent),
     inset 0 1px 1px rgba(255,255,255,.42);
 }
 /* 对勾：只给选中项显示。白色在所有八种主色上都够对比（最浅的琥珀也有 5:1） */
@@ -1945,21 +1963,62 @@ html:has(#ginkaBanner) .hero{padding-top:168px}
     display:flex;align-items:center;gap:6px;margin:0 13px 10px;
     padding:9px 0;border-bottom:1px solid var(--line);
   }
-  /* 菜单里的主色选择：12 个圆点。原来一行放得下 8 个，
-     12 个 × 22px + 11 × 8px = 352px 会超出 320px 窄屏，所以允许换行排成两行。 */
+  /* 菜单里的主色选择：12 个预置色 + 1 个自由取色，共 13 颗。
+     容器是块级，里面再套一个 7 列 grid —— 这样 grid 下面还能放「颜色名条」。
+     用 grid 而不是 flex-wrap：换行位置可预测（7 + 6），
+     也不会因为某一颗尺寸不一致而挤出奇怪的排布。 */
   .mobile-menu-accent{
-    display:flex;flex-wrap:wrap;align-items:center;gap:8px;
+    display:block;
     margin:0 13px 12px;
     padding:0 0 11px;border-bottom:1px solid var(--line);
   }
+  .mobile-accent-grid{
+    display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
+    gap:8px;align-items:center;justify-items:center;
+  }
+  /* 颜色名条：细长圆角条，横贯色珠区下方，文字居中。
+     左边一枚当前主色的小圆点 —— 让「名字」和「颜色」能对上，
+     不必靠记住哪个中文名对应哪种色。
+     用整行宽而不是包住文字：包文字会变成小药丸，文字一长一短宽度就跳；
+     定宽条在切换颜色时只换字，形不变。 */
+  .mobile-accent-name{
+    display:flex;align-items:center;justify-content:center;gap:6px;
+    margin:10px 0 0;
+    padding:5px 10px;
+    border-radius:9px;
+    background:color-mix(in srgb, var(--accent) 10%, transparent);
+    border:1px solid color-mix(in srgb, var(--accent) 24%, transparent);
+    color:var(--accent-ink);
+    font-size:11px;font-weight:600;letter-spacing:.02em;
+    line-height:1.25;
+    transition:background .25s ease,border-color .25s ease,color .25s ease;
+  }
+  .mobile-accent-name::before{
+    content:"";flex:none;
+    width:7px;height:7px;border-radius:50%;
+    background:var(--accent);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);
+  }
   .mobile-menu-accent .accent-swatch{width:22px;height:22px;animation:none}
   .mobile-menu-accent .sw-check{width:11px;height:11px}
-  /* 手机端第 9 枚：自由取色的迷你色环，尺寸与其它色珠一致 */
-  .mobile-menu-accent .accent-custom-pick.is-mini{width:22px;height:22px}
-  /* 窄屏的选中环收细一档，否则 22px 的珠子上环太抢眼 */
-  .mobile-menu-accent .accent-swatch[aria-checked="true"]{box-shadow:0 0 0 1.5px var(--surface-2),0 0 0 3px var(--ink)}
+  /* 第 13 颗：自由取色。
+     必须把桌面「整行色卡」的样式清干净 —— 那条规则带着 width:100%、
+     8/11px 内边距和浅色卡片底，套到 22px 的迷你元素上会把彩虹色块挤歪，
+     还会多出一个白色方框（就是手机上看到的白圈）。 */
+  .mobile-menu-accent .accent-custom-pick.is-mini{
+    width:22px;height:22px;padding:0;gap:0;
+    border:0;background:none;box-shadow:none;border-radius:7px;
+  }
+  .mobile-menu-accent .accent-custom-pick.is-mini .accent-custom-face{
+    width:22px;height:22px;border-radius:7px;
+  }
+  /* 选中环：用主色而不是墨色。22px 的珠子上墨色环太粗太黑，
+     看起来像给圆点加了黑框；换成主色细环既轻又和当前主题一致。 */
+  .mobile-menu-accent .accent-swatch[aria-checked="true"]{
+    box-shadow:0 0 0 1.5px var(--surface-2),0 0 0 3px var(--accent);
+  }
   .mobile-menu-accent.is-active .accent-custom-pick.is-mini .accent-custom-face{
-    box-shadow:0 0 0 1.5px var(--surface-2),0 0 0 3px var(--ink);
+    box-shadow:0 0 0 1.5px var(--surface-2),0 0 0 3px var(--accent);
   }
   .mobile-menu-lang .lang-pick{
     flex:1;padding:8px 10px;border-radius:8px;
