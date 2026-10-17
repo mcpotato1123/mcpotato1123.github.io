@@ -76,7 +76,7 @@ window.I18N = (function () {
     'theme.auto':     { zh: '当前：跟随系统。点击切到浅色', en: 'Now: following system. Click for light', ja: '現在：自動。クリックでライト' },
 
     /* ---------- 首屏 ---------- */
-    'hero.pill':      { zh: '正在开发中 · 持续更新', en: 'In development · updated often', ja: '開発中 · 随時更新' },
+    'hero.pill':      { zh: '欢迎来到项目主页', en: 'Welcome to the project home', ja: 'プロジェクトホームへようこそ' },
     'hero.lede': {
       zh: 'mcpotato1123 的主页 —— 小米手环快应用非官方移植，以及几个纯本地运行的小工具。很高兴你来到这里，欢迎访问。',
       en: 'The home page of mcpotato1123 — unofficial Mi Band quick-app ports, plus a few tools that run entirely in your browser. Glad you dropped by.',

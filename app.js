@@ -1525,6 +1525,9 @@
 
     var box = document.createElement('div');
     box.id = 'diagBox';
+    /* selectable：全站正文都禁止了选中，但诊断面板的内容恰恰是**要拿去复制的**，
+       必须把选择能力还回来，否则这个面板只能照着屏幕手抄。 */
+    box.className = 'selectable';
     box.style.cssText = 'position:fixed;z-index:99999;left:0;top:0;right:0;max-height:82vh;overflow:auto;' +
       'background:#fff;color:#111;font:12px/1.5 monospace;padding:10px;white-space:pre-wrap;' +
       'border-bottom:2px solid #2563eb';

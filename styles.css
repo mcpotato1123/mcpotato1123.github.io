@@ -34,7 +34,7 @@
      作用是把「浏览器拿到的到底是哪一版 CSS」变成可读的事实 ——
      否则一遇到「改了没生效」，只能在缓存 / 编码 / 嵌套之间瞎猜。
      **每次改完这个文件记得更新这里的日期。** */
-  --css-rev:"2026-10-11 glass-menu";
+  --css-rev:"2026-10-11 no-select";
 
   /* ---------- 主色 ----------
      站点主色沿用原有品牌蓝 #2563eb。派生令牌一律 color-mix，
@@ -445,6 +445,29 @@ svg:not(.ic):not(.sprite){width:1em;height:1em;display:block;flex:none}
 
 ::selection{background:var(--accent-soft);color:var(--accent-ink)}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+/* ---------- 禁止选中正文文字 --------------------------------------------
+   整页的正文、标题、按钮文字都不允许拖选。
+   原因：站上到处都是拖拽类交互（卡片倾斜、取色器、自定义光标），
+   鼠标一划就把文字涂蓝，既打断交互也难看。
+
+   但**不能一刀切**：下面这些地方必须还能选中，否则会真的伤到功能 ——
+     · 输入框 / 可编辑区：取色器的十六进制框、日后的搜索框
+     · pre / code：代码片段的意义就是给人复制
+     · .selectable：留给「确实需要复制」的文本（诊断面板就用了它）
+   用 :where() 包起来是为了让这条规则的优先级为 0，
+   以后任何更具体的选择器都能轻松覆盖，不会被这里卡住。
+   ---------------------------------------------------------------------- */
+body{
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  user-select:none;
+}
+:where(input,textarea,select,[contenteditable],pre,code,kbd,samp,.selectable){
+  -webkit-user-select:text;
+  -moz-user-select:text;
+  user-select:text;
+}
 
 .shell{width:min(var(--shell),calc(100% - 48px));margin-inline:auto}
 .sr-only{
@@ -1579,16 +1602,33 @@ a.update-row:hover .update-arrow{transform:translate(3px,-3px);color:var(--accen
 .ginka-close:hover{background:var(--surface-2);color:var(--ink)}
 .ginka-close .ic{font-size:15px}
 
-/* 窄屏：横条改成折行（标签一行、文字一行），否则 375px 下会把句子挤成细长条。
-   侧边距缩到 12px，给小屏多留一点文字宽度。 */
+/* 窄屏：压扁。
+   原来的写法是 flex-wrap 折行 —— 标签独占一行、文字再占两行，整条约 92px 高，
+   横跨屏幕却比顶栏还厚。现在改成**不折行**：标签缩成小胶囊贴在第一行左侧，
+   文字最多三行（line-clamp 兜底，永远不会把横幅撑高），关闭按钮垂直居中。
+   实测高度从约 92px 降到约 54px（两行文字时）。
+   左对齐而不是居中：两行以上的文字居中会让每行右端参差，看起来更碎。 */
 @media (max-width:560px){
-  .ginka-banner{left:12px;right:12px;border-radius:var(--r-s)}
+  .ginka-banner{left:10px;right:10px;border-radius:12px}
   .ginka-inner{
-    flex-wrap:wrap;justify-content:flex-start;
-    gap:8px;padding:11px 13px;
-    font-size:13px;
+    flex-wrap:nowrap;align-items:flex-start;justify-content:flex-start;
+    gap:8px;padding:8px 10px;
+    min-height:0;
+    font-size:12px;line-height:1.45;
+    text-align:left;
   }
-  .ginka-close{margin-left:auto}
+  .ginka-banner .ginka-tag{
+    padding:2px 7px;font-size:10px;line-height:1.5;
+    margin-top:1px;             /* 与文字首行视觉对齐 */
+  }
+  .ginka-banner .ginka-text{
+    /* 最多三行；超出用省略号。宁可截断也不要让横幅一层层长高 */
+    display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;
+    line-clamp:3;
+    overflow:hidden;
+  }
+  .ginka-close{width:24px;height:24px;margin-left:auto;align-self:center}
+  .ginka-close .ic{font-size:13px}
 }
 @media (prefers-reduced-motion:reduce){
   .ginka-banner{animation:none}
