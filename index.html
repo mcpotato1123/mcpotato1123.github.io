@@ -405,28 +405,16 @@
 
 <!-- ===================== 首屏 ===================== -->
 <section class="hero" id="top">
-  <!-- 首屏背景：整块铺一层动态壁纸，压一层渐变 —— 左深右浅，
+  <!-- 首屏背景：整块铺这张插画，压一层渐变 —— 左深右浅，
        左边保证文字对比度，右边让画面透出来，四边化进暖纸底。
 
-       视频必备属性缺一不可：
-         muted      —— 浏览器只允许**静音**视频自动播放（源视频已去音轨）
-         playsinline—— iOS 上不加会强制全屏
-         loop       —— 循环
-         poster     —— 视频首帧（用 Windows Shell 从源视频抽出），
-                       在解码出第一帧前顶住画面，避免闪白
-
-       为什么不写两个 <source>（720p / 540p）：<source media> 在 <video> 里的
-       浏览器支持极差，写了也不会按视口选，反而可能两个都不加载。
-       改由 app.js 在加载前按窗口宽度挑一个源（见 initHeroVideo）。
-
-       降级：prefers-reduced-motion 的用户看到静态图；视频出错也会回落到静态图。 -->
+       为什么回到静态图：中间试过两版动态壁纸（16:9 的横构图素材），
+       它们的猫耳都贴画面顶边，在「宽而扁」的窗口里会被裁掉，
+       还得靠 transform 下移来躲固定顶栏 —— 一层层补丁越叠越脆。
+       这张 2000×1247 的原图纵向留白足够，裁切友好得多，也更轻（90 KB vs 1.1 MB）。
+       width/height 写的是图片真实像素，让浏览器提前预留正确空间、避免加载跳动。 -->
   <div class="hero-bg" aria-hidden="true">
-    <video class="hero-bg-video" id="heroVideo"
-           autoplay muted loop playsinline preload="auto"
-           poster="hero-bg-poster.webp" disablepictureinpicture>
-      <source src="hero-bg.mp4" type="video/mp4" data-hd="hero-bg.mp4" data-sd="hero-bg-540.mp4">
-    </video>
-    <img class="hero-bg-still" src="hero-bg.webp" width="1812" height="1080"
+    <img src="hero-bg.webp" width="2000" height="1247"
          fetchpriority="high" decoding="async" alt="">
   </div>
 

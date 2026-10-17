@@ -34,7 +34,7 @@
      作用是把「浏览器拿到的到底是哪一版 CSS」变成可读的事实 ——
      否则一遇到「改了没生效」，只能在缓存 / 编码 / 嵌套之间瞎猜。
      **每次改完这个文件记得更新这里的日期。** */
-  --css-rev:"2026-10-11 cat-cursor2";
+  --css-rev:"2026-10-11 static-hero";
 
   /* ---------- 主色 ----------
      站点主色沿用原有品牌蓝 #2563eb。派生令牌一律 color-mix，
@@ -146,6 +146,9 @@
 
   --cursor-ring:rgba(37,99,235,.55);
   --cursor-ring:color-mix(in srgb, var(--accent) 55%, transparent);
+  --cursor-ring-bg:rgba(37,99,235,.10);
+  --cursor-ring-bg:color-mix(in srgb, var(--accent) 10%, transparent);
+  --cursor-dot:var(--accent);
 
   /* 主题切换的圆形揭示：中心与半径由 app.js 点击时写入 */
   --vt-x:50%;
@@ -252,6 +255,8 @@
 
   --cursor-ring:rgba(91,140,255,.7);
   --cursor-ring:color-mix(in srgb, var(--accent) 70%, transparent);
+  --cursor-ring-bg:rgba(91,140,255,.12);
+  --cursor-ring-bg:color-mix(in srgb, var(--accent) 12%, transparent);
 
   /* 暗色下的玻璃：底色压得更透一点，高光收弱 ——
      暗背景上白色高光超过 .1 会发灰发脏，玻璃看上去像塑料。 */
@@ -483,8 +488,8 @@ body.custom-cursor :is(input,textarea,select,[contenteditable]){cursor:auto !imp
 .cursor-dot,.cursor-ring{position:absolute;top:0;left:0;will-change:transform}
 /* 指针本体：猫猫头（完整角色，不做二次裁切）。
    cursor-cat.png 96×96：原图白底用「从边缘洪水填充」抠掉，
-   并额外留了 8% 透明边距，任何部分都不碰图标边界。
-   （之前那版把头发和下巴裁出了直边，缩到 32px 就成了一个方块。）
+   并额外留了 8% 透明边距，任何部分都不碰图标边界
+   （早前一版把头发和下巴裁出了直边，缩到 32px 就成了一个方块）。
    显示 36px，素材 96px ≈ 2.7 倍，视网膜下依然锐利。
    热区在正中央：margin 取一半，指针坐标落在猫脸中心。 */
 .cursor-dot{
@@ -903,53 +908,13 @@ html.fx-lite .hero-inner::after{animation:none}
   色相用暖调深色（--ink 家族）而不是纯黑，避免整块发灰。
 */
 .hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
-/* 背景层是「视频 + 静态图」两层叠在一起，都 position:absolute;inset:0。
-   注意 DOM 顺序：<video> 在前、<img> 在后，所以**静态图默认盖在视频之上**。
-   因此只有把静态图隐掉，视频才看得见 —— 这一点最初漏了，
-   导致视频明明在播、画面却一直是静态图（看起来像"没加载"）。
-
-   黑边：这部源视频（1920×1080）左右各带约 35px 纯黑边，是壁纸文件自带的。
-   本地没有可用的 crop 滤镜（精简版 ffmpeg 只启用了 scale/fps），
-   所以用**放大 6% 把它推出可视区**代替 —— 黑边占单侧 1.82%，
-   scale(1.06) 能推出 3.00%，余量足够。画质无损、不必重编码。
-   两层必须用同一个数值，否则交叉淡入时会看到画面跳一下。
-   换素材时先验证边缘：抽一帧看左右首末 8px 的亮度均值是否接近 0；
-   没有黑边就把这条 scale 去掉（否则白白裁掉 6% 画面）。
-
-   层序：静态图（底，可被隐掉）→ 视频（盖上去）→ ::after 渐变遮罩（最上）
-
-   取景：单人构图、人物偏右，所以横向取到 72%；**纵向取 0%（画面最上）**。
-   为什么纵向取 0 而不是居中：猫耳在画面纵向 6%~18% 处，本来就贴顶。
-   若纵向居中（之前是 42%），在「宽而扁」的窗口里
-   （1920×800、21:9 这类，容器比 16:9 更扁）纵向会被裁掉一大块 ——
-   实测耳朵会落到 -76~61px，直接跑出画面。
-   取 0% 后画面顶端对齐，耳朵稳定落在可见区内。
-
-   再配合 transform 把整体稍微下移：顶栏 + 预告横幅固定在顶部约 122px，
-   耳朵若不推开就会被压在那条带里。scale(1.10) 提供足够的放大余量，
-   translateY(5%) 让它落到 122px 以下。顶部因此会露出一条 --bg 色的缝隙，
-   但那里正好是渐变最不透明的一段（同一颜色），所以视觉上无缝。 */
-.hero-bg-video,
-.hero-bg-still{
-  position:absolute;inset:0;
+/* 取景：人物偏右，横向取 72% 把脸留在右半边（左边要给文字让位）；
+   纵向取 42%。这张图是 2000x1247（比 16:9 高），纵向留白充足，
+   居中取景时头部完整落在可见区内 —— 不需要像之前那两版 16:9
+   视频素材那样把纵向压到 0% 再靠 transform 下移来躲顶栏。 */
+.hero-bg img{
   width:100%;height:100%;object-fit:cover;
-  object-position:72% 0%;
-  transition:opacity .6s var(--ease);
-  transform:scale(1.10) translateY(5%);   /* 放大遮黑边 + 整体下移让出顶栏 */
-}
-.hero-bg-video{
-  opacity:0;                      /* 由 JS 在 canplay 后给容器加 .is-video 再淡入 */
-}
-.hero-bg-still{opacity:1}
-/* 视频可播之后：视频淡入、静态图淡出（两层交叉，不留闪白） */
-.hero-bg.is-video .hero-bg-video{opacity:1}
-.hero-bg.is-video .hero-bg-still{opacity:0}
-/* 用户要求减少动态效果：不播放视频，只显示静态图。
-   靠 :not() 排除，而不是用 !important 抢优先级 —— 这样规则之间不打架。 */
-@media (prefers-reduced-motion:reduce){
-  .hero-bg-video{display:none}
-  .hero-bg:not(.is-video) .hero-bg-still,
-  .hero-bg.is-video .hero-bg-still{opacity:1}
+  object-position:72% 42%;
 }
 .hero-bg::after{
   content:"";position:absolute;inset:0;
@@ -2263,10 +2228,9 @@ html[data-vt="theme"]::view-transition-new(root){
   .hero-actions{gap:10px;margin-top:24px}
   .particles,.scroll-cue{display:none}
 
-  /* 首屏背景：窄屏纵向几乎不裁（手机是竖长容器，只有横向裁），
-     但纵向同样取 0% 并把整体下移，保证猫耳不被顶栏压住。
-     视频与静态图两层都要写，否则窄屏下两层取景不一致、淡入时画面会跳。 */
-  .hero-bg-video,.hero-bg-still{object-position:64% 0%}
+  /* 首屏背景：窄屏改成横向取景（人物居中偏右），并把整体压暗加强，
+     否则文字会压在人物的浅色区域上、读不清 */
+  .hero-bg img{object-position:64% 38%}
   .hero-bg::after{
     background:
       linear-gradient(180deg,var(--bg) 0%,transparent 12%,transparent 72%,var(--bg) 100%),

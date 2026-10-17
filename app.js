@@ -169,54 +169,7 @@
     });
   }
 
-  /* ---------- 首屏背景视频 ----------------------------------------------
-     三件事：
-       1. 按窗口宽度挑 HD(720p) 或 SD(540p) 源 —— <source media> 在视频里不可靠
-       2. 能播才淡入；不能播就保持静态图（降级不留痕）
-       3. 用户开了「减少动态效果」就完全不加载视频
-
-     为什么不在 HTML 里写两个 <source media=...>：浏览器对 <video>/<source> 的
-     media 属性基本不实现，写了等于赌。用 JS 一行判断才是确定的。
-
-     自动播放的前提是 HTML 上的 muted 属性。少了它 Chrome/Safari 会拒绝播放，
-     而且**不报错**、只是静默失败 —— 所以必须有 canplay 兜底，不能假设它会播。 */
-  function initHeroVideo() {
-    var wrap = document.querySelector('.hero-bg');
-    var v = document.getElementById('heroVideo');
-    if (!wrap || !v) return;
-
-    /* 减少动态效果：不加载视频，静态图足够 */
-    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) { v.removeAttribute('autoplay'); v.pause(); v.remove(); return; }
-
-    /* 挑源：窄屏 540p（0.08 MB），宽屏 720p（0.13 MB） */
-    var src = v.querySelector('source');
-    if (src) {
-      var want = window.innerWidth <= 820 ? src.getAttribute('data-sd') : src.getAttribute('data-hd');
-      if (want && src.getAttribute('src') !== want) {
-        src.setAttribute('src', want);
-        v.load();                       /* 换源后必须 load() 才生效 */
-      }
-    }
-
-    var shown = false;
-    function show() {
-      if (shown) return;
-      shown = true;
-      wrap.classList.add('is-video');
-    }
-    v.addEventListener('canplay', show);
-    v.addEventListener('playing', show);
-    /* 出错就把 video 整个拿掉，只留静态图 —— 不留空白层 */
-    v.addEventListener('error', function () { v.remove(); }, true);
-
-    var p = v.play();
-    if (p && p.catch) p.catch(function () {
-      /* 自动播放被拒（省电模式等）：保持静态图，不打扰用户 */
-    });
-  }
-
-  /* ---------- 主色主题 --------------------------------------------------
+    /* ---------- 主色主题 --------------------------------------------------
      只改一个 data-accent 属性，颜色由 CSS 里预先定义好的令牌组接管
      （站内所有彩色都派生自 --accent，所以换一处就整页跟着换）。
 
@@ -229,6 +182,45 @@
     var VALID = ['blue', 'sky', 'teal', 'emerald', 'olive', 'amber',
                  'coral', 'rose', 'magenta', 'violet', 'indigo', 'graphite'];
     var root = document.documentElement;
+
+    /* ---- 先把顶栏开关接好 ------------------------------------------------
+       顺序很要紧：面板的开关和拦截层都必须**先**注册。
+       之前这段写在 paint() 之后 —— paint() 一旦抛错，后面的接线全部跳过，
+       表现就是「点调色图标毫无反应」，而且错误还被 stage() 吞进了 __initErrors，
+       界面上什么线索都没有。现在开关独立在最前面，后面再出错也不影响打开面板。
+       接线状态记到 data-wired 上，?diag=1 可以直接看到。 */
+    var toggle = document.getElementById('accentToggle');
+    var menu = document.getElementById('accentMenu');
+    (function wireToggle() {
+      if (!toggle || !menu) return;
+      function close() {
+        menu.hidden = true;
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+      toggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var open = menu.hidden;
+        menu.hidden = !open;
+        toggle.setAttribute('aria-expanded', String(open));
+        /* 与语言浮层互斥，避免两个面板叠在一起 */
+        var lm = document.getElementById('langMenu');
+        if (open && lm) lm.hidden = true;
+      });
+      document.addEventListener('click', function (e) {
+        if (!menu.hidden && !menu.contains(e.target) && e.target !== toggle) close();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') close();
+      });
+      toggle.setAttribute('data-wired', '1');
+    })();
+
+    /* 色珠点击用事件委托，同样提前注册（与 paint() 无关） */
+    document.addEventListener('click', function (e) {
+      var btn = e.target && e.target.closest ? e.target.closest('.accent-swatch') : null;
+      if (!btn) return;
+      apply(btn.getAttribute('data-accent'), true);
+    });
 
     /* ---- 任意色的对比度判定 ------------------------------------------
        自定义颜色是用户随手挑的，可能极浅（#ffff00）也可能极深（#101010）。
@@ -587,28 +579,6 @@
       });
     }
 
-    var toggle = document.getElementById('accentToggle');
-    var menu = document.getElementById('accentMenu');
-    if (!toggle || !menu) return;
-    function close() {
-      menu.hidden = true;
-      toggle.setAttribute('aria-expanded', 'false');
-    }
-    toggle.addEventListener('click', function (e) {
-      e.stopPropagation();
-      var open = menu.hidden;
-      menu.hidden = !open;
-      toggle.setAttribute('aria-expanded', String(open));
-      /* 与语言浮层互斥，避免两个面板叠在一起 */
-      var lm = document.getElementById('langMenu');
-      if (open && lm) lm.hidden = true;
-    });
-    document.addEventListener('click', function (e) {
-      if (!menu.hidden && !menu.contains(e.target) && e.target !== toggle) close();
-    });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') close();
-    });
   }
 
   /* ---------- 提前接管的变量（init 与收尾都要用） ---------- */
@@ -1459,28 +1429,30 @@
     L.push('card    ' + rect(card) + '  max-width=' + cs(card, 'max-width'));
     L.push('viewport' + rect(vp) + '  overflow=' + cs(vp, 'overflow'));
     L.push('         inline-height="' + (vp.style.height || '(空)') + '"');
-    /* 启动阶段有没有失败 —— 这一栏能直接回答「横幅为什么没出现 / 语言为什么切不了」 */
+    /* 主色面板：回答「点了调色图标为什么没反应」。
+       data-wired 缺失 = 开关接线没跑到（initAccent 早期出错）；
+       hidden=true 且刚点过 = 状态没翻转。 */
+    var at = document.getElementById('accentToggle');
+    var am = document.getElementById('accentMenu');
+    L.push('调色面板: 按钮=' + (at ? '在' : '缺失') +
+      '  wired=' + (at ? (at.getAttribute('data-wired') || '否') : '-') +
+      '  hidden=' + (am ? am.hidden : '?') +
+      '  display=' + (am ? cs(am, 'display') : '?') +
+      '  当前主色=' + (d.getAttribute('data-accent') || 'blue（默认归属）'));
     L.push('-- 启动阶段 --');
     L.push(window.__initErrors.length
       ? '失败的阶段: ' + window.__initErrors.join(' | ')
-      : '五个阶段全部成功 (init / refraction / banner / i18n / heroVideo)');
-    /* 首屏视频：这一栏回答「视频为什么没显示」。
-       常见原因是自动播放被拒（省电模式、未静音）、
-       或者 is-video 没加上（canplay 没触发）。 */
-    var hv = document.getElementById('heroVideo');
-    var hw = document.querySelector('.hero-bg');
-    if (!hv) {
-      L.push('首屏视频: 元素不在 DOM（reduced-motion 或加载出错后已移除）');
+      : '五个阶段全部成功 (init / refraction / banner / i18n / accent)');
+    /* 首屏背景：静态图，只需确认取景与裁切相关样式是否生效 */
+    var hbg = document.querySelector('.hero-bg img');
+    if (hbg) {
+      var hw = document.querySelector('.hero-bg');
+      L.push('首屏背景: 已加载=' + (hbg.complete && hbg.naturalWidth > 0) +
+        '  原图 ' + hbg.naturalWidth + 'x' + hbg.naturalHeight +
+        '  object-position=' + cs(hbg, 'objectPosition'));
+      L.push('  横向主体色(左侧压暗是否生效): ' + (hw ? cs(hw, 'zIndex') : '?'));
     } else {
-      L.push('首屏视频: readyState=' + hv.readyState + '  paused=' + hv.paused +
-        '  muted=' + hv.muted + '  networkState=' + hv.networkState);
-      L.push('  当前源: ' + (hv.currentSrc || '(空)').split('/').pop() +
-        '  .is-video=' + (hw ? hw.classList.contains('is-video') : '?') +
-        '  opacity=' + cs(hv, 'opacity'));
-      L.push('  当前宽度 ' + window.innerWidth + 'px -> 期望源 ' +
-        (window.innerWidth <= 820 ? 'hero-bg-540.mp4' : 'hero-bg.mp4'));
-      L.push('  reduced-motion=' + (window.matchMedia &&
-        matchMedia('(prefers-reduced-motion: reduce)').matches));
+      L.push('首屏背景: 未找到 .hero-bg img');
     }
     L.push('语言: I18N=' + (window.I18N ? window.I18N.get() : '未加载') +
       '  html[data-lang]=' + (d.getAttribute('data-lang') || '(空)') +
@@ -1577,7 +1549,6 @@
   stage('banner', initBanner);
   stage('i18n', initLang);
   stage('accent', initAccent);
-  stage('heroVideo', initHeroVideo);
   if (new URLSearchParams(location.search).get('diag') === '1') runDiagnostics();
 
   /* 保险丝：无论 init 是否成功，只要正文还处于隐藏态就把元素放出来 */
