@@ -82,9 +82,9 @@ window.I18N = (function () {
     'works.kicker': { zh: '作品下载', en: 'Downloads', ja: 'ダウンロード' },
     'works.title':  { zh: '已经<em>戴得上手的作品。</em>', en: 'Ports you can <em>wear right now.</em>', ja: 'もう<em>身につけられる作品。</em>' },
     'works.lede': {
-      zh: '目前上线的两款小米手环移植作品，均为非官方个人移植、免费提供。点下面的按钮会唤起 Astrobox 直接安装。',
-      en: 'Two Mi Band ports are live so far — unofficial, made by one person, free of charge. The buttons below hand off to Astrobox to install.',
-      ja: '現在公開中のスマートバンド移植は2作品。いずれも個人による非公式移植で、無料です。下のボタンから Astrobox を呼び出してインストールできます。'
+      zh: '目前公开的四款小米手环移植作品，均为非官方个人移植、免费提供。点下面的按钮会唤起 Astrobox 直接安装。',
+      en: 'Four Mi Band ports are public so far — unofficial, made by one person, free of charge. The buttons below hand off to Astrobox to install.',
+      ja: '現在公開中のスマートバンド移植は4作品。いずれも個人による非公式移植で、無料です。下のボタンから Astrobox を呼び出してインストールできます。'
     },
     'works.install':  { zh: '前往 Astrobox 安装', en: 'Install via Astrobox', ja: 'Astrobox でインストール' },
     'works.source':   { zh: '查看源码', en: 'View source', ja: 'ソースを見る' },
@@ -153,10 +153,25 @@ window.I18N = (function () {
     'collage.prev':   { zh: '上一部作品', en: 'Previous work', ja: '前の作品' },
     'collage.next':   { zh: '下一部作品', en: 'Next work', ja: '次の作品' },
     'collage.p1':     { zh: 'Galgame 移植合集', en: 'Galgame port collection', ja: 'ギャルゲー移植コレクション' },
-    'collage.p1meta': { zh: '3 部作品 · 手环 9 Pro/10 Pro', en: '3 works · Band 9 Pro / 10 Pro', ja: '3作品 · バンド 9 Pro / 10 Pro' },
-    'collage.p3meta': { zh: '快应用 · 手环 9 Pro', en: 'Quick app · Band 9 Pro', ja: 'クイックアプリ · バンド 9 Pro' },
+    'collage.p1meta': { zh: '4 部作品 · 手环 9 Pro/10 Pro', en: '4 works · Band 9 Pro / 10 Pro', ja: '4作品 · バンド 9 Pro / 10 Pro' },    'collage.p3meta': { zh: '快应用 · 手环 9 Pro', en: 'Quick app · Band 9 Pro', ja: 'クイックアプリ · バンド 9 Pro' },
     'collage.p2meta': { zh: '快应用 · 手环 9 Pro/10 Pro', en: 'Quick app · Band 9 Pro / 10 Pro', ja: 'クイックアプリ · バンド 9 Pro / 10 Pro' },
     'collage.p4meta': { zh: '待上传 · 源码已公开', en: 'Pending · source available', ja: '未アップロード · ソース公開中' },
+    'collage.p5meta': { zh: '每日构建 · 源码已公开', en: 'Nightly build · source available', ja: 'デイリービルド · ソース公開中' },
+
+    /* ---------- 作品四：黄莓C（demo） ---------- */
+    'w4.title':   { zh: '黄莓C', en: 'HUANGMEI C', ja: '黄莓C' },
+    'w4.summary': {
+      zh: '《黄莓C》的小米手环非官方移植版。目前是 demo 阶段，处于每日构建状态，安装包还没上传到 Astrobox，源码已经先公开了。',
+      en: 'An unofficial Mi Band port of HUANGMEI C. It is a demo in nightly-build stage — the build is not on Astrobox yet, but the source is already public.',
+      ja: '『黄莓C』のスマートバンド非公式移植版。現在は demo 段階でデイリービルド中、ビルドはまだ Astrobox に上がっていませんが、ソースは先に公開しています。'
+    },
+    'tag.demo':   { zh: 'Demo', en: 'Demo', ja: 'Demo' },
+    'tag.pkg':    { zh: 'com.huangmeic.band', en: 'com.huangmeic.band', ja: 'com.huangmeic.band' },
+    'works.hintPendingBuild': {
+      zh: '每日构建阶段，安装包还没上传到 Astrobox，所以暂时装不了；想先看代码点「查看源码」。',
+      en: 'It is in nightly-build stage and the build is not on Astrobox yet, so it cannot be installed for now — press \u201cView source\u201d to look at the code first.',
+      ja: '現在はデイリービルド段階で、ビルドはまだ Astrobox に上がっていないため今はインストールできません。先にコードを見たい場合は「ソースを見る」を押してください。'
+    },
 
     /* ---------- 快速链接 ---------- */
     'links.kicker': { zh: '快速链接', en: 'Links', ja: 'リンク' },
@@ -266,6 +281,7 @@ window.I18N = (function () {
     'footer.offSite': { zh: '站外', en: 'Elsewhere', ja: 'サイト外' },
     'footer.ghProfile': { zh: 'GitHub 主页', en: 'GitHub profile', ja: 'GitHub プロフィール' },
     'footer.srcObe':  { zh: 'ourbriefeternity-band 源码', en: 'ourbriefeternity-band source', ja: 'ourbriefeternity-band ソース' },
+    'footer.srcHm':   { zh: 'huangmeic-band 源码', en: 'huangmeic-band source', ja: 'huangmeic-band ソース' },
     'footer.srcGal':  { zh: 'galgod-band 源码', en: 'galgod-band source', ja: 'galgod-band ソース' },
     'footer.srcTiny': { zh: 'tinyshadows-band 源码', en: 'tinyshadows-band source', ja: 'tinyshadows-band ソース' },
     'footer.mcbbs':   { zh: 'MCBBS 存档', en: 'MCBBS archive', ja: 'MCBBS アーカイブ' },
@@ -274,6 +290,7 @@ window.I18N = (function () {
     'footer.relTinySrc': { zh: '《小小的身影》移植源码', en: 'Tiny Shadows port source', ja: '『小さな影』移植ソース' },
     'footer.relGalSrc':  { zh: 'GalGod 移植源码', en: 'GalGod port source', ja: 'GalGod 移植ソース' },
     'footer.relObeSrc':  { zh: '《永恒与星辰与日常》源码 · 安装包待上传', en: 'Eternity port source · build pending', ja: '『永遠と星々と日常』ソース · ビルド準備中' },
+    'footer.relHmSrc':   { zh: '《黄莓C》源码 · 安装包待上传', en: 'HUANGMEI C port source · build pending', ja: '『黄莓C』ソース · ビルド準備中' },
     'footer.relMirror':  { zh: 'Linux 镜像合集', en: 'Linux image collection', ja: 'Linux イメージ集' },
     'footer.relMirrorSub': { zh: '123 云盘直链', en: 'Direct link on 123 Cloud Drive', ja: '123 クラウドの直リンク' },
     'footer.relGhList':  { zh: 'GitHub 仓库列表', en: 'GitHub repositories', ja: 'GitHub リポジトリ一覧' },
@@ -281,14 +298,14 @@ window.I18N = (function () {
 
     'footer.disclaimer': { zh: '免责声明', en: 'Disclaimer', ja: '免責事項' },
     'footer.disclaimer1': {
-      zh: '「作品下载」中的两款移植均为面向小米 Vela 设备的<strong>非官方个人移植</strong>，并非原作官方版本或授权衍生产品，与原作者、小米（Xiaomi）及 Astrobox 官方均无关联。《小小的身影，重叠的内心》与《想成为 Galgame 领域大神！！！》（GalGod）的名称、角色、剧情与美术资源，著作权均归各自原作者及相关权利人所有，本站不主张任何原作权利。',
-      en: 'The ports under “Downloads” are <strong>unofficial personal ports</strong> for Xiaomi Vela devices. They are not official releases or licensed derivatives, and are unaffiliated with the original authors, Xiaomi, or Astrobox. Rights to the titles, characters, story and artwork of Tiny Shadows, Overlapping Hearts and I Want to Be a Galgame Master!!! (GalGod) belong to their respective authors and rights holders; this site claims no rights over the original works.',
-      ja: '「ダウンロード」に掲載している移植は、Xiaomi Vela デバイス向けの<strong>非公式な個人移植</strong>であり、原作の公式版や許諾を得た派生作品ではありません。原作者、Xiaomi、Astrobox のいずれとも関係ありません。『小さな影、重なる心』および『ギャルゲーの神になりたい！！！』（GalGod）の名称・キャラクター・シナリオ・美術素材の著作権は、それぞれの原作者および権利者に帰属し、当サイトはいかなる原作の権利も主張しません。'
+      zh: '「作品下载」中的四款移植均为面向小米 Vela 设备的<strong>非官方个人移植</strong>，并非原作官方版本或授权衍生产品，与原作者、小米（Xiaomi）及 Astrobox 官方均无关联。《小小的身影，重叠的内心》《想成为 Galgame 领域大神！！！》（GalGod）《永恒与星辰与日常》《黄莓C》的名称、角色、剧情与美术资源，著作权均归各自原作者及相关权利人所有，本站不主张任何原作权利。',
+      en: 'The four ports under “Downloads” are <strong>unofficial personal ports</strong> for Xiaomi Vela devices. They are not official releases or licensed derivatives, and are unaffiliated with the original authors, Xiaomi, or Astrobox. Rights to the titles, characters, story and artwork of Tiny Shadows, Overlapping Hearts; I Want to Be a Galgame Master!!! (GalGod); Eternity, the Stars, and Everyday; and HUANGMEI C belong to their respective authors and rights holders; this site claims no rights over the original works.',
+      ja: '「ダウンロード」に掲載している4作品の移植は、Xiaomi Vela デバイス向けの<strong>非公式な個人移植</strong>であり、原作の公式版や許諾を得た派生作品ではありません。原作者、Xiaomi、Astrobox のいずれとも関係ありません。『小さな影、重なる心』『ギャルゲーの神になりたい！！！』（GalGod）『永遠と星々と日常』『黄莓C』の名称・キャラクター・シナリオ・美術素材の著作権は、それぞれの原作者および権利者に帰属し、当サイトはいかなる原作の権利も主張しません。'
     },
     'footer.disclaimer2': {
-      zh: '两款移植均免费提供，不收取任何费用，也不代表原作售价；请通过正规渠道支持原作。使用、修改或传播本站所涉内容所产生的<strong>风险与责任由使用者自行承担</strong>。',
-      en: 'Both ports are provided free of charge, and this does not reflect the price of the original works; please support the originals through official channels. <strong>Any risk or liability arising from using, modifying or redistributing content referenced here rests with the user.</strong>',
-      ja: '移植は無料で提供しており、費用は一切かかりません。原作の価格を示すものでもありません。原作は正規の手段でご支援ください。当サイトの内容を利用・改変・配布することで生じる<strong>リスクと責任は利用者ご自身が負うものとします</strong>。'
+      zh: '四款移植均免费提供，不收取任何费用，也不代表原作售价；请通过正规渠道支持原作。使用、修改或传播本站所涉内容所产生的<strong>风险与责任由使用者自行承担</strong>。',
+      en: 'All four ports are provided free of charge, and this does not reflect the price of the original works; please support the originals through official channels. <strong>Any risk or liability arising from using, modifying or redistributing content referenced here rests with the user.</strong>',
+      ja: '移植はいずれも無料で提供しており、費用は一切かかりません。原作の価格を示すものでもありません。原作は正規の手段でご支援ください。当サイトの内容を利用・改変・配布することで生じる<strong>リスクと責任は利用者ご自身が負うものとします</strong>。'
     },
     'footer.copyright': { zh: '持续更新中', en: 'updated regularly', ja: '随時更新中' },
     'footer.builtWith': { zh: '用 HTML / CSS / JS 手写，没有框架', en: 'Hand-written in HTML / CSS / JS — no framework', ja: 'HTML / CSS / JS で手書き。フレームワーク不使用' },
@@ -298,9 +315,9 @@ window.I18N = (function () {
        （改名要同时改 HTML、CSS、JS 三处，收益为零）。 */
     'ginka.tag':  { zh: '移植预告', en: 'Coming next', ja: '移植予告' },
     'ginka.text': {
-      zh: '下一部：<strong>黄莓C</strong> demo —— 正在做小米手环移植，做好会在这里上线。',
-      en: 'Next up: the <strong>HUANGMEI C</strong> demo — a Mi Band port is in the works and will appear here when it is ready.',
-      ja: '次は <strong>黄莓C</strong> の demo — スマートバンド移植を進めています。完成したらここに公開します。'
+      zh: '下一部：<strong>黄莓C</strong> demo —— 已进入每日构建状态，如需体验请使用仓库内资源。',
+      en: 'Next up: the <strong>HUANGMEI C</strong> demo — now in nightly builds. To try it, use the resources in the repository.',
+      ja: '次は <strong>黄莓C</strong> の demo — デイリービルド段階に入りました。試したい場合はリポジトリ内のリソースをご利用ください。'
     },
 
 

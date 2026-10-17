@@ -924,7 +924,16 @@ html.fx-lite .hero-inner::after{animation:none}
 
 /* ---------- 项目卡 ------------------------------------------------------ */
 
-.product-grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+/* 作品卡网格：两列。
+   曾经为了「第四张卡不换行」改成 auto-fit，但那是错的方向 ——
+   两列本来就是这套设计（卡片比例、封面取景、行距都是按两列调的），
+   四张卡排成 2×2 才和下面的区块节奏一致。
+   加卡片时不用改这里：新卡会自动进入下一行。 */
+.product-grid{
+  position:relative;z-index:1;display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:20px;
+}
 
 .product-card{
   position:relative;display:flex;flex-direction:row;align-items:stretch;
