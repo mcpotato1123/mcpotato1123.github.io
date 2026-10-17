@@ -41,6 +41,22 @@
   d.dataset.themeState = resolved;
   d.dataset.themePref = pref;
 
+  /* 主色主题：和明暗一样必须在首帧就定好，否则会先闪一下默认蓝再变色。
+     默认 blue 不写属性，让 :root 里的品牌蓝生效。
+     自定义色存在另一条记录里，里面**连同算好的 --accent-fg 一起存**，
+     这样首帧脚本不必重复一遍对比度计算 —— 避免了同一套逻辑写两处。 */
+  var accent='blue';
+  try{ accent = localStorage.getItem('cenilla-accent') || 'blue'; }catch(e){}
+  if(accent === 'custom'){
+    var cz=null;
+    try{ cz = JSON.parse(localStorage.getItem('cenilla-accent-custom') || 'null'); }catch(e){}
+    if(cz && /^#[0-9a-f]{6}$/i.test(cz.c || '')){
+      d.style.setProperty('--accent', cz.c);
+      if(cz.fg) d.style.setProperty('--accent-fg', cz.fg);
+    }else{ accent='blue'; }          /* 记录损坏就退回品牌蓝，不留下半个状态 */
+  }
+  if(accent !== 'blue' && accent !== 'custom') d.dataset.accent = accent;
+
   /* 主题色：把「当前生效的那个颜色」直接写成唯一一条，避免与 media 版打架 */
   var metaL=document.getElementById('metaThemeLight');
   var metaD=document.getElementById('metaThemeDark');
@@ -77,6 +93,8 @@
   <symbol id="i-chev-down" viewBox="0 0 24 24"><path d="M5 9l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M6.5 6.5 17.5 17.5M17.5 6.5 6.5 17.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
   <symbol id="i-globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8.4"/><path d="M3.6 12h16.8M12 3.6c2.2 2.4 3.3 5.2 3.3 8.4s-1.1 6-3.3 8.4c-2.2-2.4-3.3-5.2-3.3-8.4S9.8 6 12 3.6Z"/></g></symbol>
+  <!-- 调色板：外轮廓是带拇指孔的画家调色板，里面三个小色点代表可选主色 -->
+  <symbol id="i-palette" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2a8.8 8.8 0 1 0 0 17.6c1.4 0 1.9-.7 1.9-1.5 0-.5-.3-.9-.3-1.4 0-.9.7-1.5 1.7-1.5h1.4c2 0 3.4-1.5 3.4-3.6C20.1 7.2 16.5 3.2 12 3.2Z"/><circle cx="8" cy="9" r="1.1" fill="currentColor" stroke="none"/><circle cx="12.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/><circle cx="16.2" cy="9.2" r="1.1" fill="currentColor" stroke="none"/></g></symbol>
   <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3.2 13.7 9l5.8 1.7-5.8 1.7L12 18.2 10.3 12.4 4.5 10.7 10.3 9Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M18.5 4v3M20 5.5h-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
   <!-- i-clock：通用语义图标（等待/时间）。曾用于项目卡的「弃更模式」角标，
        那批卡删掉后被当死代码移除过；《永恒与星辰与日常》审核期间又用了一次。
@@ -205,10 +223,113 @@
         <svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg>
         <span class="lang-code" id="langCode">中</span>
       </button>
+      <button class="accent-toggle" id="accentToggle" type="button" aria-haspopup="true" aria-expanded="false"
+              data-i18n-attr="aria-label:a11y.accent" aria-label="切换主色">
+        <svg class="ic" aria-hidden="true"><use href="#i-palette"/></svg>
+      </button>
       <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="mobileMenu"
               data-i18n-attr="aria-label:a11y.menu" aria-label="打开菜单">
         <span></span><span></span>
       </button>
+    </div>
+
+    <!-- 调色盘：标题行显示当前色名，下面是 4×2 色珠。
+         每个色珠内嵌一枚对勾（只在选中时显示），所以选中态不依赖颜色识别；
+         style="--i:n" 给错落入场动画排延迟。 -->
+    <div class="accent-menu" id="accentMenu" role="menu" hidden>
+      <div class="accent-menu-head">
+        <span data-i18n="accent.title">主色</span>
+        <strong id="accentName">品牌蓝</strong>
+      </div>
+      <div class="accent-grid">
+        <button class="accent-swatch" type="button" role="menuitemradio" data-accent="blue" style="--i:0"
+                aria-checked="true" data-i18n-attr="aria-label:accent.blue" aria-label="品牌蓝">
+          <svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg>
+        </button>
+        <button class="accent-swatch" type="button" role="menuitemradio" data-accent="sky" style="--i:1"
+                aria-checked="false" data-i18n-attr="aria-label:accent.sky" aria-label="天蓝">
+          <svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg>
+        </button>
+        <button class="accent-swatch" type="button" role="menuitemradio" data-accent="teal" style="--i:2"
+                aria-checked="false" data-i18n-attr="aria-label:accent.teal" aria-label="青色">
+          <svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg>
+        </button>
+        <button class="accent-swatch" type="button" role="menuitemradio" data-accent="emerald" style="--i:3"
+                aria-checked="false" data-i18n-attr="aria-label:accent.emerald" aria-label="墨绿">
+          <svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg>
+        </button>
+        <button class="accent-swatch" type="button" role="menuitemradio" data-accent="olive" style="--i:4"
+                aria-checked="false" data-i18n-attr="aria-label:accent.olive" aria-label="橄榄">
+          <svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg>
+        </button>
+        <button class="accent-swatch" type="button" role="menuitemradio" data-accent="amber" style="--i:5"
+                aria-checked="false" data-i18n-attr="aria-label:accent.amber" aria-label="琥珀">
+          <svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg>
+        </button>
+        <button class="accent-swatch" type="button" role="menuitemradio" data-accent="coral" style="--i:6"
+                aria-checked="false" data-i18n-attr="aria-label:accent.coral" aria-label="珊瑚">
+          <svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg>
+        </button>
+        <button class="accent-swatch" type="button" role="menuitemradio" data-accent="rose" style="--i:7"
+                aria-checked="false" data-i18n-attr="aria-label:accent.rose" aria-label="玫红">
+          <svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg>
+        </button>
+        <button class="accent-swatch" type="button" role="menuitemradio" data-accent="magenta" style="--i:8"
+                aria-checked="false" data-i18n-attr="aria-label:accent.magenta" aria-label="品红">
+          <svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg>
+        </button>
+        <button class="accent-swatch" type="button" role="menuitemradio" data-accent="violet" style="--i:9"
+                aria-checked="false" data-i18n-attr="aria-label:accent.violet" aria-label="紫罗兰">
+          <svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg>
+        </button>
+        <button class="accent-swatch" type="button" role="menuitemradio" data-accent="indigo" style="--i:10"
+                aria-checked="false" data-i18n-attr="aria-label:accent.indigo" aria-label="靛蓝">
+          <svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg>
+        </button>
+        <button class="accent-swatch" type="button" role="menuitemradio" data-accent="graphite" style="--i:11"
+                aria-checked="false" data-i18n-attr="aria-label:accent.graphite" aria-label="石墨">
+          <svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg>
+        </button>
+      </div>
+
+      <!-- 自由取色：不调用系统取色器（Windows 那个弹窗又大又方，和本站风格完全不搭），
+           改用网页内嵌的取色器：
+             · 上方一块「饱和度 × 明度」渐变面板，圆形取色点可拖动
+             · 下方一条色相条
+             · 再下方十六进制输入框，可直接键入精确色号
+           色卡（整行）点击即展开/收起取色器。 -->
+      <div class="accent-custom">
+        <button class="accent-custom-pick" id="accentCustomBtn" type="button"
+                aria-expanded="false" aria-controls="accentPicker"
+                data-i18n-attr="aria-label:accent.custom" aria-label="自定义主色">
+          <span class="accent-custom-face" aria-hidden="true">
+            <svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg>
+          </span>
+          <span class="accent-custom-label" data-i18n="accent.custom">自定义</span>
+          <span class="accent-custom-hex" id="accentHex">#2563EB</span>
+        </button>
+
+        <div class="accent-picker" id="accentPicker" hidden>
+          <div class="accent-sv" id="accentSV" role="slider" tabindex="0"
+               aria-valuemin="0" aria-valuemax="100" aria-valuenow="92"
+               data-i18n-attr="aria-label:accent.sv" aria-label="饱和度与明度">
+            <span class="accent-sv-knob" id="accentSVKnob" aria-hidden="true"></span>
+          </div>
+          <div class="accent-hue" id="accentHue" role="slider" tabindex="0"
+               aria-valuemin="0" aria-valuemax="359" aria-valuenow="220"
+               data-i18n-attr="aria-label:accent.hue" aria-label="色相">
+            <span class="accent-hue-track" aria-hidden="true"></span>
+            <span class="accent-hue-knob" aria-hidden="true"></span>
+          </div>
+          <label class="accent-hex-field">
+            <span aria-hidden="true">#</span>
+            <input class="accent-hex-input" id="accentHexInput" type="text"
+                   value="2563EB" maxlength="6" spellcheck="false"
+                   autocomplete="off" inputmode="latin"
+                   data-i18n-attr="aria-label:accent.hex" aria-label="十六进制色号">
+          </label>
+        </div>
+      </div>
     </div>
 
     <div class="lang-menu" id="langMenu" role="menu" hidden>
@@ -234,6 +355,41 @@
     <button class="lang-pick" type="button" data-lang="en" aria-checked="false">English</button>
     <button class="lang-pick" type="button" data-lang="ja" aria-checked="false">日本語</button>
   </div>
+  <!-- 主色选择（手机）：与顶栏那枚浮层是同一批按钮，只是换了摆放位置 -->
+  <div class="mobile-menu-accent">
+    <button class="accent-swatch" type="button" data-accent="blue"
+            aria-checked="true" data-i18n-attr="aria-label:accent.blue" aria-label="品牌蓝"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
+    <button class="accent-swatch" type="button" data-accent="sky"
+            aria-checked="false" data-i18n-attr="aria-label:accent.sky" aria-label="天蓝"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
+    <button class="accent-swatch" type="button" data-accent="teal"
+            aria-checked="false" data-i18n-attr="aria-label:accent.teal" aria-label="青色"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
+    <button class="accent-swatch" type="button" data-accent="emerald"
+            aria-checked="false" data-i18n-attr="aria-label:accent.emerald" aria-label="墨绿"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
+    <button class="accent-swatch" type="button" data-accent="olive"
+            aria-checked="false" data-i18n-attr="aria-label:accent.olive" aria-label="橄榄"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
+    <button class="accent-swatch" type="button" data-accent="amber"
+            aria-checked="false" data-i18n-attr="aria-label:accent.amber" aria-label="琥珀"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
+    <button class="accent-swatch" type="button" data-accent="coral"
+            aria-checked="false" data-i18n-attr="aria-label:accent.coral" aria-label="珊瑚"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
+    <button class="accent-swatch" type="button" data-accent="rose"
+            aria-checked="false" data-i18n-attr="aria-label:accent.rose" aria-label="玫红"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
+    <button class="accent-swatch" type="button" data-accent="magenta"
+            aria-checked="false" data-i18n-attr="aria-label:accent.magenta" aria-label="品红"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
+    <button class="accent-swatch" type="button" data-accent="violet"
+            aria-checked="false" data-i18n-attr="aria-label:accent.violet" aria-label="紫罗兰"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
+    <button class="accent-swatch" type="button" data-accent="indigo"
+            aria-checked="false" data-i18n-attr="aria-label:accent.indigo" aria-label="靛蓝"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
+    <button class="accent-swatch" type="button" data-accent="graphite"
+            aria-checked="false" data-i18n-attr="aria-label:accent.graphite" aria-label="石墨"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
+    <!-- 手机端的自由取色：一枚彩虹色块，点开在菜单里展开同一个取色器 -->
+    <button class="accent-custom-pick is-mini" id="accentMiniBtn" type="button"
+            aria-expanded="false" aria-controls="accentPicker"
+            data-i18n-attr="aria-label:accent.custom" aria-label="自定义主色">
+      <span class="accent-custom-face" aria-hidden="true">
+        <svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg>
+      </span>
+    </button>
+  </div>
   <nav data-i18n-attr="aria-label:a11y.navMobile" aria-label="移动端导航">
     <a href="#works" data-i18n="nav.works">作品下载</a>
     <a href="#collage" data-i18n="nav.collage">合集卡片</a>
@@ -249,10 +405,28 @@
 
 <!-- ===================== 首屏 ===================== -->
 <section class="hero" id="top">
-  <!-- 首屏背景：整块铺这张插画，压一层渐变 —— 左深右浅，
-       左边保证文字对比度，右边让插画透出来，四边化进暖纸底。 -->
+  <!-- 首屏背景：整块铺一层动态壁纸，压一层渐变 —— 左深右浅，
+       左边保证文字对比度，右边让画面透出来，四边化进暖纸底。
+
+       视频必备属性缺一不可：
+         muted      —— 浏览器只允许**静音**视频自动播放（源视频已去音轨）
+         playsinline—— iOS 上不加会强制全屏
+         loop       —— 循环
+         poster     —— 视频首帧（用 Windows Shell 从源视频抽出），
+                       在解码出第一帧前顶住画面，避免闪白
+
+       为什么不写两个 <source>（720p / 540p）：<source media> 在 <video> 里的
+       浏览器支持极差，写了也不会按视口选，反而可能两个都不加载。
+       改由 app.js 在加载前按窗口宽度挑一个源（见 initHeroVideo）。
+
+       降级：prefers-reduced-motion 的用户看到静态图；视频出错也会回落到静态图。 -->
   <div class="hero-bg" aria-hidden="true">
-    <img src="hero-bg.webp" width="2000" height="1247"
+    <video class="hero-bg-video" id="heroVideo"
+           autoplay muted loop playsinline preload="auto"
+           poster="hero-bg-poster.webp" disablepictureinpicture>
+      <source src="hero-bg.mp4" type="video/mp4" data-hd="hero-bg.mp4" data-sd="hero-bg-540.mp4">
+    </video>
+    <img class="hero-bg-still" src="hero-bg.webp" width="1812" height="1080"
          fetchpriority="high" decoding="async" alt="">
   </div>
 

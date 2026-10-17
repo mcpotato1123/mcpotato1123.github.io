@@ -169,6 +169,448 @@
     });
   }
 
+  /* ---------- 首屏背景视频 ----------------------------------------------
+     三件事：
+       1. 按窗口宽度挑 HD(720p) 或 SD(540p) 源 —— <source media> 在视频里不可靠
+       2. 能播才淡入；不能播就保持静态图（降级不留痕）
+       3. 用户开了「减少动态效果」就完全不加载视频
+
+     为什么不在 HTML 里写两个 <source media=...>：浏览器对 <video>/<source> 的
+     media 属性基本不实现，写了等于赌。用 JS 一行判断才是确定的。
+
+     自动播放的前提是 HTML 上的 muted 属性。少了它 Chrome/Safari 会拒绝播放，
+     而且**不报错**、只是静默失败 —— 所以必须有 canplay 兜底，不能假设它会播。 */
+  function initHeroVideo() {
+    var wrap = document.querySelector('.hero-bg');
+    var v = document.getElementById('heroVideo');
+    if (!wrap || !v) return;
+
+    /* 减少动态效果：不加载视频，静态图足够 */
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) { v.removeAttribute('autoplay'); v.pause(); v.remove(); return; }
+
+    /* 挑源：窄屏 540p（0.08 MB），宽屏 720p（0.13 MB） */
+    var src = v.querySelector('source');
+    if (src) {
+      var want = window.innerWidth <= 820 ? src.getAttribute('data-sd') : src.getAttribute('data-hd');
+      if (want && src.getAttribute('src') !== want) {
+        src.setAttribute('src', want);
+        v.load();                       /* 换源后必须 load() 才生效 */
+      }
+    }
+
+    var shown = false;
+    function show() {
+      if (shown) return;
+      shown = true;
+      wrap.classList.add('is-video');
+    }
+    v.addEventListener('canplay', show);
+    v.addEventListener('playing', show);
+    /* 出错就把 video 整个拿掉，只留静态图 —— 不留空白层 */
+    v.addEventListener('error', function () { v.remove(); }, true);
+
+    var p = v.play();
+    if (p && p.catch) p.catch(function () {
+      /* 自动播放被拒（省电模式等）：保持静态图，不打扰用户 */
+    });
+  }
+
+  /* ---------- 主色主题 --------------------------------------------------
+     只改一个 data-accent 属性，颜色由 CSS 里预先定义好的令牌组接管
+     （站内所有彩色都派生自 --accent，所以换一处就整页跟着换）。
+
+     为什么单独一个函数：明暗主题那套绑了太多东西（圆形揭示动效、meta theme-color、
+     三态循环）。主色不需要那些 —— 它没有「跟随系统」，也不需要整屏揭示，
+     硬塞进 applyTheme 只会把两件事搅在一起。 */
+  function initAccent() {
+    var KEY = 'cenilla-accent';
+    var KEY_CUSTOM = 'cenilla-accent-custom';
+    var VALID = ['blue', 'sky', 'teal', 'emerald', 'olive', 'amber',
+                 'coral', 'rose', 'magenta', 'violet', 'indigo', 'graphite'];
+    var root = document.documentElement;
+
+    /* ---- 任意色的对比度判定 ------------------------------------------
+       自定义颜色是用户随手挑的，可能极浅（#ffff00）也可能极深（#101010）。
+       实心主色上的文字（按钮字）如果沿用白色，浅色主色会直接糊掉 ——
+       所以按 WCAG 相对亮度算一遍，选对比更高的那一侧。
+       这和八个预置色是同一套标准（预置色也是这么定的）。 */
+    function lum(hex) {
+      var h = hex.replace('#', '');
+      if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+      var v = [0, 2, 4].map(function (i) {
+        var c = parseInt(h.substr(i, 2), 16) / 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+    }
+    function ratio(a, b) {
+      var l1 = lum(a), l2 = lum(b);
+      var hi = Math.max(l1, l2), lo = Math.min(l1, l2);
+      return (hi + 0.05) / (lo + 0.05);
+    }
+    function pickFg(hex) {
+      /* 白 vs 近黑，谁对比高用谁 */
+      return ratio(hex, '#ffffff') >= ratio(hex, '#141011') ? '#ffffff' : '#141011';
+    }
+
+    /* ---- HEX <-> HSV ------------------------------------------------
+       SV 面板天然就是 HSV 的坐标：横轴 = 饱和度，纵轴 = 明度。
+       用 HSL 会多一层换算误差，而且面板上「最亮的一行」应当正好是纯色相，
+       只有 HSV 满足这个直觉。 */
+    function hexToHsv(hex) {
+      var h = hex.replace('#', '');
+      if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+      var r = parseInt(h.substr(0, 2), 16) / 255,
+          g = parseInt(h.substr(2, 2), 16) / 255,
+          b = parseInt(h.substr(4, 2), 16) / 255;
+      var mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn;
+      var hue = 0;
+      if (d) {
+        if (mx === r) hue = ((g - b) / d + (g < b ? 6 : 0));
+        else if (mx === g) hue = (b - r) / d + 2;
+        else hue = (r - g) / d + 4;
+        hue *= 60;
+      }
+      return { h: hue, s: mx ? d / mx : 0, v: mx };
+    }
+    function hsvToHex(h, s, v) {
+      h = ((h % 360) + 360) % 360;
+      var c = v * s;
+      var x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+      var m = v - c;
+      var rgb;
+      if (h < 60) rgb = [c, x, 0];
+      else if (h < 120) rgb = [x, c, 0];
+      else if (h < 180) rgb = [0, c, x];
+      else if (h < 240) rgb = [0, x, c];
+      else if (h < 300) rgb = [x, 0, c];
+      else rgb = [c, 0, x];
+      return '#' + rgb.map(function (n) {
+        return ('0' + Math.round((n + m) * 255).toString(16)).slice(-2);
+      }).join('');
+    }
+
+    function isCustomActive() {
+      return root.style.getPropertyValue('--accent').trim() !== '';
+    }
+
+    function current() {
+      if (isCustomActive()) return 'custom';
+      var v = root.getAttribute('data-accent') || 'blue';
+      return VALID.indexOf(v) >= 0 ? v : 'blue';
+    }
+
+    /* 当前色的实际色值，用于回填取色器与十六进制显示 */
+    function currentHex() {
+      var v = root.style.getPropertyValue('--accent').trim();
+      if (v) return v;
+      var cur = current();
+      if (cur === 'blue') return '#2563eb';
+      var sw = document.querySelector('.accent-swatch[data-accent="' + cur + '"]');
+      /* 色珠的身份色写死在 CSS 里，取计算值即可拿到真实色号 */
+      if (sw) {
+        var bg = getComputedStyle(sw).backgroundColor;   /* rgb(r, g, b) */
+        var m = /(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/.exec(bg);
+        if (m) {
+          return '#' + [1, 2, 3].map(function (i) {
+            return ('0' + parseInt(m[i], 10).toString(16)).slice(-2);
+          }).join('');
+        }
+      }
+      return '#2563eb';
+    }
+
+    function paint() {
+      var cur = current();
+      document.querySelectorAll('.accent-swatch').forEach(function (b) {
+        b.setAttribute('aria-checked', String(b.getAttribute('data-accent') === cur));
+      });
+
+      var custom = cur === 'custom';
+      var boxes = document.querySelectorAll('.accent-custom');
+      boxes.forEach(function (box) { box.classList.toggle('is-active', custom); });
+      var mBox = document.querySelector('.mobile-menu-accent');
+      if (mBox) mBox.classList.toggle('is-active', custom);
+
+      var hex = currentHex();
+      var hexEl = document.getElementById('accentHex');
+      if (hexEl) hexEl.textContent = hex.toUpperCase();
+
+      /* 取色器内部的三个控件都跟随当前色：
+           SV 面板（--h 决定纯色相端、--s/--v 决定取色点位置）
+           色相条（--hue 是 0~1 的比值，驱动旋钮）
+           十六进制输入框（键入中不要覆盖，否则打字会被打断） */
+      var hsv = hexToHsv(hex);
+      var sv = document.getElementById('accentSV');
+      if (sv) {
+        sv.style.setProperty('--h', String(Math.round(hsv.h)));
+        sv.style.setProperty('--s', String(hsv.s));
+        sv.style.setProperty('--v', String(hsv.v));
+        sv.setAttribute('aria-valuenow', String(Math.round(hsv.v * 100)));
+        sv.setAttribute('aria-valuetext', hex.toUpperCase() +
+          ' S' + Math.round(hsv.s * 100) + '% V' + Math.round(hsv.v * 100) + '%');
+      }
+      var strip = document.getElementById('accentHue');
+      if (strip) {
+        strip.style.setProperty('--hue', String(hsv.h / 360));
+        strip.setAttribute('aria-valuenow', String(Math.round(hsv.h)));
+        strip.setAttribute('aria-valuetext', hex.toUpperCase());
+      }
+      var hexInput = document.getElementById('accentHexInput');
+      if (hexInput && document.activeElement !== hexInput) {
+        hexInput.value = hex.replace('#', '').toUpperCase();
+      }
+
+      /* 面板标题行显示当前色名；自定义色显示十六进制而不是名字 */
+      var nameEl = document.getElementById('accentName');
+      if (nameEl) {
+        var I = window.I18N;
+        if (custom) nameEl.textContent = hex.toUpperCase();
+        else {
+          var label = I ? I.t('accent.' + cur) : null;
+          if (label) nameEl.textContent = label;
+        }
+      }
+    }
+
+    function apply(name, remember) {
+      /* 从预置切到预置：先清掉可能残留的自定义内联变量 */
+      root.style.removeProperty('--accent');
+      root.style.removeProperty('--accent-fg');
+      /* 同时丢掉 HSV 缓存 —— 否则下次拖色相条会用上一个自定义色的饱和度/明度 */
+      liveHsv = null;
+      if (VALID.indexOf(name) < 0) name = 'blue';
+      /* blue 是默认值，不写属性 —— 让 :root 的 --accent 生效 */
+      if (name === 'blue') root.removeAttribute('data-accent');
+      else root.setAttribute('data-accent', name);
+      if (remember) { try { localStorage.setItem(KEY, name); } catch (e) {} }
+      paint();
+    }
+
+    /* 应用任意色。只覆盖 --accent 与 --accent-fg 两个令牌：
+       --accent-ink / soft / line 全部由 color-mix 从 --accent 推导，
+       在浅色与深色主题下各自取合适的混合比例，所以不必手写。 */
+    function applyCustom(hex, remember) {
+      if (!/^#[0-9a-f]{6}$/i.test(hex)) return;
+      var fg = pickFg(hex);
+      root.removeAttribute('data-accent');
+      root.style.setProperty('--accent', hex);
+      root.style.setProperty('--accent-fg', fg);
+      if (remember) {
+        try {
+          localStorage.setItem(KEY, 'custom');
+          localStorage.setItem(KEY_CUSTOM, JSON.stringify({ c: hex, fg: fg }));
+        } catch (e) {}
+      }
+      paint();
+    }
+
+    paint();
+
+    /* 切语言后色名要跟着换（品牌蓝 / Brand blue / ブランドブルー） */
+    document.addEventListener('langchange', paint);
+
+    /* 八枚色珠在顶栏调色盘和手机菜单里各有一套，用事件委托一次覆盖 */
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest ? e.target.closest('.accent-swatch') : null;
+      if (!btn) return;
+      apply(btn.getAttribute('data-accent'), true);
+    });
+
+    /* ---- 取色器：拖动交互的通用实现 ------------------------------------
+       两个控件（SV 面板 / 色相条）共用同一套按下—拖动—抬起逻辑：
+         · Pointer Events 统一鼠标 / 触摸 / 触控笔
+         · setPointerCapture 保证手指移出控件后仍然跟随（拖快了不断）
+         · pointerdown 里 preventDefault 会顺带阻止聚焦，所以手动 focus，
+           否则方向键接不上、焦点环也不显示
+       onMove 收到的已经是 0~1 的归一化坐标。 */
+    function bindDrag(el, onMove) {
+      if (!el) return;
+      var active = false;
+      function norm(e) {
+        var r = el.getBoundingClientRect();
+        return {
+          x: Math.max(0, Math.min(1, (e.clientX - r.left) / (r.width || 1))),
+          y: Math.max(0, Math.min(1, (e.clientY - r.top) / (r.height || 1)))
+        };
+      }
+      el.addEventListener('pointerdown', function (e) {
+        active = true;
+        el.setPointerCapture && el.setPointerCapture(e.pointerId);
+        try { el.focus({ preventScroll: true }); } catch (err) { el.focus(); }
+        var n = norm(e); onMove(n.x, n.y);
+        e.preventDefault();
+      });
+      el.addEventListener('pointermove', function (e) {
+        if (!active) return;
+        var n = norm(e); onMove(n.x, n.y);
+        e.preventDefault();
+      });
+      function end(e) {
+        if (!active) return;
+        active = false;
+        el.releasePointerCapture && el.releasePointerCapture(e.pointerId);
+      }
+      el.addEventListener('pointerup', end);
+      el.addEventListener('pointercancel', end);
+    }
+
+    /* 以「当前 H / S / V」为基准连续写入，而不是每次从 hex 反解 ——
+       hex 只有 24 位，反复取整会让颜色来回漂移（拖色时肉眼可见的抖动）。 */
+    var liveHsv = null;
+    function writeHsv(h, s, v, remember) {
+      liveHsv = { h: h, s: s, v: v };
+      applyCustom(hsvToHex(h, s, v), remember);
+    }
+    function readHsv() {
+      if (liveHsv) return liveHsv;
+      liveHsv = hexToHsv(currentHex());
+      return liveHsv;
+    }
+
+    /* ---- SV 面板（横轴饱和度、纵轴明度）---- */
+    var svEl = document.getElementById('accentSV');
+    bindDrag(svEl, function (x, y) {
+      var c = readHsv();
+      writeHsv(c.h, x, 1 - y, true);
+    });
+    if (svEl) {
+      svEl.addEventListener('keydown', function (e) {
+        var c = readHsv(), s = c.s, v = c.v, step = 0.01, big = 0.1, hit = true;
+        switch (e.key) {
+          case 'ArrowLeft': s -= step; break;
+          case 'ArrowRight': s += step; break;
+          case 'ArrowUp': v += step; break;
+          case 'ArrowDown': v -= step; break;
+          case 'PageUp': v += big; break;
+          case 'PageDown': v -= big; break;
+          case 'Home': s = 0; break;
+          case 'End': s = 1; break;
+          default: hit = false;
+        }
+        if (!hit) return;
+        e.preventDefault();
+        writeHsv(c.h, Math.max(0, Math.min(1, s)), Math.max(0, Math.min(1, v)), true);
+      });
+    }
+
+    /* ---- 色相条 ----
+       只改色相，饱和度与明度沿用当前色。
+       但 V=0（纯黑）或 S=0（纯灰）时色相在数学上不存在，拖了会毫无变化 ——
+       纯黑色上下拖动像坏了一样。所以这里兜一个下限：真的落到这两种极端时
+       先抬到能看出变化的水准，再按新色相重算。 */
+    function commitHue(h) {
+      var c = readHsv();
+      var s = c.s < 0.06 ? 0.62 : c.s;
+      var v = c.v < 0.08 ? 0.55 : c.v;
+      writeHsv(h, s, v, true);
+    }
+    var strip = document.getElementById('accentHue');
+    bindDrag(strip, function (x) { commitHue(x * 360); });
+    if (strip) {
+      strip.addEventListener('keydown', function (e) {
+        var c = readHsv(), step = 0;
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') step = -1;
+        else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') step = 1;
+        else if (e.key === 'PageDown') step = -15;
+        else if (e.key === 'PageUp') step = 15;
+        else if (e.key === 'Home') { e.preventDefault(); commitHue(0); return; }
+        else if (e.key === 'End') { e.preventDefault(); commitHue(359); return; }
+        if (!step) return;
+        e.preventDefault();
+        commitHue(c.h + step);
+      });
+    }
+
+    /* ---- 十六进制输入：键入合法色号即应用 ----
+       只在值完整合法时应用，不打断用户敲字；失焦时回填真实值。 */
+    var hexInput = document.getElementById('accentHexInput');
+    if (hexInput) {
+      hexInput.addEventListener('input', function () {
+        var v = hexInput.value.trim().replace(/^#/, '');
+        if (/^[0-9a-f]{6}$/i.test(v)) {
+          liveHsv = null;                 /* 色号是权威值，丢掉旧的 HSV 缓存 */
+          applyCustom('#' + v, true);
+        }
+      });
+      hexInput.addEventListener('blur', function () {
+        var v = hexInput.value.trim().replace(/^#/, '');
+        if (!/^[0-9a-f]{6}$/i.test(v)) {
+          hexInput.value = currentHex().replace('#', '').toUpperCase();
+        }
+      });
+      hexInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); hexInput.blur(); }
+        /* 别让 Esc 冒泡去关掉整个面板 —— 用户是在退格/取消输入 */
+        e.stopPropagation();
+      });
+    }
+
+    /* ---- 色卡：展开 / 收起取色器 ----
+       手机上面板浮层本身是 display:none，取色器得挪进菜单才看得见，
+       所以打开时按视口宽度选择挂载位置 —— 同一份 DOM，不复制两份。 */
+    var picker = document.getElementById('accentPicker');
+    var cardBtn = document.getElementById('accentCustomBtn');
+    var miniBtn = document.getElementById('accentMiniBtn');
+    var desktopSlot = document.querySelector('.accent-custom');
+    var mobileRow = document.querySelector('.mobile-menu-accent');
+
+    function placePicker() {
+      if (!picker) return;
+      if (window.innerWidth <= 820 && mobileRow && mobileRow.parentNode) {
+        if (picker.previousElementSibling !== mobileRow) {
+          mobileRow.parentNode.insertBefore(picker, mobileRow.nextSibling);
+        }
+        picker.classList.add('is-in-menu');
+      } else if (desktopSlot && picker.parentNode !== desktopSlot) {
+        desktopSlot.appendChild(picker);
+        picker.classList.remove('is-in-menu');
+      }
+    }
+    function setPicker(open) {
+      if (!picker) return;
+      if (open) { placePicker(); picker.hidden = false; }
+      else picker.hidden = true;
+      if (cardBtn) cardBtn.setAttribute('aria-expanded', String(!!open));
+      if (miniBtn) miniBtn.setAttribute('aria-expanded', String(!!open));
+    }
+    if (cardBtn) {
+      cardBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setPicker(picker ? picker.hidden : false);
+      });
+    }
+    if (miniBtn) {
+      miniBtn.addEventListener('click', function () {
+        setPicker(picker ? picker.hidden : false);
+      });
+    }
+
+    var toggle = document.getElementById('accentToggle');
+    var menu = document.getElementById('accentMenu');
+    if (!toggle || !menu) return;
+    function close() {
+      menu.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+    toggle.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = menu.hidden;
+      menu.hidden = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      /* 与语言浮层互斥，避免两个面板叠在一起 */
+      var lm = document.getElementById('langMenu');
+      if (open && lm) lm.hidden = true;
+    });
+    document.addEventListener('click', function (e) {
+      if (!menu.hidden && !menu.contains(e.target) && e.target !== toggle) close();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') close();
+    });
+  }
+
   /* ---------- 提前接管的变量（init 与收尾都要用） ---------- */
   var header = document.getElementById('siteHeader');
   var toTop = document.getElementById('toTop');
@@ -504,10 +946,14 @@
       var sx = mx, sy = my;   /* 聚光斑的缓动位置 */
       var hoverEl = null;     /* 当前倾斜中的卡片 */
 
-      /* 只有替代光标真实存在时，才允许把系统指针藏起来 */
+      /* 只有替代光标真实存在、且猫头图确实能加载时，才允许把系统指针藏起来。
+         图挂了却已隐藏系统指针 = 用户完全看不到鼠标，没法操作 —— 必须预检。 */
       if (cursorEl && ring && dot) {
-        body.classList.add('custom-cursor');
         finePointer = true;
+        var probe = new Image();
+        probe.onload = function () { body.classList.add('custom-cursor'); };
+        probe.onerror = function () { body.classList.remove('custom-cursor'); };
+        probe.src = 'cursor-cat.png';
       }
       body.classList.add('has-pointer');
 
@@ -1017,7 +1463,25 @@
     L.push('-- 启动阶段 --');
     L.push(window.__initErrors.length
       ? '失败的阶段: ' + window.__initErrors.join(' | ')
-      : '四个阶段全部成功 (init / refraction / banner / i18n)');
+      : '五个阶段全部成功 (init / refraction / banner / i18n / heroVideo)');
+    /* 首屏视频：这一栏回答「视频为什么没显示」。
+       常见原因是自动播放被拒（省电模式、未静音）、
+       或者 is-video 没加上（canplay 没触发）。 */
+    var hv = document.getElementById('heroVideo');
+    var hw = document.querySelector('.hero-bg');
+    if (!hv) {
+      L.push('首屏视频: 元素不在 DOM（reduced-motion 或加载出错后已移除）');
+    } else {
+      L.push('首屏视频: readyState=' + hv.readyState + '  paused=' + hv.paused +
+        '  muted=' + hv.muted + '  networkState=' + hv.networkState);
+      L.push('  当前源: ' + (hv.currentSrc || '(空)').split('/').pop() +
+        '  .is-video=' + (hw ? hw.classList.contains('is-video') : '?') +
+        '  opacity=' + cs(hv, 'opacity'));
+      L.push('  当前宽度 ' + window.innerWidth + 'px -> 期望源 ' +
+        (window.innerWidth <= 820 ? 'hero-bg-540.mp4' : 'hero-bg.mp4'));
+      L.push('  reduced-motion=' + (window.matchMedia &&
+        matchMedia('(prefers-reduced-motion: reduce)').matches));
+    }
     L.push('语言: I18N=' + (window.I18N ? window.I18N.get() : '未加载') +
       '  html[data-lang]=' + (d.getAttribute('data-lang') || '(空)') +
       '  html[lang]=' + (d.getAttribute('lang') || '(空)'));
@@ -1112,6 +1576,8 @@
   stage('refraction', initRefraction);
   stage('banner', initBanner);
   stage('i18n', initLang);
+  stage('accent', initAccent);
+  stage('heroVideo', initHeroVideo);
   if (new URLSearchParams(location.search).get('diag') === '1') runDiagnostics();
 
   /* 保险丝：无论 init 是否成功，只要正文还处于隐藏态就把元素放出来 */

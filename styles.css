@@ -34,7 +34,7 @@
      作用是把「浏览器拿到的到底是哪一版 CSS」变成可读的事实 ——
      否则一遇到「改了没生效」，只能在缓存 / 编码 / 嵌套之间瞎猜。
      **每次改完这个文件记得更新这里的日期。** */
-  --css-rev:"2026-10-10 i18n";
+  --css-rev:"2026-10-11 cat-cursor2";
 
   /* ---------- 主色 ----------
      站点主色沿用原有品牌蓝 #2563eb。派生令牌一律 color-mix，
@@ -146,9 +146,6 @@
 
   --cursor-ring:rgba(37,99,235,.55);
   --cursor-ring:color-mix(in srgb, var(--accent) 55%, transparent);
-  --cursor-ring-bg:rgba(37,99,235,.10);
-  --cursor-ring-bg:color-mix(in srgb, var(--accent) 10%, transparent);
-  --cursor-dot:var(--accent);
 
   /* 主题切换的圆形揭示：中心与半径由 app.js 点击时写入 */
   --vt-x:50%;
@@ -255,8 +252,6 @@
 
   --cursor-ring:rgba(91,140,255,.7);
   --cursor-ring:color-mix(in srgb, var(--accent) 70%, transparent);
-  --cursor-ring-bg:rgba(91,140,255,.12);
-  --cursor-ring-bg:color-mix(in srgb, var(--accent) 12%, transparent);
 
   /* 暗色下的玻璃：底色压得更透一点，高光收弱 ——
      暗背景上白色高光超过 .1 会发灰发脏，玻璃看上去像塑料。 */
@@ -267,6 +262,92 @@
   --glass-hi-soft:rgba(255,255,255,.05);
   --glass-rim:rgba(255,255,255,.16);
 }
+
+/* ---------- 主色主题（accent themes）--------------------------------------
+   站里所有彩色都派生自 --accent（按钮、链接、高亮、光斑、描边、图标底色……），
+   所以换主色只需要覆盖这一个令牌，其余靠 color-mix 自动跟随 ——
+   这也是当初坚持「派生令牌一律 color-mix」的回报。
+
+   每个主题只需给三样：
+     --accent       主色本身
+     --accent-fg    压在实心主色上的文字色（按钮字）
+     --accent-ink   主色的加深版，用于深色文字（链接、强调）
+   soft / line 两档透明度由 color-mix 生成，不必手写。
+
+   对比度是这条链上最容易翻车的地方：--accent-fg 必须在 --accent 上够读。
+   浅色系主色（琥珀、玫红）在白字下对比不足 3:1，所以它们配**深色**文字；
+   深色系（蓝、紫、青）配白字。深色模式下主色整体提亮，文字色反转成深色。
+   ---------------------------------------------------------------------- */
+html[data-accent="violet"]{
+  --accent:#7c3aed; --accent-fg:#fff; --accent-ink:#5b21b6;
+}
+html[data-accent="teal"]{
+  --accent:#0b7d7d; --accent-fg:#fff; --accent-ink:#075e5e;
+}
+html[data-accent="amber"]{
+  /* 琥珀在白字下只有 2.8:1，不可读 —— 所以压深色字 */
+  --accent:#c9791f; --accent-fg:#2b1600; --accent-ink:#8a4d0c;
+}
+html[data-accent="rose"]{
+  --accent:#b04a61; --accent-fg:#fff; --accent-ink:#833048;
+}
+html[data-accent="emerald"]{
+  --accent:#0f7a4d; --accent-fg:#fff; --accent-ink:#0b5c3a;
+}
+html[data-accent="magenta"]{
+  --accent:#b81f8a; --accent-fg:#fff; --accent-ink:#8a1668;
+}
+html[data-accent="graphite"]{
+  --accent:#3f4652; --accent-fg:#fff; --accent-ink:#2b303a;
+}
+html[data-accent="sky"]{
+  --accent:#0369a1; --accent-fg:#fff; --accent-ink:#075985;
+}
+html[data-accent="indigo"]{
+  --accent:#4f46e5; --accent-fg:#fff; --accent-ink:#3730a3;
+}
+html[data-accent="olive"]{
+  --accent:#5f7a1f; --accent-fg:#fff; --accent-ink:#4a5f16;
+}
+html[data-accent="coral"]{
+  --accent:#c03a2d; --accent-fg:#fff; --accent-ink:#992d23;
+}
+
+/* 深色模式：主色提亮、文字色反转为深色，保证在深底上仍然显眼 */
+html[data-accent="violet"][data-theme="dark"]{
+  --accent:#a78bfa; --accent-fg:#1a0b33; --accent-ink:#c9b6ff;
+}
+html[data-accent="teal"][data-theme="dark"]{
+  --accent:#38c4be; --accent-fg:#04231f; --accent-ink:#7fe0da;
+}
+html[data-accent="amber"][data-theme="dark"]{
+  --accent:#e0a04a; --accent-fg:#2b1600; --accent-ink:#f0c684;
+}
+html[data-accent="rose"][data-theme="dark"]{
+  --accent:#e88aa0; --accent-fg:#33101a; --accent-ink:#f4b3c2;
+}
+html[data-accent="emerald"][data-theme="dark"]{
+  --accent:#4ade80; --accent-fg:#04231a; --accent-ink:#8ff0b5;
+}
+html[data-accent="magenta"][data-theme="dark"]{
+  --accent:#e879d0; --accent-fg:#2a0a24; --accent-ink:#f0a8e0;
+}
+html[data-accent="graphite"][data-theme="dark"]{
+  --accent:#9aa6b8; --accent-fg:#0d1117; --accent-ink:#c3ccd8;
+}
+html[data-accent="sky"][data-theme="dark"]{
+  --accent:#38bdf8; --accent-fg:#0e1116; --accent-ink:#7dd3fc;
+}
+html[data-accent="indigo"][data-theme="dark"]{
+  --accent:#818cf8; --accent-fg:#0e1116; --accent-ink:#c7d2fe;
+}
+html[data-accent="olive"][data-theme="dark"]{
+  --accent:#a9c94f; --accent-fg:#0e1116; --accent-ink:#cbe36a;
+}
+html[data-accent="coral"][data-theme="dark"]{
+  --accent:#f4796b; --accent-fg:#0e1116; --accent-ink:#ffb3a7;
+}
+/* 默认（未设 data-accent 或 =blue）沿用 :root 里的品牌蓝，无需重复定义 */
 
 /* ---------- 玻璃能力分级 ------------------------------------------------
    ① 支持 backdrop-filter —— 走真玻璃；
@@ -399,16 +480,37 @@ body.custom-cursor .cursor{display:block}
 body.custom-cursor *{cursor:none !important}
 body.custom-cursor :is(input,textarea,select,[contenteditable]){cursor:auto !important}
 
-.cursor-dot,.cursor-ring{position:absolute;top:0;left:0;border-radius:50%;will-change:transform}
-.cursor-dot{width:5px;height:5px;margin:-2.5px 0 0 -2.5px;background:var(--cursor-dot);transition:opacity .3s ease}
+.cursor-dot,.cursor-ring{position:absolute;top:0;left:0;will-change:transform}
+/* 指针本体：猫猫头（完整角色，不做二次裁切）。
+   cursor-cat.png 96×96：原图白底用「从边缘洪水填充」抠掉，
+   并额外留了 8% 透明边距，任何部分都不碰图标边界。
+   （之前那版把头发和下巴裁出了直边，缩到 32px 就成了一个方块。）
+   显示 36px，素材 96px ≈ 2.7 倍，视网膜下依然锐利。
+   热区在正中央：margin 取一半，指针坐标落在猫脸中心。 */
+.cursor-dot{
+  width:36px;height:36px;margin:-18px 0 0 -18px;
+  background:url("cursor-cat.png") center/contain no-repeat;
+  /* 浅色页面上深色头发也需要一点投影才浮得起来 */
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.32));
+  transition:opacity .3s ease,width .22s var(--ease),height .22s var(--ease),margin .22s var(--ease);
+}
+/* 悬停可用元素时：猫头放大一点，外圈浮出一枚主色细环作为反馈。
+   静止时不显示圆环，免得压住猫脸。 */
 .cursor-ring{
   width:30px;height:30px;margin:-15px 0 0 -15px;
-  border:1.5px solid var(--cursor-ring);
+  border-radius:50%;
+  border:1.5px solid transparent;
+  opacity:0;
   transition:width .28s var(--ease),height .28s var(--ease),margin .28s var(--ease),
-             background .3s ease,border-color .3s ease,opacity .3s ease;
+             border-color .3s ease,opacity .3s ease;
 }
-body.cursor-hover .cursor-ring{width:50px;height:50px;margin:-25px 0 0 -25px;background:var(--cursor-ring-bg);border-color:transparent}
-body.cursor-down .cursor-ring{width:22px;height:22px;margin:-11px 0 0 -11px}
+body.cursor-hover .cursor-dot{width:42px;height:42px;margin:-21px 0 0 -21px}
+body.cursor-hover .cursor-ring{
+  width:58px;height:58px;margin:-29px 0 0 -29px;
+  border-color:var(--cursor-ring);
+  opacity:1;
+}
+body.cursor-down .cursor-dot{width:32px;height:32px;margin:-16px 0 0 -16px}
 body.cursor-hidden .cursor-dot,body.cursor-hidden .cursor-ring{opacity:0}
 
 /* ---------- 顶栏（液态玻璃） -------------------------------------------- */
@@ -801,14 +903,61 @@ html.fx-lite .hero-inner::after{animation:none}
   色相用暖调深色（--ink 家族）而不是纯黑，避免整块发灰。
 */
 .hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
-.hero-bg img{
-  width:100%;height:100%;object-fit:cover;object-position:72% 42%;
+/* 背景层是「视频 + 静态图」两层叠在一起，都 position:absolute;inset:0。
+   注意 DOM 顺序：<video> 在前、<img> 在后，所以**静态图默认盖在视频之上**。
+   因此只有把静态图隐掉，视频才看得见 —— 这一点最初漏了，
+   导致视频明明在播、画面却一直是静态图（看起来像"没加载"）。
+
+   黑边：这部源视频（1920×1080）左右各带约 35px 纯黑边，是壁纸文件自带的。
+   本地没有可用的 crop 滤镜（精简版 ffmpeg 只启用了 scale/fps），
+   所以用**放大 6% 把它推出可视区**代替 —— 黑边占单侧 1.82%，
+   scale(1.06) 能推出 3.00%，余量足够。画质无损、不必重编码。
+   两层必须用同一个数值，否则交叉淡入时会看到画面跳一下。
+   换素材时先验证边缘：抽一帧看左右首末 8px 的亮度均值是否接近 0；
+   没有黑边就把这条 scale 去掉（否则白白裁掉 6% 画面）。
+
+   层序：静态图（底，可被隐掉）→ 视频（盖上去）→ ::after 渐变遮罩（最上）
+
+   取景：单人构图、人物偏右，所以横向取到 72%；**纵向取 0%（画面最上）**。
+   为什么纵向取 0 而不是居中：猫耳在画面纵向 6%~18% 处，本来就贴顶。
+   若纵向居中（之前是 42%），在「宽而扁」的窗口里
+   （1920×800、21:9 这类，容器比 16:9 更扁）纵向会被裁掉一大块 ——
+   实测耳朵会落到 -76~61px，直接跑出画面。
+   取 0% 后画面顶端对齐，耳朵稳定落在可见区内。
+
+   再配合 transform 把整体稍微下移：顶栏 + 预告横幅固定在顶部约 122px，
+   耳朵若不推开就会被压在那条带里。scale(1.10) 提供足够的放大余量，
+   translateY(5%) 让它落到 122px 以下。顶部因此会露出一条 --bg 色的缝隙，
+   但那里正好是渐变最不透明的一段（同一颜色），所以视觉上无缝。 */
+.hero-bg-video,
+.hero-bg-still{
+  position:absolute;inset:0;
+  width:100%;height:100%;object-fit:cover;
+  object-position:72% 0%;
+  transition:opacity .6s var(--ease);
+  transform:scale(1.10) translateY(5%);   /* 放大遮黑边 + 整体下移让出顶栏 */
+}
+.hero-bg-video{
+  opacity:0;                      /* 由 JS 在 canplay 后给容器加 .is-video 再淡入 */
+}
+.hero-bg-still{opacity:1}
+/* 视频可播之后：视频淡入、静态图淡出（两层交叉，不留闪白） */
+.hero-bg.is-video .hero-bg-video{opacity:1}
+.hero-bg.is-video .hero-bg-still{opacity:0}
+/* 用户要求减少动态效果：不播放视频，只显示静态图。
+   靠 :not() 排除，而不是用 !important 抢优先级 —— 这样规则之间不打架。 */
+@media (prefers-reduced-motion:reduce){
+  .hero-bg-video{display:none}
+  .hero-bg:not(.is-video) .hero-bg-still,
+  .hero-bg.is-video .hero-bg-still{opacity:1}
 }
 .hero-bg::after{
   content:"";position:absolute;inset:0;
   background:
-    /* 顶 / 底 化进页面底色 */
-    linear-gradient(180deg,var(--bg) 0%,transparent 14%,transparent 74%,var(--bg) 100%),
+    /* 顶 / 底 化进页面底色。
+       顶部渐变从 14% 收到 11% —— 猫耳落在可见区 11%~24% 一带，
+       原来的 14% 会在耳朵上再压一层底色，等于又遮回去一次。 */
+    linear-gradient(180deg,var(--bg) 0%,transparent 11%,transparent 74%,var(--bg) 100%),
     /* 左右：左深右浅，给文字让出对比度 */
     linear-gradient(96deg,rgba(20,16,17,.86) 0%,rgba(20,16,17,.62) 34%,rgba(20,16,17,.18) 66%,transparent 100%),
     /* 整体轻压一层，保证长文本也读得清 */
@@ -1496,6 +1645,304 @@ html:has(#ginkaBanner) .hero{padding-top:168px}
 .lang-toggle .ic{font-size:15px}
 .lang-code{font-size:11.5px;font-weight:700;letter-spacing:.02em;line-height:1}
 
+/* ---------- 主色主题切换 ------------------------------------------------
+   顶栏一枚调色板按钮 + 一个色板浮层。样式与语言切换器保持同一套
+   （同高、同圆角、同玻璃底），因为它们是同一类「设置」控件。 */
+.accent-toggle{
+  display:flex;align-items:center;justify-content:center;flex:none;
+  width:34px;height:34px;border-radius:9px;
+  border:1px solid transparent;
+  background:color-mix(in srgb, var(--surface) 16%, transparent);
+  backdrop-filter:var(--fx-glass-8);
+  -webkit-backdrop-filter:var(--fx-glass-8);
+  box-shadow:inset 0 1px 0 var(--glass-hi-soft);
+  color:var(--ink-2);
+  transition:border-color .22s ease,color .22s ease,background .22s ease;
+}
+.accent-toggle:hover{border-color:var(--accent);color:var(--accent-ink)}
+.accent-toggle .ic{font-size:16px}
+/* 按钮右下角点一枚当前主色的小圆点，不打开浮层也能看出当前主题 */
+.accent-toggle::after{
+  content:"";position:absolute;right:5px;bottom:5px;
+  width:7px;height:7px;border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 0 1.5px var(--surface);
+}
+.accent-toggle{position:relative}
+
+/* ---------- 主色调色盘 --------------------------------------------------
+   面板 = 「标题行（当前色名）+ 4×2 色珠」。比一排纯色圆点更像调色盘：
+     · 色珠带顶部高光（radial-gradient）与内描边，像一滴颜料而不是色块
+     · 悬停上浮 2px，按下微缩，给触觉反馈
+     · 选中态是「双层描边环 + 对勾」，不只靠颜色 —— 八个圆点里认当前项
+       必须有不依赖色觉的线索
+     · 打开时色珠错落入场（--i 由 nth-child 给延迟），比整块弹出轻快
+   面板本身沿用玻璃令牌，和语言浮层是同一族材质。 */
+.accent-menu{
+  position:absolute;z-index:60;
+  top:calc(100% + 8px);right:20px;
+  width:238px;                    /* 固定宽度：色相条需要足够的拖动行程 */
+  padding:13px 14px 15px;
+  /* 展开取色器后面板会变高，矮屏幕上要能滚，别顶出视口 */
+  max-height:calc(100vh - 150px);
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  border-radius:var(--r-m);
+  border:1px solid var(--glass-rim);
+  background-color:var(--glass-tint-strong);
+  backdrop-filter:var(--fx-glass-14);
+  -webkit-backdrop-filter:var(--fx-glass-14);
+  box-shadow:inset 0 1px 0 var(--glass-hi-soft), var(--elev-2);
+}
+.accent-menu[hidden]{display:none}
+
+.accent-menu-head{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:14px;margin:0 1px 12px;
+  font-size:11.5px;color:var(--muted);letter-spacing:.01em;
+}
+.accent-menu-head strong{
+  color:var(--ink);font-size:12px;font-weight:700;
+  /* 当前色名右侧点一枚同色小圆，名字与颜色一起确认 */
+  display:inline-flex;align-items:center;gap:6px;
+}
+.accent-menu-head strong::after{
+  content:"";width:7px;height:7px;border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 0 1px color-mix(in srgb, var(--ink) 22%, transparent);
+}
+
+/* 面板固定 238px 宽后，grid 的单元格会比色珠宽 —— 让色珠居中，
+   于是 8 个色珠在更宽的画布上均匀铺开，比挤在 166px 里更好看也更好点 */
+.accent-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;justify-items:center}
+
+/* 色珠 */
+.accent-swatch{
+  position:relative;display:grid;place-items:center;
+  width:34px;height:34px;border-radius:50%;
+  border:1px solid rgba(0,0,0,.14);
+  /* 顶部偏左的高光 + 底部的轻微暗边，做成球面观感 */
+  background-image:
+    radial-gradient(circle at 33% 26%, rgba(255,255,255,.55) 0%, rgba(255,255,255,0) 58%),
+    linear-gradient(180deg, rgba(255,255,255,.16), rgba(0,0,0,.10));
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.42), 0 1px 2px rgba(0,0,0,.14);
+  transition:transform .2s var(--ease),box-shadow .2s ease;
+  animation:swIn .34s var(--ease) both;
+  animation-delay:calc(var(--i,0) * 26ms);
+}
+@keyframes swIn{
+  from{opacity:0;transform:translateY(-4px) scale(.88)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.accent-swatch:hover{transform:translateY(-2px) scale(1.06);box-shadow:inset 0 1px 1px rgba(255,255,255,.5), 0 4px 10px -3px rgba(0,0,0,.3)}
+.accent-swatch:active{transform:translateY(0) scale(.96)}
+/* 选中态：内圈留出面板底色、外圈用墨色收边 —— 双层环在深浅两套主题下都成立 */
+.accent-swatch[aria-checked="true"]{
+  box-shadow:
+    0 0 0 2px var(--glass-tint-strong),
+    0 0 0 4px var(--ink),
+    inset 0 1px 1px rgba(255,255,255,.42);
+}
+/* 对勾：只给选中项显示。白色在所有八种主色上都够对比（最浅的琥珀也有 5:1） */
+.sw-check{
+  width:14px;height:14px;flex:none;
+  color:#fff;opacity:0;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.42));
+  transition:opacity .18s ease,transform .2s var(--ease);
+  transform:scale(.7);
+}
+.accent-swatch[aria-checked="true"] .sw-check{opacity:1;transform:scale(1)}
+
+/* 八种主色的身份色。用固定色而不是 var(--accent)：
+   色板要能认出「这是哪个主题」，它本身不该随当前主题变形。 */
+.accent-swatch[data-accent="blue"]{background-color:#2563eb}
+.accent-swatch[data-accent="violet"]{background-color:#7c3aed}
+.accent-swatch[data-accent="teal"]{background-color:#0b7d7d}
+.accent-swatch[data-accent="emerald"]{background-color:#0f7a4d}
+.accent-swatch[data-accent="amber"]{background-color:#c9791f}
+.accent-swatch[data-accent="rose"]{background-color:#b04a61}
+.accent-swatch[data-accent="magenta"]{background-color:#b81f8a}
+.accent-swatch[data-accent="graphite"]{background-color:#3f4652}
+.accent-swatch[data-accent="sky"]{background-color:#0369a1}
+.accent-swatch[data-accent="indigo"]{background-color:#4f46e5}
+.accent-swatch[data-accent="olive"]{background-color:#5f7a1f}
+.accent-swatch[data-accent="coral"]{background-color:#c03a2d}
+
+/* ---------- 自由取色（网页内嵌取色器）------------------------------------
+   为什么不用 <input type="color">：它弹出的是**操作系统**的取色对话框
+   （Windows 上是一整块方形 HSV 面板 + RGB 数字框），方角、深灰、和本站的
+   暖纸 / 玻璃语言完全冲突，观感上像另一个软件插进来。
+
+   所以自己实现一套，只保留三件必要的东西：
+     1. 饱和度 × 明度面板（二维渐变 + 圆形取色点）
+     2. 色相条（白圈旋钮）
+     3. 十六进制输入框（想要精确色号时直接敲）
+   全部沿用本站的圆角、发丝边框、内高光与阴影层级。 */
+.accent-custom{
+  margin-top:13px;padding-top:12px;
+  border-top:1px solid var(--line);
+}
+
+/* 色卡：整行可点，点一下展开/收起取色器 */
+.accent-custom-pick{
+  position:relative;display:flex;align-items:center;gap:10px;width:100%;
+  padding:8px 11px 8px 9px;
+  border-radius:14px;                       /* iOS 那种大圆角卡片 */
+  border:1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--surface) 92%, transparent),
+    color-mix(in srgb, var(--surface-2) 92%, transparent));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 55%, transparent),
+    0 1px 2px rgba(0,0,0,.06);
+  cursor:pointer;text-align:left;
+  transition:border-color .2s ease,box-shadow .2s ease,transform .16s var(--ease);
+}
+.accent-custom-pick:hover{
+  border-color:color-mix(in srgb, var(--accent) 46%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 55%, transparent),
+    0 3px 10px -4px rgba(0,0,0,.22);
+}
+.accent-custom-pick:active{transform:scale(.985)}
+.accent-custom-pick[aria-expanded="true"]{
+  border-color:color-mix(in srgb, var(--accent) 60%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 55%, transparent),
+    0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+/* squircle 色块：用 border-radius 约 30% 模拟 iOS 连续圆角 */
+.accent-custom-face{
+  position:relative;flex:none;
+  width:30px;height:30px;border-radius:9px;
+  display:grid;place-items:center;
+  /* 未启用自定义色时显示彩虹，一眼看出「这里能自由取色」 */
+  background-image:conic-gradient(from 210deg,
+    #ff5f57,#ffbd2e,#28c840,#22c1d6,#5b8cff,#a855f7,#ff5f57);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.35),
+    inset 0 1px 1px rgba(255,255,255,.45),
+    0 1px 2px rgba(0,0,0,.16);
+  transition:transform .2s var(--ease),box-shadow .2s ease;
+}
+.accent-custom-pick:hover .accent-custom-face{transform:scale(1.05)}
+
+.accent-custom-label{font-size:12px;color:var(--ink-2);flex:none;font-weight:500}
+.accent-custom-hex{
+  margin-left:auto;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:11px;letter-spacing:.04em;color:var(--muted);
+  text-transform:uppercase;
+  font-variant-numeric:tabular-nums;   /* 数字等宽，换色时文字不抖 */
+}
+
+/* 启用自定义色后：色块换成该颜色，边框染上主色，出现对勾 */
+.accent-custom.is-active .accent-custom-pick{
+  border-color:color-mix(in srgb, var(--accent) 52%, transparent);
+}
+.accent-custom.is-active .accent-custom-face,
+.mobile-menu-accent.is-active .accent-custom-pick .accent-custom-face{
+  background-image:none;
+  background-color:var(--accent);
+  background-image:radial-gradient(circle at 32% 26%, rgba(255,255,255,.5) 0%, rgba(255,255,255,0) 60%);
+}
+.accent-custom.is-active .accent-custom-face .sw-check,
+.mobile-menu-accent.is-active .accent-custom-pick .sw-check{
+  opacity:1;transform:scale(1);
+}
+.accent-custom-pick:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---- 展开后的取色器 ---- */
+.accent-picker{display:grid;gap:10px;margin-top:10px}
+.accent-picker[hidden]{display:none}
+/* 被挪进手机菜单时，与菜单其它行保持同样的左右边距 */
+.accent-picker.is-in-menu{margin:0 13px 14px}
+
+/* 饱和度（横）× 明度（纵）面板。
+   两层渐变叠加：白→纯色相（横向），透明→黑（纵向）。 */
+.accent-sv{
+  position:relative;height:132px;
+  border-radius:12px;
+  background-image:
+    linear-gradient(to top, #000 0%, rgba(0,0,0,0) 100%),
+    linear-gradient(to right, #fff 0%, hsl(var(--h, 221) 100% 50%) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,.14),
+    inset 0 1px 2px rgba(0,0,0,.10);
+  cursor:crosshair;
+  touch-action:none;          /* 拖动时不要触发页面滚动 */
+}
+.accent-sv-knob{
+  position:absolute;
+  /* 内缩 8px（圆点半径）再按比例定位：否则拖到最右/最下时圆点会有一半
+     溢出面板边界，压在边框上很难看。这样圆点始终完整落在面板内。 */
+  left:calc(8px + var(--s, 0.83) * (100% - 16px));
+  top:calc(8px + (1 - var(--v, 0.92)) * (100% - 16px));
+  width:16px;height:16px;margin:-8px 0 0 -8px;
+  border-radius:50%;
+  border:2px solid #fff;
+  background:var(--accent);
+  box-shadow:0 1px 4px rgba(0,0,0,.45),0 0 0 .5px rgba(0,0,0,.22);
+  pointer-events:none;
+}
+.accent-sv:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* ---- 色相条 ----
+   轨道是七段色相渐变 + 内阴影做成凹槽感；旋钮白圈 + 阴影，
+   位置由 --hue 驱动（JS 写 0~1 的比值）。 */
+.accent-hue{
+  position:relative;
+  height:26px;
+  border-radius:999px;
+  cursor:pointer;
+  touch-action:none;
+}
+.accent-hue-track{
+  position:absolute;inset:0;border-radius:inherit;
+  background:linear-gradient(90deg,
+    #ff3b30 0%,#ffcc00 16.6%,#34c759 33.3%,
+    #32ade6 50%,#5b8cff 66.6%,#af52de 83.3%,#ff3b30 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.28),
+    inset 0 2px 4px rgba(0,0,0,.18),
+    0 1px 2px rgba(0,0,0,.10);
+}
+.accent-hue-knob{
+  position:absolute;top:50%;
+  left:calc(var(--hue,0.61) * 100%);
+  width:22px;height:22px;
+  margin-top:-11px;margin-left:-11px;   /* 以自身中心对齐 */
+  border-radius:50%;
+  border:2.5px solid #fff;
+  background:var(--accent);
+  box-shadow:0 1px 4px rgba(0,0,0,.34),0 0 0 .5px rgba(0,0,0,.14);
+  transition:transform .15s var(--ease);
+  pointer-events:none;
+}
+.accent-hue:hover .accent-hue-knob{transform:scale(1.12)}
+.accent-hue:active .accent-hue-knob{transform:scale(1.2)}
+.accent-hue:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:999px}
+
+/* ---- 十六进制输入 ---- */
+.accent-hex-field{
+  display:flex;align-items:center;gap:5px;
+  padding:8px 11px;border-radius:11px;
+  border:1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  background:color-mix(in srgb, var(--surface-2) 80%, transparent);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:11.5px;color:var(--muted);
+  transition:border-color .2s ease;
+}
+.accent-hex-field:focus-within{border-color:color-mix(in srgb, var(--accent) 55%, transparent)}
+.accent-hex-input{
+  flex:1;min-width:0;
+  border:0;background:none;outline:none;
+  font:inherit;font-size:12px;letter-spacing:.08em;
+  color:var(--ink);text-transform:uppercase;
+}
+.accent-hex-input::placeholder{color:var(--muted);text-transform:none;letter-spacing:0}
+
 .lang-menu{
   position:absolute;z-index:60;
   top:calc(100% + 8px);right:20px;
@@ -1521,14 +1968,33 @@ html:has(#ginkaBanner) .hero{padding-top:168px}
   box-shadow:inset 2px 0 0 var(--accent);
 }
 
-/* 手机：把语言按钮收进菜单（顶栏放不下），桌面隐藏菜单里那枚 */
-.mobile-menu-lang{display:none}
+/* 手机：把语言与主色按钮都收进菜单（顶栏放不下），桌面隐藏菜单里那两行 */
+.mobile-menu-lang,
+.mobile-menu-accent{display:none}
 @media (max-width:820px){
   .lang-toggle{display:none}
   .lang-menu{display:none}
+  .accent-toggle{display:none}
+  .accent-menu{display:none}
   .mobile-menu-lang{
     display:flex;align-items:center;gap:6px;margin:0 13px 10px;
     padding:9px 0;border-bottom:1px solid var(--line);
+  }
+  /* 菜单里的主色选择：12 个圆点。原来一行放得下 8 个，
+     12 个 × 22px + 11 × 8px = 352px 会超出 320px 窄屏，所以允许换行排成两行。 */
+  .mobile-menu-accent{
+    display:flex;flex-wrap:wrap;align-items:center;gap:8px;
+    margin:0 13px 12px;
+    padding:0 0 11px;border-bottom:1px solid var(--line);
+  }
+  .mobile-menu-accent .accent-swatch{width:22px;height:22px;animation:none}
+  .mobile-menu-accent .sw-check{width:11px;height:11px}
+  /* 手机端第 9 枚：自由取色的迷你色环，尺寸与其它色珠一致 */
+  .mobile-menu-accent .accent-custom-pick.is-mini{width:22px;height:22px}
+  /* 窄屏的选中环收细一档，否则 22px 的珠子上环太抢眼 */
+  .mobile-menu-accent .accent-swatch[aria-checked="true"]{box-shadow:0 0 0 1.5px var(--surface-2),0 0 0 3px var(--ink)}
+  .mobile-menu-accent.is-active .accent-custom-pick.is-mini .accent-custom-face{
+    box-shadow:0 0 0 1.5px var(--surface-2),0 0 0 3px var(--ink);
   }
   .mobile-menu-lang .lang-pick{
     flex:1;padding:8px 10px;border-radius:8px;
@@ -1797,9 +2263,10 @@ html[data-vt="theme"]::view-transition-new(root){
   .hero-actions{gap:10px;margin-top:24px}
   .particles,.scroll-cue{display:none}
 
-  /* 首屏背景：窄屏改成横向取景（人物居中），并把左侧压暗加强，
-     否则文字会压在人物的浅色区域上、读不清 */
-  .hero-bg img{object-position:64% 38%}
+  /* 首屏背景：窄屏纵向几乎不裁（手机是竖长容器，只有横向裁），
+     但纵向同样取 0% 并把整体下移，保证猫耳不被顶栏压住。
+     视频与静态图两层都要写，否则窄屏下两层取景不一致、淡入时画面会跳。 */
+  .hero-bg-video,.hero-bg-still{object-position:64% 0%}
   .hero-bg::after{
     background:
       linear-gradient(180deg,var(--bg) 0%,transparent 12%,transparent 72%,var(--bg) 100%),

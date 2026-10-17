@@ -8,6 +8,7 @@
    ========================================================================== */
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
+import { createReadStream } from 'node:fs';
 import { extname, join, normalize, resolve } from 'node:path';
 
 const ROOT = resolve(process.cwd());
@@ -26,6 +27,12 @@ const MIME = {
   '.webp': 'image/webp',
   '.gif': 'image/gif',
   '.ico': 'image/x-icon',
+  /* 视频：类型必须写对。用 application/octet-stream 时部分浏览器会拒绝播放
+     （尤其 Safari），因为它按 MIME 判断能不能解。 */
+  '.mp4': 'video/mp4',
+  '.m4v': 'video/mp4',
+  '.webm': 'video/webm',
+  '.ogv': 'video/ogg',
   '.woff2': 'font/woff2',
   '.txt': 'text/plain; charset=utf-8',
   '.xml': 'application/xml; charset=utf-8',
@@ -98,12 +105,49 @@ const server = createServer(async (req, res) => {
 
   try {
     /* 目录在上面的 stat 里已经换成 index.html，这里只可能是文件 */
-    const body = await readFile(target);
+    const info = await stat(target);
+    const type = MIME[extname(target).toLowerCase()] || 'application/octet-stream';
+
+    /* ---- Range 支持 ----
+       MP4 播放器（尤其 Safari）要求服务器支持分段请求，否则可能：
+       不播、只能播一次、或拖动进度条就断。GitHub Pages 原生支持，
+       但这个验收服务器原来只会整文件返回，导致本地测不出视频的真实表现。
+       这里实现最小的单区间 206 响应。 */
+    const range = req.headers.range;
+    if (range) {
+      const m = /^bytes=(\d*)-(\d*)$/.exec(range.trim());
+      if (m) {
+        const size = info.size;
+        let start = m[1] === '' ? null : parseInt(m[1], 10);
+        let end = m[2] === '' ? null : parseInt(m[2], 10);
+        if (start === null && end !== null) {          /* bytes=-N 取末尾 N 字节 */
+          start = Math.max(0, size - end); end = size - 1;
+        } else {
+          if (end === null || end >= size) end = size - 1;
+        }
+        if (start > end || start >= size) {
+          res.writeHead(416, { 'content-range': `bytes */${size}`, ...NO_STORE }).end();
+          return;
+        }
+        res.writeHead(206, {
+          'content-type': type,
+          'content-length': end - start + 1,
+          'content-range': `bytes ${start}-${end}/${size}`,
+          'accept-ranges': 'bytes',
+          ...NO_STORE,
+        });
+        createReadStream(target, { start, end }).pipe(res);
+        return;
+      }
+    }
+
     res.writeHead(200, {
-      'content-type': MIME[extname(target).toLowerCase()] || 'application/octet-stream',
+      'content-type': type,
+      'content-length': info.size,
+      'accept-ranges': 'bytes',
       ...NO_STORE,
     });
-    res.end(body);
+    res.end(await readFile(target));
   } catch {
     res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' });
     res.end('404 ' + rel);
