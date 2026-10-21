@@ -34,7 +34,7 @@
      作用是把「浏览器拿到的到底是哪一版 CSS」变成可读的事实 ——
      否则一遇到「改了没生效」，只能在缓存 / 编码 / 嵌套之间瞎猜。
      **每次改完这个文件记得更新这里的日期。** */
-  --css-rev:"2026-10-21 proj-list";
+  --css-rev:"2026-10-21 flag-clear";
 
   /* ---------- 主色 ----------
      站点主色沿用原有品牌蓝 #2563eb。派生令牌一律 color-mix，
@@ -1165,16 +1165,65 @@ html.fx-lite .hero-inner::after{animation:none}
   content:"";position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(70% 45% at 50% 0%,var(--shimmer),transparent 72%);
 }
+/* 角标（已上线 / 待上传）做成磨砂玻璃。
+   早先是 88% 的实底 + 8px 模糊 —— 底色太实，模糊看不出来，
+   贴在封面上就是一块不透明的牌子。
+   现在底色只留一半多点，靠 20px 模糊把背后的插画揉开，
+   再加顶部高光与发丝边，就是 iOS 那种毛玻璃质感。
+   字色仍用 --ink（随主题）；为什么不用白字 —— 封面有亮有暗，
+   白字在亮封面上会消失，而 --ink 配半透底没这个问题。 */
+/* 角标（已上线 / 待上传）：尽量透的毛玻璃。
+   之前底色 54%~72%，把封面左上角原本的作品标题盖得严实。
+   现在只留 26%（浅）/ 30%（深），靠 28px 模糊把背景揉开，
+   下面的插画标题仍能透出轮廓。
+
+   字色为什么不再用 var(--ink)：徽标压在封面上，而封面不随主题变。
+   实测各封面左上角均亮度：小小的身影 197 · 黄莓C 93 · 夏末白夜 92 · 海蓝星 107
+   —— 这四张是亮底；GalGod 3 · 永恒 12 —— 这两张是黑底。
+   所以徽标自带两套固定配色，用 data-flag-tone="dark" 指定黑底那几张。 */
 .product-card-flag{
-  position:absolute;z-index:3;top:14px;left:14px;
+  /* 横幅放右上角。封面的作品标题多在左上（小小的身影、黄莓C都是），
+     放左边会把它们遮住；六张封面的右上角都是空的（最多是头发与星空）。
+     用物理右而不用 inset-inline-end：封面是图片，不随语言镜像，
+     RTL 下也应该贴着图片的右上角。 */
+  position:absolute;z-index:3;top:14px;right:14px;left:auto;
   display:inline-flex;align-items:center;gap:6px;
   padding:5px 11px;border-radius:var(--r-s);
-  background:color-mix(in srgb,var(--surface) 88%,transparent);
-  backdrop-filter:var(--fx-glass-8);-webkit-backdrop-filter:var(--fx-glass-8);
-  border:1px solid var(--line);
-  color:var(--ink);font-size:11.5px;font-weight:700;letter-spacing:.02em;
+  /* 只留 16% 底色 —— 84% 透光，封面上原本的标题能透出来。
+     这个值不是拍脑子：六张封面逐个算过（模糊后取均色再叠底色），
+     最暗的那张（黄莓C）仍有 5.95:1，其余 7~14:1。 */
+  background:color-mix(in srgb,#fff 16%,transparent);
+  backdrop-filter:var(--fx-glass-28);
+  -webkit-backdrop-filter:var(--fx-glass-28);
+  border:1px solid color-mix(in srgb,#fff 52%,transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.60),
+    0 1px 4px -1px rgba(20,16,17,.18);
+  color:#1a1517;
+  text-shadow:0 1px 0 rgba(255,255,255,.55);
+  font-size:11.5px;font-weight:700;letter-spacing:.02em;
 }
+.product-card-flag[data-flag-tone="dark"]{
+  /* 黑底封面用深色玻璃 + 白字，22% 底色（更透）下仍有 12~18:1 */
+  background:color-mix(in srgb,#141011 22%,transparent);
+  border-color:color-mix(in srgb,#fff 26%,transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.20),
+    0 1px 4px -1px rgba(0,0,0,.50);
+  color:#fff;
+  text-shadow:0 1px 2px rgba(0,0,0,.55);
+}
+/* 没有模糊的环境（老浏览器 / 弱机）：26% 的半透片直接压在插画上，
+   字会跟背后的画麻花，必须把底色提回来。 */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .product-card-flag{background:color-mix(in srgb,#fff 92%,transparent)}
+  .product-card-flag[data-flag-tone="dark"]{background:color-mix(in srgb,#141011 90%,transparent)}
+}
+html.fx-noblur .product-card-flag{background:color-mix(in srgb,#fff 92%,transparent)}
+html.fx-noblur .product-card-flag[data-flag-tone="dark"]{background:color-mix(in srgb,#141011 90%,transparent)}
 .product-card-flag .ic{font-size:13px;color:var(--card-accent,var(--accent))}
+/* 黑底封面上卡片主色（深青/深绣）接近背景，图标会几乎看不见 —— 跟字一起转白 */
+.product-card-flag[data-flag-tone="dark"] .ic{color:#fff;opacity:.92}
 
 .product-card-copy{display:flex;flex-direction:column;gap:14px;padding:22px 24px;flex:1;min-width:0}
 .product-card-head{display:flex;align-items:center;gap:12px}
