@@ -102,9 +102,9 @@ window.I18N = (function () {
     'works.kicker': { zh: '作品下载', en: 'Downloads', ja: 'ダウンロード' },
     'works.title':  { zh: '已经<em>戴得上手的作品。</em>', en: 'Ports you can <em>wear right now.</em>', ja: 'もう<em>身につけられる作品。</em>' },
     'works.lede': {
-      zh: '目前公开的四款小米手环移植作品，均为非官方个人移植、免费提供。点下面的按钮会唤起 Astrobox 直接安装。',
-      en: 'Four Mi Band ports are public so far — unofficial, made by one person, free of charge. The buttons below hand off to Astrobox to install.',
-      ja: '現在公開中のスマートバンド移植は4作品。いずれも個人による非公式移植で、無料です。下のボタンから Astrobox を呼び出してインストールできます。'
+      zh: '目前公开的五款小米手环移植作品，均为非官方个人移植、免费提供。点下面的按钮会唤起 Astrobox 直接安装。',
+      en: 'Five Mi Band ports are public so far — unofficial, made by one person, free of charge. The buttons below hand off to Astrobox to install.',
+      ja: '現在公開中のスマートバンド移植は5作品。いずれも個人による非公式移植で、無料です。下のボタンから Astrobox を呼び出してインストールできます。'
     },
     'works.install':  { zh: '前往 Astrobox 安装', en: 'Install via Astrobox', ja: 'Astrobox でインストール' },
     'works.source':   { zh: '查看源码', en: 'View source', ja: 'ソースを見る' },
@@ -159,11 +159,27 @@ window.I18N = (function () {
       ja: '『永遠と星々と日常』のスマートバンド非公式移植版。原作は、ありふれた日常の中に少しずつ芽生える「普通でないもの」を描いたビジュアルノベルです。ビルドはアップロード準備中で、ソースは先に公開しています。'
     },
 
+    /* 作品五：夏末白夜 */
+    'w5.title':   { zh: '夏末白夜', en: 'The White Night in Late Summer', ja: '夏末白夜' },
+    'w5.summary': {
+      zh: '《夏末白夜》的小米手环非官方移植版。还在整理阶段，安装包暂时没有上传到 Astrobox，源码已经先公开了。',
+      en: 'An unofficial Mi Band port of The White Night in Late Summer. Still being put together — the build is not on Astrobox yet, but the source is already public.',
+      ja: '『夏末白夜』のスマートバンド非公式移植版。まだ整理中で、ビルドは Astrobox に未アップロードですが、ソースは先に公開しています。'
+    },
+    /* 「尚未上传、但源码已公开」的提示。
+       与 works.hintPendingBuild 的区别：那一条说的是「每日构建阶段」，
+       这一条只说还没传 —— 不能把两件事的说法混用。 */
+    'works.hintPendingSource': {
+      zh: '安装包还没上传到 Astrobox，所以暂时装不了；想先看代码点「查看源码」。',
+      en: 'The build is not on Astrobox yet, so it cannot be installed for now — hit “View source” to look at the code first.',
+      ja: 'ビルドはまだ Astrobox に上がっていないため、今はインストールできません。先にコードを見るなら「ソースを見る」から。'
+    },
+
     /* ---------- 合集卡片 ---------- */
     'collage.kicker': { zh: '合集卡片', en: 'Card deck', ja: 'カード' },
     'collage.title':  { zh: 'Galgame合集卡片喵~', en: 'The Galgame card deck~', ja: 'ギャルゲーカードコレクションにゃ〜' },
     'collage.lede': {
-      zh: '一张卡把两部作品收在一起。按住往上拖、滚鼠标滚轮、或用方向键和下面的按钮都能翻页；序号下面的作品名就是安装入口，点进去由 Astrobox 打开。',
+      zh: '一张卡把整套移植作品收在一起。按住往上拖、滚鼠标滚轮、或用方向键和下面的按钮都能翻页；序号下面的作品名就是安装入口，点进去由 Astrobox 打开。',
       en: 'One card holds the whole collection. Drag upward, use the mouse wheel, the arrow keys, or the buttons below to page through. The title under each number is the install entry — Astrobox takes over from there.',
       ja: '1枚のカードに作品をまとめています。上へドラッグ、マウスホイール、矢印キー、下のボタンのどれでもページを送れます。番号の下の作品名がインストール入口で、Astrobox が開きます。'
     },
@@ -173,11 +189,12 @@ window.I18N = (function () {
     'collage.prev':   { zh: '上一部作品', en: 'Previous work', ja: '前の作品' },
     'collage.next':   { zh: '下一部作品', en: 'Next work', ja: '次の作品' },
     'collage.p1':     { zh: 'Galgame 移植合集', en: 'Galgame port collection', ja: 'ギャルゲー移植コレクション' },
-    'collage.p1meta': { zh: '4 部作品 · 手环 9 Pro/10 Pro', en: '4 works · Band 9 Pro / 10 Pro', ja: '4作品 · バンド 9 Pro / 10 Pro' },
+    'collage.p1meta': { zh: '5 部作品 · 手环 9 Pro/10 Pro', en: '5 works · Band 9 Pro / 10 Pro', ja: '5作品 · バンド 9 Pro / 10 Pro' },
     'collage.p3meta': { zh: '快应用 · 手环 9 Pro', en: 'Quick app · Band 9 Pro', ja: 'クイックアプリ · バンド 9 Pro' },
     'collage.p2meta': { zh: '快应用 · 手环 9 Pro/10 Pro', en: 'Quick app · Band 9 Pro / 10 Pro', ja: 'クイックアプリ · バンド 9 Pro / 10 Pro' },
     'collage.p4meta': { zh: '待上传 · 源码已公开', en: 'Pending · source available', ja: '未アップロード · ソース公開中' },
     'collage.p5meta': { zh: '每日构建 · 源码已公开', en: 'Nightly build · source available', ja: 'デイリービルド · ソース公開中' },
+    'collage.p6meta': { zh: '待上传 · 源码已公开', en: 'Pending · source available', ja: '未アップロード · ソース公開中' },
 
     /* ---------- 作品四：黄莓C（demo） ---------- */
     'w4.title':   { zh: '黄莓C', en: 'HUANGMEI C', ja: '黄莓C' },
@@ -319,13 +336,13 @@ window.I18N = (function () {
 
     'footer.disclaimer': { zh: '免责声明', en: 'Disclaimer', ja: '免責事項' },
     'footer.disclaimer1': {
-      zh: '「作品下载」中的四款移植均为面向小米 Vela 设备的<strong>非官方个人移植</strong>，并非原作官方版本或授权衍生产品，与原作者、小米（Xiaomi）及 Astrobox 官方均无关联。《小小的身影，重叠的内心》《想成为 Galgame 领域大神！！！》（GalGod）《永恒与星辰与日常》《黄莓C》的名称、角色、剧情与美术资源，著作权均归各自原作者及相关权利人所有，本站不主张任何原作权利。',
-      en: 'The four ports under “Downloads” are <strong>unofficial personal ports</strong> for Xiaomi Vela devices. They are not official releases or licensed derivatives, and are unaffiliated with the original authors, Xiaomi, or Astrobox. Rights to the titles, characters, story and artwork of Tiny Shadows, Overlapping Hearts; I Want to Be a Galgame Master!!! (GalGod); Eternity, the Stars, and Everyday; and HUANGMEI C belong to their respective authors and rights holders; this site claims no rights over the original works.',
-      ja: '「ダウンロード」に掲載している4作品の移植は、Xiaomi Vela デバイス向けの<strong>非公式な個人移植</strong>であり、原作の公式版や許諾を得た派生作品ではありません。原作者、Xiaomi、Astrobox のいずれとも関係ありません。『小さな影、重なる心』『ギャルゲーの神になりたい！！！』（GalGod）『永遠と星々と日常』『黄莓C』の名称・キャラクター・シナリオ・美術素材の著作権は、それぞれの原作者および権利者に帰属し、当サイトはいかなる原作の権利も主張しません。'
+      zh: '「作品下载」中的五款移植均为面向小米 Vela 设备的<strong>非官方个人移植</strong>，并非原作官方版本或授权衍生产品，与原作者、小米（Xiaomi）及 Astrobox 官方均无关联。《小小的身影，重叠的内心》《想成为 Galgame 领域大神！！！》（GalGod）《永恒与星辰与日常》《黄莓C》《夏末白夜》的名称、角色、剧情与美术资源，著作权均归各自原作者及相关权利人所有，本站不主张任何原作权利。',
+      en: 'The five ports under “Downloads” are <strong>unofficial personal ports</strong> for Xiaomi Vela devices. They are not official releases or licensed derivatives, and are unaffiliated with the original authors, Xiaomi, or Astrobox. Rights to the titles, characters, story and artwork of Tiny Shadows, Overlapping Hearts; I Want to Be a Galgame Master!!! (GalGod); Eternity, the Stars, and Everyday; HUANGMEI C; and The White Night in Late Summer belong to their respective authors and rights holders; this site claims no rights over the original works.',
+      ja: '「ダウンロード」に掲載している5作品の移植は、Xiaomi Vela デバイス向けの<strong>非公式な個人移植</strong>であり、原作の公式版や許諾を得た派生作品ではありません。原作者、Xiaomi、Astrobox のいずれとも関係ありません。『小さな影、重なる心』『ギャルゲーの神になりたい！！！』（GalGod）『永遠と星々と日常』『黄莓C』『夏末白夜』の名称・キャラクター・シナリオ・美術素材の著作権は、それぞれの原作者および権利者に帰属し、当サイトはいかなる原作の権利も主張しません。'
     },
     'footer.disclaimer2': {
-      zh: '四款移植均免费提供，不收取任何费用，也不代表原作售价；请通过正规渠道支持原作。使用、修改或传播本站所涉内容所产生的<strong>风险与责任由使用者自行承担</strong>。',
-      en: 'All four ports are provided free of charge, and this does not reflect the price of the original works; please support the originals through official channels. <strong>Any risk or liability arising from using, modifying or redistributing content referenced here rests with the user.</strong>',
+      zh: '五款移植均免费提供，不收取任何费用，也不代表原作售价；请通过正规渠道支持原作。使用、修改或传播本站所涉内容所产生的<strong>风险与责任由使用者自行承担</strong>。',
+      en: 'All five ports are provided free of charge, and this does not reflect the price of the original works; please support the originals through official channels. <strong>Any risk or liability arising from using, modifying or redistributing content referenced here rests with the user.</strong>',
       ja: '移植はいずれも無料で提供しており、費用は一切かかりません。原作の価格を示すものでもありません。原作は正規の手段でご支援ください。当サイトの内容を利用・改変・配布することで生じる<strong>リスクと責任は利用者ご自身が負うものとします</strong>。'
     },
     'footer.copyright': { zh: '持续更新中', en: 'updated regularly', ja: '随時更新中' },
@@ -336,9 +353,9 @@ window.I18N = (function () {
        （改名要同时改 HTML、CSS、JS 三处，收益为零）。 */
     'ginka.tag':  { zh: '移植预告', en: 'Coming next', ja: '移植予告' },
     'ginka.text': {
-      zh: '下一部：<strong>黄莓C</strong> demo —— 已进入每日构建状态，如需体验请使用仓库内资源。',
-      en: 'Next up: the <strong>HUANGMEI C</strong> demo — now in nightly builds. To try it, use the resources in the repository.',
-      ja: '次は <strong>黄莓C</strong> の demo — デイリービルド段階に入りました。試したい場合はリポジトリ内のリソースをご利用ください。'
+      zh: '下一部：<strong>海蓝星之梦</strong> —— 将要开始移植，不久就能在手环上看到它。',
+      en: 'Next up: <strong>Dream of BluePlanet</strong> — the port is about to start; it will land on the band soon.',
+      ja: '次は <strong>海藍星の夢</strong> —— まもなく移植に着手します。もうすぐにバンドで見られるようになります。'
     },
 
 

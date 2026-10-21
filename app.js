@@ -1052,6 +1052,15 @@
       var pcNav = pcCard.querySelector('.pc-nav');
 
       var pcCount = pcPages.length;
+
+      /* 序号统一由 JS 写一遍。HTML 里那些「1/6…6/6」是给无脚本情况看的兜底，
+         但每次往合集里加作品都得手动改 6 处，漏一个就前后矛盾。
+         这里按实际页数重算，以后加页不必再动序号。 */
+      pcPages.forEach(function (el, i) {
+        var idx = el.querySelector('.pc-index');
+        if (idx) idx.textContent = (i + 1) + '/' + pcCount;
+      });
+
       var pcAt = 0;
       var pcDragging = false, pcStartY = 0, pcDy = 0, pcLastY = 0, pcLastT = 0, pcVy = 0, pcMoved = false;
       var pcPageH = 0;      /* 一页的高度，首次布局时量 */

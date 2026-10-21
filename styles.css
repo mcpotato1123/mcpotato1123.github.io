@@ -34,7 +34,7 @@
      作用是把「浏览器拿到的到底是哪一版 CSS」变成可读的事实 ——
      否则一遇到「改了没生效」，只能在缓存 / 编码 / 嵌套之间瞎猜。
      **每次改完这个文件记得更新这里的日期。** */
-  --css-rev:"2026-10-11 no-select";
+  --css-rev:"2026-10-21 whitenight";
 
   /* ---------- 主色 ----------
      站点主色沿用原有品牌蓝 #2563eb。派生令牌一律 color-mix，
@@ -55,6 +55,9 @@
   --amber-soft:rgba(201,121,31,.12);
   --rose:#c4566f;
   --rose-soft:rgba(196,86,111,.12);
+  /* 第四辅助色：藏青（取自《夏末白夜》标题的深蓝）*/
+  --night:#3a6485;
+  --night-soft:rgba(58,100,133,.12);
 
   --shadow-1:0 1px 2px rgba(26,21,23,.05),0 4px 14px -8px rgba(26,21,23,.14);
   --shadow-2:0 2px 6px rgba(26,21,23,.06),0 20px 44px -24px rgba(26,21,23,.30);
@@ -246,6 +249,8 @@
   --amber-soft:rgba(226,165,97,.14);
   --rose:#ff7d97;
   --rose-soft:rgba(255,125,151,.14);
+  --night:#7db2d8;
+  --night-soft:rgba(125,178,216,.14);
 
   --shadow-1:0 1px 2px rgba(0,0,0,.55),0 6px 18px -10px rgba(0,0,0,.8);
   --shadow-2:0 2px 8px rgba(0,0,0,.5),0 26px 54px -28px rgba(0,0,0,.9);
@@ -1087,6 +1092,17 @@ html.fx-lite .hero-inner::after{animation:none}
   grid-template-columns:repeat(2,minmax(0,1fr));
   gap:20px;
 }
+/* 卡片数量为奇数时（现在是 5 张），最后一张会单独落在左列、右边空一格，
+   看着像少了一块。让它跨满两列再缩回单卡宽度并居中 —— 尺寸不变、位置居中，
+   视觉节奏还是「两列」，只是收尾不歪。
+   限定在桌面两列布局：窄屏是单列，这条规则会把卡片挤成半宽。 */
+@media (min-width:821px){
+  .product-grid > .product-card:last-child:nth-child(odd){
+    grid-column:1 / -1;
+    justify-self:center;
+    width:calc(50% - 10px);   /* 50% - 半个 gap，与单列宽一致 */
+  }
+}
 
 .product-card{
   position:relative;display:flex;flex-direction:row;align-items:stretch;
@@ -1172,6 +1188,8 @@ html.fx-lite .hero-inner::after{animation:none}
 .product-card[data-tone="amber"]{--card-accent:var(--amber);--card-soft:var(--amber-soft)}
 .product-card[data-tone="teal"]{--card-accent:var(--teal);--card-soft:var(--teal-soft)}
 .product-card[data-tone="muted"]{--card-accent:var(--muted);--card-soft:var(--line-2)}
+.product-card[data-tone="rose"]{--card-accent:var(--rose);--card-soft:var(--rose-soft)}
+.product-card[data-tone="night"]{--card-accent:var(--night);--card-soft:var(--night-soft)}
 
 /* ---------- 作品下载卡（Astrobox 安装入口） ----------------------------
    在 .product-card 骨架上加两样：底部的按钮行（安装 + 源码）、以及下面那行安装说明。
