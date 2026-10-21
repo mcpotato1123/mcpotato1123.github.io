@@ -620,6 +620,16 @@
     var mqDark = window.matchMedia('(prefers-color-scheme: dark)');
 
     /* ====================================================================
+       0. 禁止双指缩放（老 iOS 兜底）
+       主策略在 CSS 的 touch-action 与 viewport meta 上，但 iOS 10 起
+       **直接忽略 user-scalable=no**，而 Safari 13 之前也不支持用 touch-action
+       限制捏合。这些版本只会抛 gesturestart/gesturechange，所以在这里拦一道。
+       新版浏览器上这些事件本来就不触发，等于空跑，不影响任何交互。
+       ==================================================================== */
+    document.addEventListener('gesturestart', function (e) { e.preventDefault(); }, { passive: false });
+    document.addEventListener('gesturechange', function (e) { e.preventDefault(); }, { passive: false });
+
+    /* ====================================================================
        0. 入场动画 + 数字滚动
        隐藏正文的类在这里、由 JS 自己加上：观察器就绪 = 后续必定会把元素放出来。
        两个观察器合成一个 —— 它们进入视口的时机一致，没必要开两条。

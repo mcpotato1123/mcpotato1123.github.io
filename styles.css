@@ -391,6 +391,12 @@ html{
   scroll-behavior:smooth;
   scroll-padding-top:88px;
   -webkit-text-size-adjust:100%;
+  /* 禁止双指缩放（与 viewport meta 里的 user-scalable=no 同一条策略）。
+     pan-x pan-y = 只允许横向和纵向滑动，不允许「捏合缩放」，
+     顺带也关掉了双击缩放（双击在手机上常常是误触，会把页面放大到奇怪的比例）。
+     子元素各自需要的手势不受影响：取色器写了 touch-action:none、
+     合集卡片写了 pan-x，那些更具体的值会覆盖这里。 */
+  touch-action:pan-x pan-y;
   background:var(--bg);
   overflow-x:clip;
 }
