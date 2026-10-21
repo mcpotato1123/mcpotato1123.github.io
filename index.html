@@ -298,6 +298,53 @@
              · 下方一条色相条
              · 再下方十六进制输入框，可直接键入精确色号
            色卡（整行）点击即展开/收起取色器。 -->
+      <!-- 主题配色：从六部作品的封面各建一套主色。
+           读屏器读的是各自作品名（复用 w1..w6.title），不必另建一套文案。 -->
+      <!-- 主题配色：每一行 = 色点 + 色名 + 出自哪部作品。
+           早先这里是 6 个纯圆点，看不出颜色和作品的对应关系。
+           色名与作品名由 JS 在 paint() 里填写（随语言变），这里只留空壳。 -->
+      <div class="accent-sect">
+        <p class="accent-sect-title" data-i18n="accent.projects">主题配色</p>
+        <div class="accent-proj-list">
+          <button class="accent-proj" type="button" role="menuitemradio" data-accent="tiny"
+                  data-i18n-attr="aria-label:w1.title" aria-checked="false">
+            <i class="pj-dot" aria-hidden="true"></i>
+            <span class="pj-nm"></span>
+            <span class="pj-src"></span>
+          </button>
+          <button class="accent-proj" type="button" role="menuitemradio" data-accent="galgod"
+                  data-i18n-attr="aria-label:w2.title" aria-checked="false">
+            <i class="pj-dot" aria-hidden="true"></i>
+            <span class="pj-nm"></span>
+            <span class="pj-src"></span>
+          </button>
+          <button class="accent-proj" type="button" role="menuitemradio" data-accent="eternity"
+                  data-i18n-attr="aria-label:w3.title" aria-checked="false">
+            <i class="pj-dot" aria-hidden="true"></i>
+            <span class="pj-nm"></span>
+            <span class="pj-src"></span>
+          </button>
+          <button class="accent-proj" type="button" role="menuitemradio" data-accent="huangmeic"
+                  data-i18n-attr="aria-label:w4.title" aria-checked="false">
+            <i class="pj-dot" aria-hidden="true"></i>
+            <span class="pj-nm"></span>
+            <span class="pj-src"></span>
+          </button>
+          <button class="accent-proj" type="button" role="menuitemradio" data-accent="whitenight"
+                  data-i18n-attr="aria-label:w5.title" aria-checked="false">
+            <i class="pj-dot" aria-hidden="true"></i>
+            <span class="pj-nm"></span>
+            <span class="pj-src"></span>
+          </button>
+          <button class="accent-proj" type="button" role="menuitemradio" data-accent="blueplanet"
+                  data-i18n-attr="aria-label:w6.title" aria-checked="false">
+            <i class="pj-dot" aria-hidden="true"></i>
+            <span class="pj-nm"></span>
+            <span class="pj-src"></span>
+          </button>
+        </div>
+      </div>
+
       <div class="accent-custom">
         <button class="accent-custom-pick" id="accentCustomBtn" type="button"
                 aria-expanded="false" aria-controls="accentPicker"
@@ -390,6 +437,19 @@
             aria-checked="false" data-i18n-attr="aria-label:accent.indigo" aria-label="靛蓝"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
     <button class="accent-swatch" type="button" data-accent="graphite"
             aria-checked="false" data-i18n-attr="aria-label:accent.graphite" aria-label="石墨"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
+      <!-- 主题配色（6 颗）：颜色与桌面面板里那组一致 -->
+      <button class="accent-swatch" type="button" data-accent="tiny" aria-checked="false"
+              data-i18n-attr="aria-label:w1.title" aria-label="小小的身影"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
+      <button class="accent-swatch" type="button" data-accent="galgod" aria-checked="false"
+              data-i18n-attr="aria-label:w2.title" aria-label="GalGod"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
+      <button class="accent-swatch" type="button" data-accent="eternity" aria-checked="false"
+              data-i18n-attr="aria-label:w3.title" aria-label="永恒与星辰"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
+      <button class="accent-swatch" type="button" data-accent="huangmeic" aria-checked="false"
+              data-i18n-attr="aria-label:w4.title" aria-label="黄莓C"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
+      <button class="accent-swatch" type="button" data-accent="whitenight" aria-checked="false"
+              data-i18n-attr="aria-label:w5.title" aria-label="夏末白夜"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
+      <button class="accent-swatch" type="button" data-accent="blueplanet" aria-checked="false"
+              data-i18n-attr="aria-label:w6.title" aria-label="海蓝星之梦"><svg class="sw-check" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg></button>
       <!-- 手机端的自由取色：一枚彩虹色块，点开在菜单里展开同一个取色器 -->
       <button class="accent-custom-pick is-mini" id="accentMiniBtn" type="button"
               aria-expanded="false" aria-controls="accentPicker"
@@ -454,7 +514,7 @@
       </div>
 
       <ul class="hero-stats" data-anim="4">
-        <li><strong data-count="5"></strong><span data-i18n="hero.stat1">款手环移植</span></li>
+        <li><strong data-count="6"></strong><span data-i18n="hero.stat1">款手环移植</span></li>
         <li><strong data-count="3"></strong><span data-i18n="hero.stat2">个在线工具</span></li>
         <li><strong data-count="100" data-suffix="%"></strong><span data-i18n="hero.stat3">浏览器本地处理</span></li>
       </ul>
@@ -741,6 +801,51 @@
         </div>
       </article>
 
+      <article class="product-card media-top glow reveal" data-tone="ocean"
+               data-tilt data-tilt-max="4">
+        <figure class="product-card-media">
+          <img class="product-card-image" src="blueplanet-cover-full.webp" width="1920" height="1080"
+               loading="lazy" decoding="async"
+               alt="《海蓝星之梦》小米手环移植版封面">
+          <figcaption class="product-card-flag">
+            <svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg><span data-i18n="flag.pending">待上传</span>
+          </figcaption>
+        </figure>
+        <div class="product-card-copy">
+          <div class="product-card-head">
+            <span class="product-icon" aria-hidden="true">
+              <img src="blueplanet-logo.webp" width="96" height="96" loading="lazy" decoding="async" alt="">
+            </span>
+            <div class="product-card-title">
+              <h3 data-i18n="w6.title">海蓝星之梦</h3>
+              <span data-i18n="tag.subtitle">小米手环非官方移植</span>
+            </div>
+          </div>
+          <p class="product-card-summary" data-i18n="w6.summary">《海蓝星之梦》的小米手环非官方移植版。已进入每日构建状态，安装包还没上传到 Astrobox，源码已经先公开了。</p>
+          <div class="card-tags">
+            <i data-i18n="tag.band9">小米手环 9 Pro</i>
+            <i data-i18n="tag.unofficial">非官方移植</i>
+            <i data-i18n="tag.free">免费</i>
+            <i>com.blueplanet.dream.band</i>
+          </div>
+          <div class="dl-actions">
+            <span class="btn btn-primary is-pending" aria-disabled="true">
+              <svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>
+              <span data-i18n="works.pending">待上传</span>
+            </span>
+            <a class="btn btn-ghost" href="https://github.com/mcpotato1123/blueplanet-band"
+               target="_blank" rel="noopener noreferrer">
+              <svg class="ic" aria-hidden="true"><use href="#i-github"/></svg>
+              <span data-i18n="works.source">查看源码</span>
+            </a>
+          </div>
+          <p class="dl-hint">
+            <span data-i18n="works.hintPendingBuild">每日构建阶段，安装包还没上传到 Astrobox，所以暂时装不了；想先看代码点「查看源码」。</span>
+          </p>
+        </div>
+      </article>
+
+
     </div>
 
     <p class="works-note reveal">
@@ -858,6 +963,21 @@
                 <svg class="ic" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
               </a>
               <p class="pc-meta" data-i18n="collage.p6meta">待上传 · 源码已公开</p>
+            </article>
+
+            <article class="pc-page">
+              <figure class="pc-cover">
+                <img src="blueplanet-cover-full.webp" width="1920" height="1080"
+                     loading="lazy" decoding="async" draggable="false"
+                     alt="《海蓝星之梦》小米手环移植版封面">
+              </figure>
+              <p class="pc-index">7/7</p>
+              <!-- 每日构建中，安装包还没上 Astrobox，这一页指向源码仓库 -->
+              <a class="pc-title" href="https://github.com/mcpotato1123/blueplanet-band"
+                 target="_blank" rel="noopener noreferrer"><span data-i18n="w6.title">海蓝星之梦</span>
+                <svg class="ic" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
+              </a>
+              <p class="pc-meta" data-i18n="collage.p7meta">每日构建 · 源码已公开</p>
             </article>
           </div>
         </div>
@@ -1155,6 +1275,7 @@
         <div>
           <h4 data-i18n="footer.offSite">站外</h4>
           <a href="https://github.com/mcpotato1123" target="_blank" rel="noopener noreferrer" data-i18n="footer.ghProfile">GitHub 主页</a>
+          <a href="https://github.com/mcpotato1123/blueplanet-band" target="_blank" rel="noopener noreferrer" data-i18n="footer.srcBp">blueplanet-band 源码</a>
           <a href="https://github.com/mcpotato1123/huangmeic-band" target="_blank" rel="noopener noreferrer" data-i18n="footer.srcHm">huangmeic-band 源码</a>
           <a href="https://github.com/mcpotato1123/ourbriefeternity-band" target="_blank" rel="noopener noreferrer" data-i18n="footer.srcObe">ourbriefeternity-band 源码</a>
           <a href="https://github.com/mcpotato1123/galgod-band" target="_blank" rel="noopener noreferrer" data-i18n="footer.srcGal">galgod-band 源码</a>

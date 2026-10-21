@@ -184,7 +184,9 @@
     var KEY = 'cenilla-accent';
     var KEY_CUSTOM = 'cenilla-accent-custom';
     var VALID = ['blue', 'sky', 'teal', 'emerald', 'olive', 'amber',
-                 'coral', 'rose', 'magenta', 'violet', 'indigo', 'graphite'];
+                 'coral', 'rose', 'magenta', 'violet', 'indigo', 'graphite',
+                 /* 主题配色：从六部作品封面提取的主色 */
+                 'tiny', 'galgod', 'eternity', 'huangmeic', 'whitenight', 'blueplanet'];
     var root = document.documentElement;
 
     /* ---- 先把顶栏开关接好 ------------------------------------------------
@@ -221,7 +223,7 @@
 
     /* 色珠点击用事件委托，同样提前注册（与 paint() 无关） */
     document.addEventListener('click', function (e) {
-      var btn = e.target && e.target.closest ? e.target.closest('.accent-swatch') : null;
+      var btn = e.target && e.target.closest ? e.target.closest('.accent-swatch, .accent-proj') : null;
       if (!btn) return;
       apply(btn.getAttribute('data-accent'), true);
     });
@@ -361,12 +363,44 @@
       /* 当前色名：桌面显示在面板标题行，手机显示在色珠下方的名条里。
          自定义色一律显示色号 —— 用户自己挑的颜色没有名字。 */
       var I2 = window.I18N;
+      /* 主题配色对应的作品简称键：标题行和手机名条要在色名后面补上出处。 */
+      var projSrc = null;
+      if (cur === 'tiny') projSrc = 'w1';
+      else if (cur === 'galgod') projSrc = 'w2';
+      else if (cur === 'eternity') projSrc = 'w3';
+      else if (cur === 'huangmeic') projSrc = 'w4';
+      else if (cur === 'whitenight') projSrc = 'w5';
+      else if (cur === 'blueplanet') projSrc = 'w6';
+
       var shownName;
       if (custom) {
         shownName = hex.toUpperCase();
       } else {
-        shownName = (I2 ? I2.t('accent.' + cur) : '') || '';
+        /* 查不到译文就退回原键名 —— 否则 shownName 为空，
+           下面的 if 不成立，标题会一直停在上一个颜色上（旧版就是这个错）。 */
+        shownName = (I2 && I2.t('accent.' + cur)) || cur;
       }
+      /* 主题配色显示成「草野绿 · 小小的身影」，其余只显示色名 */
+      if (projSrc) {
+        var srcName = I2 && I2.t(projSrc + '.short');
+        if (srcName) shownName = shownName + ' · ' + srcName;
+      }
+
+      /* 主题配色列表：每行的色名与作品名都要随语言重写 */
+      document.querySelectorAll('.accent-proj').forEach(function (row) {
+        var k = row.getAttribute('data-accent');
+        row.setAttribute('aria-checked', String(k === cur));
+        var nm = row.querySelector('.pj-nm');
+        var src = row.querySelector('.pj-src');
+        var nmLabel = I2 && I2.t('accent.' + k);
+        if (nm && nmLabel) nm.textContent = nmLabel;
+        if (src) {
+          var map = { tiny: 'w1', galgod: 'w2', eternity: 'w3', huangmeic: 'w4', whitenight: 'w5', blueplanet: 'w6' };
+          var s2 = I2 && map[k] ? I2.t(map[k] + '.short') : null;
+          if (s2) src.textContent = s2;
+        }
+      });
+
       var nameEl = document.getElementById('accentName');
       if (nameEl && shownName) nameEl.textContent = shownName;
       var mNameEl = document.getElementById('mobileAccentName');

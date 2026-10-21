@@ -34,7 +34,7 @@
      作用是把「浏览器拿到的到底是哪一版 CSS」变成可读的事实 ——
      否则一遇到「改了没生效」，只能在缓存 / 编码 / 嵌套之间瞎猜。
      **每次改完这个文件记得更新这里的日期。** */
-  --css-rev:"2026-10-21 i18n-title";
+  --css-rev:"2026-10-21 proj-list";
 
   /* ---------- 主色 ----------
      站点主色沿用原有品牌蓝 #2563eb。派生令牌一律 color-mix，
@@ -58,6 +58,8 @@
   /* 第四辅助色：藏青（取自《夏末白夜》标题的深蓝）*/
   --night:#3a6485;
   --night-soft:rgba(58,100,133,.12);
+  --ocean:#1d7fa8;
+  --ocean-soft:rgba(29,127,168,.12);
 
   --shadow-1:0 1px 2px rgba(26,21,23,.05),0 4px 14px -8px rgba(26,21,23,.14);
   --shadow-2:0 2px 6px rgba(26,21,23,.06),0 20px 44px -24px rgba(26,21,23,.30);
@@ -251,6 +253,8 @@
   --rose-soft:rgba(255,125,151,.14);
   --night:#7db2d8;
   --night-soft:rgba(125,178,216,.14);
+  --ocean:#5cc4e8;
+  --ocean-soft:rgba(92,196,232,.14);
 
   --shadow-1:0 1px 2px rgba(0,0,0,.55),0 6px 18px -10px rgba(0,0,0,.8);
   --shadow-2:0 2px 8px rgba(0,0,0,.5),0 26px 54px -28px rgba(0,0,0,.9);
@@ -362,6 +366,26 @@ html[data-accent="olive"][data-theme="dark"]{
 html[data-accent="coral"][data-theme="dark"]{
   --accent:#f4796b; --accent-fg:#0e1116; --accent-ink:#ffb3a7;
 }
+/* ---------- 主题配色（从各作品封面提取）---------------------
+   不是随手挑的色：每一个都是把对应封面缩小后做色相直方图，
+   按「饱和度×明度」加权取主峰，再把饱和与明度调到能当主色的水平。
+   四个蓝系封面本来色相接近（GalGod 226° 与永恒 228°），所以把它们拉开到
+   每隔 20° 以上，否则六个小圆点看上去像重复。每个都算过对比度，
+   实心主色上的字色自动选白或深。 */
+html[data-accent="tiny"]{ --accent:#568f2e; --accent-fg:#141011; --accent-ink:#3d6620; }
+html[data-accent="galgod"]{ --accent:#6a44c9; --accent-fg:#ffffff; --accent-ink:#4c2f92; }
+html[data-accent="eternity"]{ --accent:#2b64ab; --accent-fg:#ffffff; --accent-ink:#1e4779; }
+html[data-accent="huangmeic"]{ --accent:#9c642c; --accent-fg:#ffffff; --accent-ink:#70471f; }
+html[data-accent="whitenight"]{ --accent:#96825a; --accent-fg:#141011; --accent-ink:#6b5c3f; }
+html[data-accent="blueplanet"]{ --accent:#1b8ab2; --accent-fg:#141011; --accent-ink:#146880; }
+
+html[data-accent="tiny"][data-theme="dark"]{ --accent:#8ed65a; --accent-fg:#14200a; --accent-ink:#b6e88f; }
+html[data-accent="galgod"][data-theme="dark"]{ --accent:#956efa; --accent-fg:#12062e; --accent-ink:#c0aaff; }
+html[data-accent="eternity"][data-theme="dark"]{ --accent:#589df2; --accent-fg:#05203f; --accent-ink:#9cc6f8; }
+html[data-accent="huangmeic"][data-theme="dark"]{ --accent:#e39e58; --accent-fg:#2b1600; --accent-ink:#f0c391; }
+html[data-accent="whitenight"][data-theme="dark"]{ --accent:#dec592; --accent-fg:#1d1707; --accent-ink:#efdfbe; }
+html[data-accent="blueplanet"][data-theme="dark"]{ --accent:#45cafa; --accent-fg:#04222e; --accent-ink:#8de0fb; }
+
 /* 默认（未设 data-accent 或 =blue）沿用 :root 里的品牌蓝，无需重复定义 */
 
 /* ---------- 玻璃能力分级 ------------------------------------------------
@@ -1196,6 +1220,7 @@ html.fx-lite .hero-inner::after{animation:none}
 .product-card[data-tone="muted"]{--card-accent:var(--muted);--card-soft:var(--line-2)}
 .product-card[data-tone="rose"]{--card-accent:var(--rose);--card-soft:var(--rose-soft)}
 .product-card[data-tone="night"]{--card-accent:var(--night);--card-soft:var(--night-soft)}
+.product-card[data-tone="ocean"]{--card-accent:var(--ocean);--card-soft:var(--ocean-soft)}
 
 /* ---------- 作品下载卡（Astrobox 安装入口） ----------------------------
    在 .product-card 骨架上加两样：底部的按钮行（安装 + 源码）、以及下面那行安装说明。
@@ -1743,11 +1768,15 @@ html:has(#ginkaBanner) .hero{padding-top:168px}
 
 .accent-menu-head{
   display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;row-gap:2px;
   gap:14px;margin:0 1px 12px;
   font-size:11.5px;color:var(--muted);letter-spacing:.01em;
 }
 .accent-menu-head strong{
   color:var(--ink);font-size:12px;font-weight:700;
+  /* 主题配色的色名可能较长（White night sand、رمل الليلة البيضاء），
+     宽容不下时让它整体换到下一行，而不是挤出面板。 */
+  min-width:0;text-align:end;overflow-wrap:break-word;
   /* 当前色名右侧点一枚同色小圆，名字与颜色一起确认 */
   display:inline-flex;align-items:center;gap:6px;
 }
@@ -1760,6 +1789,45 @@ html:has(#ginkaBanner) .hero{padding-top:168px}
 /* 面板固定 238px 宽后，grid 的单元格会比色珠宽 —— 让色珠居中，
    于是 8 个色珠在更宽的画布上均匀铺开，比挤在 166px 里更好看也更好点 */
 .accent-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;justify-items:center}
+/* 「主题配色」分组：与上面的通用主色隔一道细线，
+   否则 18 个圆点摆在一起分不清哪些是什么。 */
+.accent-sect{margin-top:13px;padding-top:11px;border-top:1px solid var(--line)}
+.accent-sect-title{
+  margin:0 1px 9px;
+  font-size:10.5px;font-weight:600;letter-spacing:.04em;
+  color:var(--muted);text-transform:uppercase;
+}
+/* 主题配色列表：每行一个色，左边色点、中间色名、右边作品简称。
+   用列表而不用圆点网格，是因为 238px 的面板里六个纯圆点根本看不出各自出自哪部作品。 */
+.accent-proj-list{display:grid;gap:1px;margin-top:2px}
+.accent-proj{
+  display:flex;align-items:center;gap:8px;
+  width:100%;padding:6px 7px;border-radius:8px;
+  text-align:start;
+  transition:background .18s ease;
+}
+.accent-proj:hover{background:var(--surface-2)}
+.accent-proj[aria-checked="true"]{background:color-mix(in srgb, var(--accent) 12%, transparent)}
+.accent-proj[aria-checked="true"] .pj-nm{color:var(--accent-ink)}
+.accent-proj[aria-checked="true"] .pj-dot{box-shadow:0 0 0 1.5px var(--surface),0 0 0 3px var(--accent)}
+.accent-proj:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.pj-dot{
+  flex:none;width:16px;height:16px;border-radius:5px;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.12);
+}
+/* 色点的身份色与色块一致 */
+.accent-proj[data-accent="tiny"] .pj-dot{background:#568f2e}
+.accent-proj[data-accent="galgod"] .pj-dot{background:#6a44c9}
+.accent-proj[data-accent="eternity"] .pj-dot{background:#2b64ab}
+.accent-proj[data-accent="huangmeic"] .pj-dot{background:#9c642c}
+.accent-proj[data-accent="whitenight"] .pj-dot{background:#96825a}
+.accent-proj[data-accent="blueplanet"] .pj-dot{background:#1b8ab2}
+.pj-nm{font-size:11.5px;font-weight:600;color:var(--ink);flex:none}
+.pj-src{
+  margin-inline-start:auto;min-width:0;
+  font-size:10.5px;color:var(--muted);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
 
 /* 色珠 */
 .accent-swatch{
@@ -1814,6 +1882,13 @@ html:has(#ginkaBanner) .hero{padding-top:168px}
 .accent-swatch[data-accent="indigo"]{background-color:#4f46e5}
 .accent-swatch[data-accent="olive"]{background-color:#5f7a1f}
 .accent-swatch[data-accent="coral"]{background-color:#c03a2d}
+/* 主题配色的色块用各自封面提取的原色 */
+.accent-swatch[data-accent="tiny"]{background-color:#568f2e}
+.accent-swatch[data-accent="galgod"]{background-color:#6a44c9}
+.accent-swatch[data-accent="eternity"]{background-color:#2b64ab}
+.accent-swatch[data-accent="huangmeic"]{background-color:#9c642c}
+.accent-swatch[data-accent="whitenight"]{background-color:#96825a}
+.accent-swatch[data-accent="blueplanet"]{background-color:#1b8ab2}
 
 /* ---------- 自由取色（网页内嵌取色器）------------------------------------
    为什么不用 <input type="color">：它弹出的是**操作系统**的取色对话框
@@ -2051,7 +2126,8 @@ html:has(#ginkaBanner) .hero{padding-top:168px}
      用整行宽而不是包住文字：包文字会变成小药丸，文字一长一短宽度就跳；
      定宽条在切换颜色时只换字，形不变。 */
   .mobile-accent-name{
-    display:flex;align-items:center;justify-content:center;gap:6px;
+    display:flex;align-items:center;justify-content:center;
+    flex-wrap:wrap;gap:6px;
     margin:10px 0 0;
     padding:5px 10px;
     border-radius:9px;
