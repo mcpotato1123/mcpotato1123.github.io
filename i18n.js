@@ -893,6 +893,25 @@ window.I18N = (function () {
     if (DICT[k]) DICT[k]['zh-hant'] = HANT[k];
   });
 
+  /* ---------- 补齐漏译的键 ------------------------------------------------
+     这几个键是后发现的：合集卡有两页标题、页脚导航七项、GalGod 卡的标签、
+     跳转链接、品牌文字、mcbbs 卡片标题都是写死的中文，没接 i18n。
+     这里一次性给出七种语言，避免在 DICT / EXTRA / HANT 三张表里四处补。 */
+  var MORE = {
+    'a11y.skip':       { zh: '跳到主要内容', 'zh-hant': '跳到主要內容', en: 'Skip to main content', ja: '本文へスキップ', ko: '본문으로 건너뛰기', es: 'Saltar al contenido principal', ar: 'انتقل إلى المحتوى الرئيسي' },
+    'brand.name':      { zh: 'mcpotato1123的主页', 'zh-hant': 'mcpotato1123 的首頁', en: "mcpotato1123's home", ja: 'mcpotato1123 のホーム', ko: 'mcpotato1123의 홈', es: 'La página de mcpotato1123', ar: 'صفحة mcpotato1123' },
+    'links.mcbbsTitle':{ zh: 'mcbbs 主页', 'zh-hant': 'mcbbs 首頁', en: 'MCBBS profile', ja: 'mcbbs ホーム', ko: 'mcbbs 홈', es: 'Perfil de MCBBS', ar: 'ملف MCBBS' },
+    'tag.band910':     { zh: '小米手环 9 Pro/10 Pro', 'zh-hant': '小米手環 9 Pro/10 Pro', en: 'Mi Band 9 Pro / 10 Pro', ja: 'Xiaomi Smart Band 9 Pro / 10 Pro', ko: '샤오미 밴드 9 Pro/10 Pro', es: 'Xiaomi Smart Band 9 Pro / 10 Pro', ar: 'Xiaomi Smart Band 9 Pro / 10 Pro' },
+    'collage.p3title': { zh: '小小的身影', 'zh-hant': '小小的身影', en: 'Tiny Shadows', ja: '小さな影', ko: '작은 모습', es: 'Pequeñas sombras', ar: 'ظلال صغيرة' },
+    'collage.p4title': { zh: '永恒与星辰与日常', 'zh-hant': '永恆與星辰與日常', en: 'Eternity & Stars', ja: '永遠と星々と日常', ko: '영원과 별과 일상', es: 'Eternidad y estrellas', ar: 'الأبد والنجوم' },
+    'meta.title':      { zh: 'mcpotato1123的主页 · 小米手环移植与本地工具', 'zh-hant': 'mcpotato1123 的首頁 · 小米手環移植與本機工具', en: "mcpotato1123's home · Mi Band ports & local tools", ja: 'mcpotato1123 のホーム · スマートバンド移植とローカルツール', ko: 'mcpotato1123의 홈 · 샤오미 밴드 이식과 로컬 도구', es: 'La página de mcpotato1123 · Ports para Mi Band y herramientas locales', ar: 'صفحة mcpotato1123 · نقل تطبيقات الساعة وأدوات محلية' }
+  };
+
+  Object.keys(MORE).forEach(function (k) {
+    DICT[k] = DICT[k] || {};
+    Object.keys(MORE[k]).forEach(function (l) { DICT[k][l] = MORE[k][l]; });
+  });
+
   /* 运行时状态 */
   var current = 'zh';
 

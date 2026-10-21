@@ -124,6 +124,10 @@
     var short = { zh: '中', en: 'EN', ja: '日', ko: 'KO', es: 'ES', ar: 'AR', 'zh-hant': '繁' };
     function paintCode() {
       if (code) code.textContent = short[i18n.get()] || '中';
+      /* 标签页标题也跟着切。<meta>、<title> 不属于 data-i18n 的作用域，
+         所以在这里手写一句；paintCode 在初始化和每次 langchange 都会跑。 */
+      var ttl = i18n.t('meta.title');
+      if (ttl) document.title = ttl;
       document.querySelectorAll('[data-lang]').forEach(function (b) {
         b.setAttribute('aria-checked', String(b.getAttribute('data-lang') === i18n.get()));
       });
