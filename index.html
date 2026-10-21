@@ -588,6 +588,11 @@
               <svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>
               <span data-i18n="works.install">前往 Astrobox 安装</span>
             </a>
+            <a class="btn btn-ghost" href="https://github.com/mcpotato1123/tinyshadows-band/releases"
+               target="_blank" rel="noopener noreferrer">
+              <svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>
+              <span data-i18n="works.btnRelease">从 Releases 下载</span>
+            </a>
             <a class="btn btn-ghost" href="https://github.com/mcpotato1123/tinyshadows-band"
                target="_blank" rel="noopener noreferrer">
               <svg class="ic" aria-hidden="true"><use href="#i-github"/></svg>
@@ -633,6 +638,11 @@
               <svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>
               <span data-i18n="works.install">前往 Astrobox 安装</span>
             </a>
+            <a class="btn btn-ghost" href="https://github.com/mcpotato1123/galgod-band/releases"
+               target="_blank" rel="noopener noreferrer">
+              <svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>
+              <span data-i18n="works.btnRelease">从 Releases 下载</span>
+            </a>
             <a class="btn btn-ghost" href="https://github.com/mcpotato1123/galgod-band"
                target="_blank" rel="noopener noreferrer">
               <svg class="ic" aria-hidden="true"><use href="#i-github"/></svg>
@@ -645,14 +655,14 @@
         </div>
       </article>
 
-      <!-- 《永恒与星辰与日常》：整部处于「待上传」状态，所以卡片保留展示，
-           但**安装与源码两个入口都不可点**（做成 <span>，没有 href 就没有焦点）。
-           包名与两个链接都已确认无误，上传完成后只需三处：
-             1. 把两个 <span class="btn ... is-pending"> 换回 <a>，href 分别是
+      <!-- 《永恒与星辰与日常》：安装包仍为「待上传」，但源码仓库已恢复公开。
+           安装入口仍做成 <span>（没有 href 就没有焦点），源码入口是正常 <a>，
+           与「夏末白夜」「黄莓C」同一种状态：源码先公开，安装等上传。
+           上传完成后只剩两处：
+             1. 把安装那个 <span class="btn btn-primary is-pending"> 换回 <a>，href 为
                 abox.run/open?source=resv2&id=com.ourbriefeternity.band&provider=OfficialV2
-                和 github.com/mcpotato1123/ourbriefeternity-band
              2. 角标「待上传」改成「已上线」（图标从 i-clock 换成 i-sparkle）
-             3. 合集卡片第 4 页的链接从 GitHub 换回 abox.run，备注改回「快应用 · 手环 9 Pro」
+           合集卡片第 4 页到时也要从 GitHub 换回 abox.run，备注改回「快应用 · 手环 9 Pro」。
            首屏统计和页脚不用动 —— 它们已经是最终状态。
 
            注意：这段注释里不能出现连续两个连字符（中文破折号、CSS 自定义属性名
@@ -691,16 +701,22 @@
               <svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>
               <span data-i18n="works.pending">待上传</span>
             </span>
-            <!-- 源码仓库也先不开：这一部整体处于「待上传」状态，两个入口一起关掉，
-                 免得出现「源码能看、安装不能装」的半开状态。
-                 上传完成后把两个 span 一起换回 <a>（href 都已确定，见文件注释）。 -->
-            <span class="btn btn-ghost is-pending" aria-disabled="true">
+            <!-- 源码仓库已恢复（已公开），安装入口仍为「待上传」。
+                 这和「夏末白夜」「黄莓C」是同一种状态：源码先公开，
+                 安装包等上传。将来安装包上线后，只需把这一个 span 换回 <a>（href 见文件头部注释）并把角标改回「已上线」。 -->
+            <a class="btn btn-ghost" href="https://github.com/mcpotato1123/ourbriefeternity-band/releases"
+               target="_blank" rel="noopener noreferrer">
+              <svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>
+              <span data-i18n="works.btnRelease">从 Releases 下载</span>
+            </a>
+            <a class="btn btn-ghost" href="https://github.com/mcpotato1123/ourbriefeternity-band"
+               target="_blank" rel="noopener noreferrer">
               <svg class="ic" aria-hidden="true"><use href="#i-github"/></svg>
-              <span data-i18n="works.disabled">暂不可用</span>
-            </span>
+              <span data-i18n="works.source">查看源码</span>
+            </a>
           </div>
           <p class="dl-hint">
-            <span data-i18n="works.hintPending">这一部还没上传，安装与源码都暂时打不开，等传完会一起放出来。</span>
+            <span data-i18n="works.hintPendingSource">安装包还没上传到 Astrobox，所以暂时装不了；想先看代码点「查看源码」。</span>
           </p>
         </div>
       </article>
@@ -745,6 +761,11 @@
               <svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>
               <span data-i18n="works.pending">待上传</span>
             </span>
+            <a class="btn btn-ghost" href="https://github.com/mcpotato1123/huangmeic-band/releases"
+               target="_blank" rel="noopener noreferrer">
+              <svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>
+              <span data-i18n="works.btnRelease">从 Releases 下载</span>
+            </a>
             <a class="btn btn-ghost" href="https://github.com/mcpotato1123/huangmeic-band"
                target="_blank" rel="noopener noreferrer">
               <svg class="ic" aria-hidden="true"><use href="#i-github"/></svg>
@@ -789,6 +810,11 @@
               <svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>
               <span data-i18n="works.pending">待上传</span>
             </span>
+            <a class="btn btn-ghost" href="https://github.com/mcpotato1123/thewhitenightinlatesummer-band/releases"
+               target="_blank" rel="noopener noreferrer">
+              <svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>
+              <span data-i18n="works.btnRelease">从 Releases 下载</span>
+            </a>
             <a class="btn btn-ghost" href="https://github.com/mcpotato1123/thewhitenightinlatesummer-band"
                target="_blank" rel="noopener noreferrer">
               <svg class="ic" aria-hidden="true"><use href="#i-github"/></svg>
@@ -833,6 +859,11 @@
               <svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>
               <span data-i18n="works.pending">待上传</span>
             </span>
+            <a class="btn btn-ghost" href="https://github.com/mcpotato1123/blueplanet-band/releases"
+               target="_blank" rel="noopener noreferrer">
+              <svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>
+              <span data-i18n="works.btnRelease">从 Releases 下载</span>
+            </a>
             <a class="btn btn-ghost" href="https://github.com/mcpotato1123/blueplanet-band"
                target="_blank" rel="noopener noreferrer">
               <svg class="ic" aria-hidden="true"><use href="#i-github"/></svg>
@@ -1254,7 +1285,7 @@
             <a class="contact-chip" data-brand="bili" href="https://space.bilibili.com/1538255138?spm_id_from=333.1007.0.0" target="_blank" rel="noopener noreferrer">
               <svg class="ic" aria-hidden="true"><use href="#i-bili"/></svg><span data-i18n="footer.bili">哔哩哔哩 · mcpotato</span>
             </a>
-            <a class="contact-chip" data-brand="qq" href="https://qm.qq.com/q/3rCYoLk21W" target="_blank" rel="noopener noreferrer">
+            <a class="contact-chip" data-brand="qq" href="https://qun.qq.com/universal-share/share?ac=1&authKey=GIA8Op10KxVj0XcOAsNTIg0PbrTMEbiypWzlPZ21oQblPzY5Ov9PepDRFSEEGaot&busi_data=eyJncm91cENvZGUiOiI2NjE1MzU1OTYiLCJ0b2tlbiI6InlsZDduQ21PbGcxYXEybldJWXd4a0JERmRlTDNpMzQ4UGhSVHN0Q01JSDBXS3g5NVFCeDFNTUdkTVZSQ3F5c1UiLCJ1aW4iOiIyNDM2MzcwMDgxIn0%3D&data=F8WMjKCp2u3zdj7CWvMPiR-VIbsW0199rYrXBC6td8uJ-DEEb0InUVHG3xSYNZAqgmV6s0YVxQhcPnGqVq6LCA&svctype=4&tempid=h5_group_info" target="_blank" rel="noopener noreferrer">
               <svg class="ic" aria-hidden="true"><use href="#i-qq"/></svg><span data-i18n="footer.qq">玩家交流 QQ 群</span>
             </a>
           </div>

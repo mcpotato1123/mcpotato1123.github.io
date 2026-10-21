@@ -34,7 +34,7 @@
      作用是把「浏览器拿到的到底是哪一版 CSS」变成可读的事实 ——
      否则一遇到「改了没生效」，只能在缓存 / 编码 / 嵌套之间瞎猜。
      **每次改完这个文件记得更新这里的日期。** */
-  --css-rev:"2026-10-21 flag-clear";
+  --css-rev:"2026-10-21 release-btn";
 
   /* ---------- 主色 ----------
      站点主色沿用原有品牌蓝 #2563eb。派生令牌一律 color-mix，
@@ -1313,6 +1313,9 @@ html.fx-noblur .product-card-flag[data-flag-tone="dark"]{background:color-mix(in
 /* 卡片够宽时（≤900px 断点之后卡片变单列满宽）并排两颗 */
 @media (max-width:900px){
   .dl-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+/* 现在每张卡有三个按钮（主动作 + Release 下载 + 查看源码）。
+   主动作占满一行，后两个并划开；否则 2 列格子里塞 3 个会落下一个孤零零的。 */
+.dl-actions .btn-primary{grid-column:1 / -1}
 }
 
 /* ---------- 合集卡片区（独立区块）-------------------------------------- */
@@ -2558,8 +2561,7 @@ html[data-vt="theme"]::view-transition-new(root){
   .row-card{padding:16px;gap:13px}
   .row-icon{width:42px;height:42px;font-size:20px}
   .row-body small{font-size:12.5px}
-  .dl-hint{font-size:11px}
-}
+  .dl-hint{font-size:11px}}
 
 /* ---------- 封面置顶变体（.product-card.media-top） --------------------
    默认的 .product-card 是「左图右文」。作品下载那两张卡用的是横版封面

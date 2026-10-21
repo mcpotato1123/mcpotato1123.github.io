@@ -983,11 +983,96 @@ window.I18N = (function () {
     }
   };
 
+  /* Release 下载按钮：六部作品的仓库都发过 Release，
+     所以它和「查看源码」并列放在按钮区，而不是一行小字链接。 */
+  PLANET['works.btnRelease'] = {
+    zh: '从 Releases 下载',
+    'zh-hant': '從 Releases 下載',
+    en: 'Download from Releases',
+    ja: 'Releases からダウンロード',
+    ko: 'Releases에서 다운로드',
+    es: 'Descargar desde Releases',
+    ar: 'التنزيل من Releases'
+  };
+
   Object.keys(PLANET).forEach(function (k) {
     DICT[k] = DICT[k] || {};
     Object.keys(PLANET[k]).forEach(function (l) { DICT[k][l] = PLANET[k][l]; });
   });
 
+  /* ---------- 简介里的下载渠道 ------------------------------------------
+     六部作品的简介末尾都补一句「安装包也可以从仓库 Releases 下载」。
+     不直接去改 6 条 × 7 语言 = 42 条译文，是因为这句话七种语言完全一致：
+     用一张表拼接比在 DICT / EXTRA / HANT 三处逐条改更可靠 ——
+     而且以后修改原简介时，这句下载说明会自动跟着走。 */
+  var REL = {
+    zh: "安装包也可以直接从源码仓库的 Releases 下载。",
+    'zh-hant': "安裝包也可以直接從原始碼儲存庫的 Releases 下載。",
+    en: "You can also download the build straight from the repository's Releases.",
+    ja: "ビルドはリポジトリの Releases から直接ダウンロードすることもできます。",
+    ko: "설치 파일은 저장소의 Releases에서 바로 받을 수도 있습니다.",
+    es: "El paquete también se puede descargar directamente desde las Releases del repositorio.",
+    ar: "يمكنك أيضًا تنزيل الحزمة مباشرة من قسم Releases في المستودع.",
+  };
+  /* 中日文拼接不加空格；拉丁与阿拉伯字加一个空格 */
+  var REL_NO_SPACE = { zh: 1, 'zh-hant': 1, ja: 1 };
+  ['w1', 'w2'].forEach(function (k) {
+    var key = k + '.summary';
+    if (!DICT[key]) return;
+    LANGS.forEach(function (l) {
+      var v = DICT[key][l];
+      if (!v || !REL[l]) return;
+      DICT[key][l] = v.replace(/\s+$/, '') + (REL_NO_SPACE[l] ? '' : ' ') + REL[l];
+    });
+  });
+
+  /* ---------- 文案重修：安装包已在 Releases ----------------------------------
+     六部作品的安装包都已经放在各自仓库的 Releases 里了，
+     所以「安装包还没上传」这种说法不再成立 —— 只剩下 Astrobox 未上架。
+     这里整段重写待上架四部的简介、两条提示语，并把角标「待上传」改成「待上架」。 */
+  var TUNED = {
+    'w3.summary': { zh: "《永恒与星辰与日常》的小米手环非官方移植版。原作是一部视觉小说，讲的是普通日常里慢慢长出来的那点不普通。安装包已经放进源码仓库的 Releases，可以先从那里下载；Astrobox 那边还没上架。", 'zh-hant': "《永恆與星辰與日常》的小米手環非官方移植版。原作是一部視覺小說，講的是平凡日常裡慢慢長出來的那一點不平凡。安裝包已經放進原始碼儲存庫的 Releases，可以先從那裡下載；Astrobox 那邊還沒上架。", en: "An unofficial Mi Band port of Eternity, the Stars, and Everyday. The original is a visual novel about the small extraordinary things that grow out of ordinary days. The build is already in the repository's Releases, so you can download it there; it is not on Astrobox yet.", ja: "『永遠と星々と日常』のスマートバンド非公式移植版。原作は、ありふれた日常の中に少しずつ芽生える「普通でないもの」を描いたビジュアルノベルです。ビルドはすでにリポジトリの Releases に置いてあるので、そこからダウンロードできます。Astrobox にはまだ掲載されていません。", ko: "《영원과 별과 일상》의 샤오미 밴드 비공식 이식판입니다. 평범한 일상에서 천천히 자라나는 조금 특별한 무언가를 그린 비주얼 노벨입니다. 설치 파일은 이미 저장소의 Releases에 있으니 거기서 받을 수 있습니다. Astrobox에는 아직 등록되지 않았습니다.", es: "Un port no oficial de Eternidad, las estrellas y lo cotidiano. El original es una novela visual sobre lo extraordinario que crece despacio en los días normales. El paquete ya está en las Releases del repositorio, así que puedes descargarlo desde ahí; todavía no está en Astrobox.", ar: "نسخة منقولة غير رسمية من «الأبد والنجوم واليومي» إلى ساعة Mi Band. الأصل رواية بصرية عن الأشياء غير العادية التي تنمو ببطء داخل الأيام العادية. الملف موجود بالفعل في قسم Releases في المستودع ويمكن تنزيله من هناك؛ لكنه ليس على Astrobox بعد." },
+    'w4.summary': { zh: "《黄莓C》的小米手环非官方移植版。目前是 demo 阶段，处于每日构建状态。安装包已经放进源码仓库的 Releases，可以先从那里下载；Astrobox 那边还没上架。", 'zh-hant': "《黃莓C》的小米手環非官方移植版。目前是 demo 階段，處於每日建置狀態。安裝包已經放進原始碼儲存庫的 Releases，可以先從那裡下載；Astrobox 那邊還沒上架。", en: "An unofficial Mi Band port of HUANGMEI C. It is a demo in nightly-build stage. The build is already in the repository's Releases, so you can download it there; it is not on Astrobox yet.", ja: "『黄莓C』のスマートバンド非公式移植版。現在は demo 段階でデイリービルド中です。ビルドはすでにリポジトリの Releases に置いてあるので、そこからダウンロードできます。Astrobox にはまだ掲載されていません。", ko: "《황메이C》의 샤오미 밴드 비공식 이식판입니다. 현재 데모 단계로 데일리 빌드 중입니다. 설치 파일은 이미 저장소의 Releases에 있으니 거기서 받을 수 있습니다. Astrobox에는 아직 등록되지 않았습니다.", es: "Un port no oficial de HUANGMEI C para la Mi Band. Está en fase de demo, con compilaciones diarias. El paquete ya está en las Releases del repositorio, así que puedes descargarlo desde ahí; todavía no está en Astrobox.", ar: "نسخة منقولة غير رسمية من HUANGMEI C إلى ساعة Mi Band. ما زالت في مرحلة العرض التجريبي ببناء يومي. الملف موجود بالفعل في قسم Releases في المستودع ويمكن تنزيله من هناك؛ لكنه ليس على Astrobox بعد." },
+    'w5.summary': { zh: "《夏末白夜》的小米手环非官方移植版。还在整理阶段。安装包已经放进源码仓库的 Releases，可以先从那里下载；Astrobox 那边还没上架。", 'zh-hant': "《夏末白夜》的小米手環非官方移植版。還在整理階段。安裝包已經放進原始碼儲存庫的 Releases，可以先從那裡下載；Astrobox 那邊還沒上架。", en: "An unofficial Mi Band port of The White Night in Late Summer. Still being put together. The build is already in the repository's Releases, so you can download it there; it is not on Astrobox yet.", ja: "『夏末白夜』のスマートバンド非公式移植版。まだ整理中です。ビルドはすでにリポジトリの Releases に置いてあるので、そこからダウンロードできます。Astrobox にはまだ掲載されていません。", ko: "《여름 끝의 백야》의 샤오미 밴드 비공식 이식판입니다. 아직 정리 중입니다. 설치 파일은 이미 저장소의 Releases에 있으니 거기서 받을 수 있습니다. Astrobox에는 아직 등록되지 않았습니다.", es: "Un port no oficial de La noche blanca del final del verano. Todavía en preparación. El paquete ya está en las Releases del repositorio, así que puedes descargarlo desde ahí; todavía no está en Astrobox.", ar: "نسخة منقولة غير رسمية من «الليلة البيضاء في آخر الصيف» إلى ساعة Mi Band. ما زال قيد الإعداد. الملف موجود بالفعل في قسم Releases في المستودع ويمكن تنزيله من هناك؛ لكنه ليس على Astrobox بعد." },
+    'w6.summary': { zh: "《海蓝星之梦》的小米手环非官方移植版。已进入每日构建状态。安装包已经放进源码仓库的 Releases，可以先从那里下载；Astrobox 那边还没上架。", 'zh-hant': "《海藍星之夢》的小米手環非官方移植版。已進入每日建置狀態。安裝包已經放進原始碼儲存庫的 Releases，可以先從那裡下載；Astrobox 那邊還沒上架。", en: "An unofficial Mi Band port of Dream of BluePlanet. Now in nightly builds. The build is already in the repository's Releases, so you can download it there; it is not on Astrobox yet.", ja: "『海藍星の夢』のスマートバンド非公式移植版。デイリービルド段階に入りました。ビルドはすでにリポジトリの Releases に置いてあるので、そこからダウンロードできます。Astrobox にはまだ掲載されていません。", ko: "《바다빛 별의 꿈》의 샤오미 밴드 비공식 이식판입니다. 데일리 빌드 단계에 들어갔습니다. 설치 파일은 이미 저장소의 Releases에 있으니 거기서 받을 수 있습니다. Astrobox에는 아직 등록되지 않았습니다.", es: "Un port no oficial de Dream of BluePlanet para la Mi Band. Ya en compilaciones diarias. El paquete ya está en las Releases del repositorio, así que puedes descargarlo desde ahí; todavía no está en Astrobox.", ar: "نسخة منقولة غير رسمية من Dream of BluePlanet إلى ساعة Mi Band. دخلت مرحلة البناء اليومي. الملف موجود بالفعل في قسم Releases في المستودع ويمكن تنزيله من هناك؛ لكنه ليس على Astrobox بعد." },
+    'works.hintPendingSource': { zh: "Astrobox 那边还没上架，暂时装不了；安装包在源码仓库的 Releases 里，可以先从那里下载。", 'zh-hant': "Astrobox 那邊還沒上架，暫時裝不了；安裝包在原始碼儲存庫的 Releases 裡，可以先從那裡下載。", en: "It is not on Astrobox yet, so the install button is unavailable; the build is in the repository's Releases, so you can download it there.", ja: "Astrobox にはまだ掲載されていないため、まだインストールできません。ビルドはリポジトリの Releases にあるので、そこからダウンロードできます。", ko: "Astrobox에는 아직 등록되지 않아 설치할 수 없습니다. 설치 파일은 저장소의 Releases에 있으니 거기서 받으세요.", es: "Todavía no está en Astrobox, así que no se puede instalar; el paquete está en las Releases del repositorio y puedes descargarlo desde ahí.", ar: "لم يُدرَج على Astrobox بعد، لذا لا يمكن التثبيت منه؛ الملف موجود في قسم Releases في المستودع ويمكن تنزيله من هناك." },
+    'works.hintPendingBuild': { zh: "每日构建阶段，Astrobox 还没上架；安装包在源码仓库的 Releases 里，可以先从那里下载。", 'zh-hant': "每日建置階段，Astrobox 還沒上架；安裝包在原始碼儲存庫的 Releases 裡，可以先從那裡下載。", en: "Currently in nightly builds and not listed on Astrobox yet; the build is in the repository's Releases, so you can download it there.", ja: "デイリービルド段階で、Astrobox にはまだ掲載されていません。ビルドはリポジトリの Releases にあるので、そこからダウンロードできます。", ko: "데일리 빌드 단계이며 Astrobox에는 아직 등록되지 않았습니다. 설치 파일은 저장소의 Releases에 있으니 거기서 받으세요.", es: "En compilaciones diarias y aún sin publicar en Astrobox; el paquete está en las Releases del repositorio y puedes descargarlo desde ahí.", ar: "في مرحلة البناء اليومي ولم يُدرَج على Astrobox بعد؛ الملف موجود في قسم Releases في المستودع ويمكن تنزيله من هناك." },
+    'flag.pending': { zh: "待上架", 'zh-hant': "待上架", en: "Not listed yet", ja: "未掲載", ko: "미등록", es: "Sin publicar", ar: "لم يُدرَج بعد" },
+    'works.pending': { zh: "待上架", 'zh-hant': "待上架", en: "Not listed yet", ja: "未掲載", ko: "미등록", es: "Sin publicar", ar: "لم يُدرَج بعد" },
+  };
+  Object.keys(TUNED).forEach(function (k) {
+    DICT[k] = DICT[k] || {};
+    Object.keys(TUNED[k]).forEach(function (l) { DICT[k][l] = TUNED[k][l]; });
+  });
+  /* ---------- 收尾：把仍在说「待上传」的地方统一成「待上架 / Releases 可下载」 -----
+     安装包已经在各仓库的 Releases 里，所以「待上传」「安装包待上传」都是旧说法。
+     合集卡脚注与页脚链接里的作品条目一并改口，免得同一页上两种口径。 */
+  var TUNED2 = {
+    'collage.p4meta': { zh: "待上架 · Releases 可下载", 'zh-hant': "待上架 · Releases 可下載", en: "Not listed yet · Releases available", ja: "未掲載 · Releases から入手可", ko: "미등록 · Releases에서 받기 가능", es: "Sin publicar · disponible en Releases", ar: "لم يُدرَج بعد · متاح في Releases" },
+    'collage.p6meta': { zh: "待上架 · Releases 可下载", 'zh-hant': "待上架 · Releases 可下載", en: "Not listed yet · Releases available", ja: "未掲載 · Releases から入手可", ko: "미등록 · Releases에서 받기 가능", es: "Sin publicar · disponible en Releases", ar: "لم يُدرَج بعد · متاح في Releases" },
+    'collage.p5meta': { zh: "每日构建 · Releases 可下载", 'zh-hant': "每日建置 · Releases 可下載", en: "Nightly build · Releases available", ja: "デイリービルド · Releases から入手可", ko: "데일리 빌드 · Releases에서 받기 가능", es: "Compilación diaria · disponible en Releases", ar: "بناء يومي · متاح في Releases" },
+    'collage.p7meta': { zh: "每日构建 · Releases 可下载", 'zh-hant': "每日建置 · Releases 可下載", en: "Nightly build · Releases available", ja: "デイリービルド · Releases から入手可", ko: "데일리 빌드 · Releases에서 받기 가능", es: "Compilación diaria · disponible en Releases", ar: "بناء يومي · متاح في Releases" },
+    'footer.relObeSrc': { zh: "《永恒与星辰与日常》源码 · Release 可下载", 'zh-hant': "《永恆與星辰與日常》原始碼 · Release 可下載", en: "Eternity, the Stars, and Everyday source · Releases available", ja: "『永遠と星々と日常』ソース · Releases から入手可", ko: "《영원과 별과 일상》소스 · Releases에서 받기 가능", es: "Código de Eternidad, las estrellas y lo cotidiano · disponible en Releases", ar: "مصدر «الأبد والنجوم واليومي» · متاح في Releases" },
+    'footer.relHmSrc': { zh: "《黄莓C》源码 · Release 可下载", 'zh-hant': "《黃莓C》原始碼 · Release 可下載", en: "HUANGMEI C source · Releases available", ja: "『黄莓C』ソース · Releases から入手可", ko: "《황메이C》소스 · Releases에서 받기 가능", es: "Código de HUANGMEI C · disponible en Releases", ar: "مصدر HUANGMEI C · متاح في Releases" },
+    'footer.relBpSrc': { zh: "《海蓝星之梦》源码 · Release 可下载", 'zh-hant': "《海藍星之夢》原始碼 · Release 可下載", en: "Dream of BluePlanet source · Releases available", ja: "『海藍星の夢』ソース · Releases から入手可", ko: "《바다빛 별의 꿈》소스 · Releases에서 받기 가능", es: "Código de Dream of BluePlanet · disponible en Releases", ar: "مصدر Dream of BluePlanet · متاح في Releases" },
+  };
+  Object.keys(TUNED2).forEach(function (k) {
+    DICT[k] = DICT[k] || {};
+    Object.keys(TUNED2[k]).forEach(function (l) { DICT[k][l] = TUNED2[k][l]; });
+  });
+  /* ---------- FAQ 数量词修正 --------------------------------------------------
+     这两条一直写着「两款作品」/「当前公开的两款移植」，那是只有两部作品时的口径。
+     站点现在有六部，且《想成为 Galgame 领域大神！！！》标注 9 Pro / 10 Pro，
+     所以收费问题改成不点数量，兼容机型问题改成「按卡片标注装」。 */
+  var TUNED3 = {
+    'faq.q4': { zh: "这些作品收费吗？", 'zh-hant': "這些作品收費嗎？", en: "Are these ports free?", ja: "これらの移植作品は有料ですか？", ko: "이 이식 작품들은 유료인가요?", es: "¿Estos ports son gratuitos?", ar: "هل هذه النسخ المنقولة مدفوعة؟" },
+    'faq.a4': { zh: "免费。站上公开的移植作品全部是非官方的个人移植，不收取任何费用，也不代表原作售价。如果喜欢，请通过正规渠道支持原作。", 'zh-hant': "免費。站上公開的移植作品全部是非官方的個人移植，不收取任何費用，也不代表原作售價。如果喜歡，請透過正規管道支持原作。", en: "They are free. Every port on this site is an unofficial personal port, offered at no charge, and the price says nothing about the original work. If you enjoy it, please support the original through official channels.", ja: "無料です。当サイトの移植作品はいずれも非公式の個人移植で、費用は一切かかりません。原作の価格を示すものでもありません。気に入ったら、正規の手段で原作を応援してください。", ko: "무료입니다. 이 사이트의 이식 작품은 모두 비공식 개인 이식이며 어떤 비용도 받지 않습니다. 원작의 가격을 뜻하지도 않습니다. 마음에 드셨다면 정식 경로로 원작을 응원해 주세요.", es: "Son gratuitos. Todos los ports de este sitio son ports personales no oficiales, sin ningún coste, y no reflejan el precio de la obra original. Si te gustan, apoya el original por los canales oficiales.", ar: "مجانية. جميع النسخ المنقولة في هذا الموقع هي نسخ شخصية غير رسمية، تُقدَّم دون أي مقابل، ولا تعبّر عن سعر العمل الأصلي. إن أعجبك العمل، فادعم الأصل عبر القنوات الرسمية." },
+    'faq.a2': { zh: "作品卡上都标了适配机型：多数面向<strong>小米手环 9 Pro</strong>，《想成为 Galgame 领域大神！！！》同时标注 9 Pro / 10 Pro。快应用形态的适配高度依赖屏幕尺寸，机型比例不同会出现构图错位，请按卡片标注的机型安装，不要混装。更多机型的适配会视设备情况陆续补上。", 'zh-hant': "作品卡上都標了適配機型：多數面向<strong>小米手環 9 Pro</strong>，《想成為 Galgame 領域大神！！！》同時標註 9 Pro / 10 Pro。快應用形態的適配高度依賴螢幕尺寸，機型比例不同會出現構圖錯位，請依卡片標註的機型安裝，不要混裝。更多機型的適配會視裝置情況陸續補上。", en: "Each card lists the devices it targets: most are for the <strong>Mi Band 9 Pro</strong>, and I Want to Be a Galgame Master!!! lists both 9 Pro and 10 Pro. Quick-app layouts depend heavily on screen size, so a different aspect ratio will misalign the art — install only on the model your card names, and do not mix builds. Support for more models will follow as devices allow.", ja: "対応機種は各カードに記載しています。多くは<strong>Xiaomi Smart Band 9 Pro</strong> 向けで、『ギャルゲーの神になりたい！！！』は 9 Pro / 10 Pro の両方に対応しています。クイックアプリは画面サイズに強く依存するため、アスペクト比が違うとレイアウトが崩れます。カードに書かれた機種にのみインストールし、混在させないでください。他の機種への対応は状況を見て順次追加します。", ko: "지원 기기는 각 카드에 적혀 있습니다. 대부분 <strong>샤오미 밴드 9 Pro</strong> 대상이며, 《갸루게 장르의 신이 되고 싶어!!!》는 9 Pro / 10 Pro를 모두 지원합니다. 퀵 앱은 화면 크기에 크게 의존하므로 화면 비율이 다르면 구성이 어긋납니다. 카드에 적힌 기종에만 설치하고 섞어 설치하지 마세요. 더 많은 기종은 상황에 따라 순차적으로 지원할 예정입니다.", es: "Cada tarjeta indica los dispositivos compatibles: la mayoría son para la <strong>Mi Band 9 Pro</strong>, y ¡Quiero ser un maestro del galgame! indica 9 Pro y 10 Pro. Las quick apps dependen mucho del tamaño de pantalla, así que otra proporción desajusta la composición: instala solo en el modelo que indique la tarjeta y no mezcles versiones. Iremos añadiendo más modelos según los dispositivos.", ar: "تذكر كل بطاقة الأجهزة المدعومة: معظمها لساعة <strong>Mi Band 9 Pro</strong>، و«أريد أن أصبح سيد الغالغيم!!!» تدعم 9 Pro و10 Pro معًا. تعتمد واجهات التطبيقات السريعة بشدة على مقاس الشاشة، لذا سيختل التخطيط على نسبة مختلفة؛ ثبّت فقط على الطراز المكتوب في البطاقة ولا تخلط النسخ. سنضيف المزيد من الطرازات حسب توفر الأجهزة." },
+  };
+  Object.keys(TUNED3).forEach(function (k) {
+    DICT[k] = DICT[k] || {};
+    Object.keys(TUNED3[k]).forEach(function (l) { DICT[k][l] = TUNED3[k][l]; });
+  });
   /* 运行时状态 */
   var current = 'zh';
 
