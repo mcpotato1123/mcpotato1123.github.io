@@ -121,7 +121,7 @@
 
     i18n.apply(document);
     var code = document.getElementById('langCode');
-    var short = { zh: '中', en: 'EN', ja: '日' };
+    var short = { zh: '中', en: 'EN', ja: '日', ko: 'KO', es: 'ES', ar: 'AR', 'zh-hant': '繁' };
     function paintCode() {
       if (code) code.textContent = short[i18n.get()] || '中';
       document.querySelectorAll('[data-lang]').forEach(function (b) {
