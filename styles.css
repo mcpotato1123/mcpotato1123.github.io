@@ -41,7 +41,7 @@
      作用是把「浏览器拿到的到底是哪一版 CSS」变成可读的事实 ——
      否则一遇到「改了没生效」，只能在缓存 / 编码 / 嵌套之间瞎猜。
      **每次改完这个文件记得更新这里的日期。** */
-  --css-rev:"2026-10-22 hero-mobile-fix";
+  --css-rev:"2026-10-22 strip-removed";
 
   /* ---------- 主色 ----------
      站点主色沿用原有品牌蓝 #2563eb。派生令牌一律 color-mix，
@@ -1049,10 +1049,11 @@ html[data-theme="dark"] .hero-actions .btn-primary:active{
 /*
   整块首屏铺一张插画，再压一层渐变。
   渐变承担三件事，缺一不可：
-   1. 左边压暗 —— 标题、导语、按钮都落在左半边，白底字压在插画上对比度不可控；
-   2. 右边留亮 —— 让插画的主体（人物）透出来，不至于被糊成一片暗色；
-   3. 四边化开 —— 顶边接顶栏、底边接下面的走马灯，不出现一道生硬的图片边界。
-  色相用暖调深色（--ink 家族）而不是纯黑，避免整块发灰。
+   1. 左侧压实 —— 标题、导语、按钮都落在左半边，需要一个足够平的底；
+   2. 右侧留亮 —— 让插画的主体（人物）透出来，不至于被糊成一片；
+   3. 四边化开 —— 顶边接顶栏、底边接下面的区块，不出现一道生硬的图片边界。
+  底色的「实/亮」不写死成暗色：全部由 --bg 混合，浅色主题是纸色薄纱（黑字可读），
+  深色主题自动变成暗纱（白字可读）。具体强度见 --hero-wash-* 那组变量。
 */
 .hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
 /* 取景：人物偏右，横向取 72% 把脸留在右半边（左边要给文字让位）；
@@ -1098,26 +1099,6 @@ html[data-theme="dark"] .hero-actions .btn-primary:active{
   50%{transform:scaleY(1);opacity:1;transform-origin:top}
 }
 
-/* ---------- 走马灯 ------------------------------------------------------ */
-
-.marquee{
-  position:relative;overflow:hidden;padding:18px 0;
-  border-top:1px solid var(--line);
-  border-bottom:1px solid var(--line);
-  background:var(--surface-2);
-}
-.marquee-track{display:flex;width:max-content;animation:marquee 38s linear infinite}
-.marquee:hover .marquee-track{animation-play-state:paused}
-.marquee-track span{
-  display:inline-flex;align-items:center;gap:9px;
-  padding-right:44px;color:var(--muted);
-  font-size:12.5px;font-weight:500;letter-spacing:.02em;white-space:nowrap;
-}
-.marquee-track span::before{
-  content:"";width:5px;height:5px;border-radius:50%;
-  background:var(--accent);opacity:.5;flex:none;
-}
-@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* ---------- 区块 -------------------------------------------------------- */
 
@@ -2730,7 +2711,7 @@ html.fx-lite .spotlight{transition:none}
 
 /* ---------- Print ------------------------------------------------------- */
 @media print{
-  .backdrop,.spotlight,.site-header,.to-top,.marquee,.cursor,.particles,.scroll-cue{display:none}
+  .backdrop,.spotlight,.site-header,.to-top,.cursor,.particles,.scroll-cue{display:none}
   body{background:#fff;animation:none}
   html.js-anim .reveal,
   html.js-anim [data-anim],

@@ -92,15 +92,6 @@ window.I18N = (function () {
     'hero.stat3':     { zh: '浏览器本地处理', en: 'runs locally', ja: 'ブラウザ内処理' },
     'hero.scroll':    { zh: '向下浏览', en: 'Scroll down', ja: 'スクロール' },
 
-    /* ---------- 走马灯 ---------- */
-    'marquee.1': { zh: '小米手环快应用', en: 'Mi Band quick apps', ja: 'スマートバンド クイックアプリ' },
-    'marquee.2': { zh: 'Vela 平台移植', en: 'Vela platform ports', ja: 'Vela プラットフォーム移植' },
-    'marquee.3': { zh: '非官方移植', en: 'Unofficial ports', ja: '非公式移植' },
-    'marquee.4': { zh: '纯本地文本工具', en: 'Local-only text tools', ja: 'ローカル完結のテキストツール' },
-    'marquee.5': { zh: 'GitHub Pages', en: 'GitHub Pages', ja: 'GitHub Pages' },
-    'marquee.6': { zh: 'Linux 镜像', en: 'Linux mirrors', ja: 'Linux ミラー' },
-    'marquee.7': { zh: '开源 · 共建', en: 'Open source · contributions welcome', ja: 'オープンソース · 貢献歓迎' },
-
     /* ---------- 作品下载 ---------- */
     'works.kicker': { zh: '作品下载', en: 'Downloads', ja: 'ダウンロード' },
     'works.title':  { zh: '已经<em>戴得上手的作品。</em>', en: 'Ports you can <em>wear right now.</em>', ja: 'もう<em>身につけられる作品。</em>' },
@@ -420,13 +411,6 @@ window.I18N = (function () {
     'hero.stat3':     { ko: '브라우저에서 처리', es: 'se ejecuta local', ar: 'يعمل محليًا' },
     'hero.scroll':    { ko: '아래로 스크롤', es: 'Desplázate', ar: 'اسحب لأسفل' },
 
-    'marquee.1': { ko: '샤오미 밴드 퀵 앱', es: 'Quick apps para Mi Band', ar: 'تطبيقات سريعة للساعة' },
-    'marquee.2': { ko: 'Vela 플랫폼 이식', es: 'Ports para la plataforma Vela', ar: 'نقل لمنصة Vela' },
-    'marquee.3': { ko: '비공식 이식', es: 'Ports no oficiales', ar: 'نقل غير رسمي' },
-    'marquee.4': { ko: '로컬 전용 텍스트 도구', es: 'Herramientas de texto locales', ar: 'أدوات نصية محلية' },
-    'marquee.5': { ko: 'GitHub Pages', es: 'GitHub Pages', ar: 'GitHub Pages' },
-    'marquee.6': { ko: 'Linux 미러', es: 'Espejos de Linux', ar: 'مرايا Linux' },
-    'marquee.7': { ko: '오픈 소스 · 함께 만들기', es: 'Código abierto · contribuciones', ar: 'مفتوح المصدر · مرحّب بالمساهمات' },
 
     'works.kicker': { ko: '작품 다운로드', es: 'Descargas', ar: 'التنزيلات' },
     'works.title':  { ko: '지금 <em>손목에 차는 작품.</em>', es: 'Ports que puedes <em>llevar puestos.</em>', ar: 'أعمال <em>يمكنك ارتداؤها الآن.</em>' },
@@ -754,13 +738,6 @@ window.I18N = (function () {
     'hero.stat2': '個線上工具',
     'hero.stat3': '瀏覽器本機處理',
     'hero.scroll': '向下瀏覽',
-    'marquee.1': '小米手環快應用',
-    'marquee.2': 'Vela 平台移植',
-    'marquee.3': '非官方移植',
-    'marquee.4': '純本機文字工具',
-    'marquee.5': 'GitHub Pages',
-    'marquee.6': 'Linux 鏡像',
-    'marquee.7': '開源 · 共建',
     'works.kicker': '作品下載',
     'works.title': '已經<em>戴得上手的作品。</em>',
     'works.lede': '目前公開的七款小米手環移植作品，皆為非官方個人移植、免費提供。點下面的按鈕會喚起 Astrobox 直接安裝。',
