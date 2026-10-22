@@ -11,6 +11,11 @@
    ========================================================================== */
 
 :root{
+  /* 首屏遮罩的三段强度（左 → 中 → 右）。
+     浅色主题下插画本身很亮（天空），薄纱可以薄一些，让插画多露出来；
+     深色主题下同一套规则要用厚纱，否则白字压在亮插画上读不出。 */
+  --hero-wash-a:58%;--hero-wash-b:40%;--hero-wash-c:10%;
+
   color-scheme: light;
 
   /* ---------- 表面 ---------- */
@@ -34,7 +39,7 @@
      作用是把「浏览器拿到的到底是哪一版 CSS」变成可读的事实 ——
      否则一遇到「改了没生效」，只能在缓存 / 编码 / 嵌套之间瞎猜。
      **每次改完这个文件记得更新这里的日期。** */
-  --css-rev:"2026-10-22 flag-small";
+  --css-rev:"2026-10-22 hero-btn-glow";
 
   /* ---------- 主色 ----------
      站点主色沿用原有品牌蓝 #2563eb。派生令牌一律 color-mix，
@@ -220,6 +225,8 @@
 }
 
 [data-theme="dark"]{
+  --hero-wash-a:84%;--hero-wash-b:62%;--hero-wash-c:20%;
+
   color-scheme: dark;
 
   --bg:#141011;
@@ -941,20 +948,79 @@ html.fx-lite .hero-inner::after{animation:none}
   （深灰），压在暗底上几乎不可读 —— 所以这一段必须整体翻成亮色，
   并给一点柔和投影：插画明暗不均，单靠颜色对比在亮部仍会糊。
 */
-.hero .lede{
+.hero /* 首屏大标题：字号随视口爬升，窄屏收到 34px；行高压到 1.08 让两行贴紧。
+   第二行用 <em> 单独成块并上主色 —— 主色是用户可换的，所以这里用
+   color-mix 把它和白色混合，保证在任何主色下、压在暗插画上都足够亮。 */
+.hero-title{
+  margin:0;
+  font-size:clamp(30px,4.6vw + 8px,62px);
+  line-height:1.08;
+  font-weight:800;
+  letter-spacing:-.035em;
+  /* 跟随主题：浅色下 --ink 是近黑，深色下是近白 */
+  color:var(--ink);
+  text-shadow:0 1px 0 color-mix(in srgb, var(--bg) 55%, transparent);
+}
+.hero-title em{
+  display:block;
+  overflow-wrap:break-word;
+  font-style:normal;
+  color:var(--accent-ink);
+}
+/* 深色模式给主色那行一层同色辉光（参考站的效果）：
+   两层不同半径的阴影叠出「荧光」感，而不是简单的模糊。
+   浅色模式下不加 —— 白底上辉光只会把字糊掉。 */
+html[data-theme="dark"] .hero-title em{
+  text-shadow:
+    0 0 18px color-mix(in srgb, var(--accent) 70%, transparent),
+    0 0 46px color-mix(in srgb, var(--accent) 38%, transparent);
+}
+
+.lede{
   max-width:520px;margin:22px 0 0;
-  color:rgba(255,255,255,.9);
+  color:var(--ink-2);
   font-size:16px;line-height:1.85;
-  text-shadow:0 1px 12px rgba(0,0,0,.45);
 }
 /* 大标题删掉之后，导语成了首屏第一块文字，别再多压一层上边距 */
 .hero .pill + .lede{margin-top:20px}
 .hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
-/* 首屏里的次级按钮在暗底上要反过来：浅色描边 + 浅色字 */
+/* 首屏主按钮的「荧光」：与首屏主色标题行用的是同一套做法 ——
+   两圈同色阴影（近处亮、远处淡）叠出光晕，而不是单层模糊。
+   悬停、键盘聚焦、按下三种状态都发光；深色主题下静止态也带一点微光，
+   这样它和旁边会发光的主标题是同一套语言。
+   右边那颗次级按钮（GitHub）保持原样，不加光。 */
+.hero-actions .btn-primary{
+  transition:background .22s ease,color .22s ease,box-shadow .28s ease,transform .22s var(--ease);
+}
+.hero-actions .btn-primary:hover,
+.hero-actions .btn-primary:focus-visible,
+.hero-actions .btn-primary:active{
+  box-shadow:
+    0 0 16px color-mix(in srgb, var(--accent) 62%, transparent),
+    0 0 40px color-mix(in srgb, var(--accent) 32%, transparent),
+    0 10px 26px -10px color-mix(in srgb, var(--accent) 70%, transparent);
+  transform:translateY(-1px);
+}
+.hero-actions .btn-primary:focus-visible{outline:2px solid var(--accent-ink);outline-offset:3px}
+html[data-theme="dark"] .hero-actions .btn-primary{
+  box-shadow:
+    0 0 12px color-mix(in srgb, var(--accent) 34%, transparent),
+    0 0 30px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+html[data-theme="dark"] .hero-actions .btn-primary:hover,
+html[data-theme="dark"] .hero-actions .btn-primary:focus-visible,
+html[data-theme="dark"] .hero-actions .btn-primary:active{
+  box-shadow:
+    0 0 20px color-mix(in srgb, var(--accent) 72%, transparent),
+    0 0 52px color-mix(in srgb, var(--accent) 42%, transparent),
+    0 12px 30px -10px color-mix(in srgb, var(--accent) 80%, transparent);
+}
+/* 首屏次级按钮：遮罩现在跟随主题，所以按钮也回到常规描边样式，
+   不再需要之前那套「暗底反色」的补丁。 */
 .hero .btn-ghost{
-  border-color:rgba(255,255,255,.42);
-  background:rgba(255,255,255,.14);
-  color:#fff;
+  border-color:var(--line);
+  background:var(--surface-2);
+  color:var(--ink);
   backdrop-filter:var(--fx-glass-8);-webkit-backdrop-filter:var(--fx-glass-8);
 }
 .hero .btn-ghost:hover{border-color:#fff;background:rgba(255,255,255,.24)}
@@ -962,19 +1028,17 @@ html.fx-lite .hero-inner::after{animation:none}
 .hero-stats{
   display:flex;flex-wrap:wrap;gap:36px;
   margin-top:42px;padding-top:24px;
-  border-top:1px solid rgba(255,255,255,.24);
+  border-top:1px solid var(--line);
 }
 .hero-stats li{display:flex;flex-direction:column;gap:2px}
 .hero-stats strong{
   font-size:26px;font-weight:700;letter-spacing:-.03em;
-  color:#fff;
-  text-shadow:0 1px 10px rgba(0,0,0,.4);
+  color:var(--ink);
   font-variant-numeric:tabular-nums;
 }
-.hero-stats strong i{font-style:normal;font-size:17px;color:rgba(255,255,255,.72);font-weight:700;margin-left:1px}
+.hero-stats strong i{font-style:normal;font-size:17px;color:var(--muted);font-weight:700;margin-left:1px}
 .hero-stats span{
-  color:rgba(255,255,255,.78);font-size:12.5px;
-  text-shadow:0 1px 10px rgba(0,0,0,.4);
+  color:var(--muted);font-size:12.5px;
 }
 
 /* --- 首屏背景插画 + 渐变 ------------------------------------------------ */
@@ -998,15 +1062,20 @@ html.fx-lite .hero-inner::after{animation:none}
 }
 .hero-bg::after{
   content:"";position:absolute;inset:0;
+  /* 遮罩一律用 --bg 混合，不写死 rgba：浅色主题下 --bg 是暖纸色，
+     于是左侧成了「纸色薄纱」，黑字读得清；深色主题下 --bg 近黑，
+     同一套规则自动变成暗纱、白字。首屏文字因此可以真正跟随主题。
+     （左起 82% → 34% 处 54% → 66% 处 14%，右边全透，插画留在右半。） */
   background:
-    /* 顶 / 底 化进页面底色。
-       顶部渐变从 14% 收到 11% —— 猫耳落在可见区 11%~24% 一带，
-       原来的 14% 会在耳朵上再压一层底色，等于又遮回去一次。 */
     linear-gradient(180deg,var(--bg) 0%,transparent 11%,transparent 74%,var(--bg) 100%),
-    /* 左右：左深右浅，给文字让出对比度 */
-    linear-gradient(96deg,rgba(20,16,17,.86) 0%,rgba(20,16,17,.62) 34%,rgba(20,16,17,.18) 66%,transparent 100%),
-    /* 整体轻压一层，保证长文本也读得清 */
-    linear-gradient(180deg,rgba(20,16,17,.14),rgba(20,16,17,.26));
+    linear-gradient(96deg,
+      color-mix(in srgb, var(--bg) var(--hero-wash-a), transparent) 0%,
+      color-mix(in srgb, var(--bg) var(--hero-wash-b), transparent) 34%,
+      color-mix(in srgb, var(--bg) var(--hero-wash-c), transparent) 66%,
+      transparent 100%),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--bg) 12%, transparent),
+      color-mix(in srgb, var(--bg) 24%, transparent));
 }
 /* 插画铺满之后，左上那团极光就多余了，隐掉省一次合成 */
 .hero-inner::before{display:none}
@@ -2183,6 +2252,15 @@ html:has(#ginkaBanner) .hero{padding-top:168px}
     display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
     gap:8px;align-items:center;justify-items:center;
   }
+  /* 手机端调色盘分组：与桌面面板同一套逻辑（主色 / 主题配色）。
+     桌面是 4 列圆点 + 带作品名的列表；手机横向空间有限，
+     用「小标题 + 7 列圆点」两段表示，避免 19 颗珠子混在一起分不清来源。 */
+  .m-accent-group + .m-accent-group{margin-top:13px}
+  .m-accent-label{
+    margin:0 0 8px 1px;
+    font-size:10.5px;font-weight:600;letter-spacing:.04em;
+    color:var(--muted);text-transform:uppercase;
+  }
   /* 颜色名条：细长圆角条，横贯色珠区下方，文字居中。
      左边一枚当前主色的小圆点 —— 让「名字」和「颜色」能对上，
      不必靠记住哪个中文名对应哪种色。
@@ -2562,7 +2640,9 @@ html[data-vt="theme"]::view-transition-new(root){
   .header-inner{gap:5px}
   .brand{gap:7px}
   .brand-avatar{width:28px;height:28px}
-  .brand-text{font-size:15px;letter-spacing:-.02em}
+  /* 站名「小猫娘土豆的环上旮旯小屋」比原来的 mcpotato1123 长得多，
+     小屏上收字号并允许省略号，保证顶栏的品牌、语言、主题、菜单四块不挤爆。 */
+  .brand-text{font-size:12.5px;letter-spacing:-.03em;min-width:0;overflow:hidden;text-overflow:ellipsis}
   .header-actions{gap:4px}
   .menu-toggle{width:40px;height:40px}
   .pill-btn{width:40px;height:40px}

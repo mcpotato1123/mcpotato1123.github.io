@@ -229,7 +229,7 @@ window.I18N = (function () {
 
     /* ---------- 在线工具 ---------- */
     'tools.kicker': { zh: '在线工具', en: 'Tools', ja: 'ツール' },
-    'tools.title':  { zh: '写剧本用的<em>那几把家伙。</em>', en: 'The <em>tools I write scripts with.</em>', ja: '台本を書くための<em>道具たち。</em>' },
+    'tools.title':  { zh: '写剧本用的<em>那三件工具。</em>', en: 'The <em>tools I write scripts with.</em>', ja: '台本を書くための<em>道具たち。</em>' },
     'tools.lede': {
       zh: '自己做的几个小工具，都是纯前端、本地运行 —— 文件不会被上传到任何服务器，断网也能用。',
       en: 'A few small tools I built myself. All front-end, all local — your files are never uploaded anywhere, and they work offline.',
@@ -815,7 +815,7 @@ window.I18N = (function () {
     'links.mcbbsDesc': '早年混跡的 MCBBS 個人空間，站點本身早已關閉，這裡只留一個紀念性的入口。',
     'links.mcbbsCta': '去懷舊一下',
     'tools.kicker': '線上工具',
-    'tools.title': '寫劇本用的<em>那幾把傢伙。</em>',
+    'tools.title': '寫劇本用的<em>那三件工具。</em>',
     'tools.lede': '自己做的幾個小工具，都是純前端、本機執行 —— 檔案不會被上傳到任何伺服器，斷網也能用。',
     'tools.live': '已上線',
     'tools.t1': 'Galgame 劇本編輯器',
@@ -1106,6 +1106,64 @@ window.I18N = (function () {
   Object.keys(TUNED6).forEach(function (k) {
     DICT[k] = DICT[k] || {};
     Object.keys(TUNED6[k]).forEach(function (l) { DICT[k][l] = TUNED6[k][l]; });
+  });
+  /* ---- 站名改为「小猫娘土豆的环上旮旯小屋」----
+     brand.name 用于页头 / 手机菜单 / 页脚；meta.title 是标签页与分享卡片；
+     a11y.brand 是页头 logo 的读屏标签。三处必须同名，否则读屏与视觉会不一致。 */
+  var BRAND = {
+    zh: "小猫娘土豆的环上旮旯小屋",
+    'zh-hant': "小貓娘土豆的環上旮旯小屋",
+    en: "Kitten Potato's Band Nook",
+    ja: "小猫娘ポテトのバンドの片隅",
+    ko: "고양이 소녀 감자의 밴드 구석방",
+    es: "El rinconcito de Kitten Potato",
+    ar: "زاوية كيتن بوتيتو على الساعة",
+  };
+  var BRAND_TITLE = {
+    zh: "小猫娘土豆的环上旮旯小屋 · 小米手环移植与本地工具",
+    'zh-hant': "小貓娘土豆的環上旮旯小屋 · 小米手環移植與本機工具",
+    en: "Kitten Potato's Band Nook · Mi Band ports & local tools",
+    ja: "小猫娘ポテトのバンドの片隅 · スマートバンド移植とローカルツール",
+    ko: "고양이 소녀 감자의 밴드 구석방 · 샤오미 밴드 이식과 로컬 도구",
+    es: "El rinconcito de Kitten Potato · Ports para Mi Band y herramientas locales",
+    ar: "زاوية كيتن بوتيتو على الساعة · نقل تطبيقات الساعة وأدوات محلية",
+  };
+  LANGS.forEach(function (l) {
+    var name = BRAND[l] || BRAND.zh;
+    var title = BRAND_TITLE[l] || BRAND_TITLE.zh;
+    DICT['brand.name'] = DICT['brand.name'] || {};
+    DICT['brand.name'][l] = name;
+    DICT['a11y.brand'] = DICT['a11y.brand'] || {};
+    DICT['a11y.brand'][l] = name;
+    DICT['meta.title'] = DICT['meta.title'] || {};
+    DICT['meta.title'][l] = title;
+  });
+  /* ---- 首屏改为大标题 + 导语 ----------------------------------------------
+     标题讲「是什么」，导语讲「怎么用、要不要钱」，两段不重复用词：
+     旧导语开头是站名 + 欢迎语，跟顶栏和 pill 都重复了。 */
+  var HERO_TITLE = {
+    zh: "腕上有故事，<em>手里有工具。</em>",
+    'zh-hant': "腕上有故事，<em>手裡有工具。</em>",
+    en: "Stories on your wrist,<em>tools in your browser.</em>",
+    ja: "腕に物語、<em>手元に道具。</em>",
+    ko: "손목엔 이야기,<em>손안엔 도구.</em>",
+    es: "Historias en la muñeca,<em>herramientas en el navegador.</em>",
+    ar: "حكايات على معصمك،<em>وكتابة على شاشتك.</em>",
+  };
+  var HERO_LEDE = {
+    zh: "小米手环上的非官方 galgame 移植，外加三个跑在浏览器里的文本工具。免费、免登录，断网也能用。",
+    'zh-hant': "小米手環上的非官方 galgame 移植，外加三個跑在瀏覽器裡的文字工具。免費、免登入，斷網也能用。",
+    en: "Unofficial galgame ports for the Mi Band, plus a trio of text utilities that run entirely on your device. Free, no sign-up, and they keep working offline.",
+    ja: "スマートバンド向けの非公式 galgame 移植と、ブラウザだけで動くテキストツールが3つ。無料・登録不要で、オフラインでも使えます。",
+    ko: "샤오미 밴드용 비공식 galgame 이식과, 기기 안에서만 도는 텍스트 유틸 세 가지. 무료이고 가입도 필요 없으며 오프라인에서도 쓸 수 있습니다.",
+    es: "Ports no oficiales de galgame para la Mi Band, más tres utilidades de texto que corren dentro del propio dispositivo. Gratis, sin registro y sin conexión.",
+    ar: "نسخ منقولة غير رسمية لألعاب galgame إلى ساعة Mi Band، مع ثلاث أدوات نصية تعمل داخل جهازك وحده. مجانية، بلا تسجيل، وتعمل دون اتصال أيضًا.",
+  };
+  LANGS.forEach(function (l) {
+    DICT['hero.title'] = DICT['hero.title'] || {};
+    DICT['hero.title'][l] = HERO_TITLE[l] || HERO_TITLE.zh;
+    DICT['hero.lede'] = DICT['hero.lede'] || {};
+    DICT['hero.lede'][l] = HERO_LEDE[l] || HERO_LEDE.zh;
   });
   /* 运行时状态 */
   var current = 'zh';
