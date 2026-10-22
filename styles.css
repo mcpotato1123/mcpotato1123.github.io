@@ -34,7 +34,7 @@
      作用是把「浏览器拿到的到底是哪一版 CSS」变成可读的事实 ——
      否则一遇到「改了没生效」，只能在缓存 / 编码 / 嵌套之间瞎猜。
      **每次改完这个文件记得更新这里的日期。** */
-  --css-rev:"2026-10-21 release-btn";
+  --css-rev:"2026-10-22 flag-small";
 
   /* ---------- 主色 ----------
      站点主色沿用原有品牌蓝 #2563eb。派生令牌一律 color-mix，
@@ -60,6 +60,8 @@
   --night-soft:rgba(58,100,133,.12);
   --ocean:#1d7fa8;
   --ocean-soft:rgba(29,127,168,.12);
+  --lilac:#9f46b8;
+  --lilac-soft:rgba(159,70,184,.12);
 
   --shadow-1:0 1px 2px rgba(26,21,23,.05),0 4px 14px -8px rgba(26,21,23,.14);
   --shadow-2:0 2px 6px rgba(26,21,23,.06),0 20px 44px -24px rgba(26,21,23,.30);
@@ -255,6 +257,8 @@
   --night-soft:rgba(125,178,216,.14);
   --ocean:#5cc4e8;
   --ocean-soft:rgba(92,196,232,.14);
+  --lilac:#d39ae8;
+  --lilac-soft:rgba(211,154,232,.14);
 
   --shadow-1:0 1px 2px rgba(0,0,0,.55),0 6px 18px -10px rgba(0,0,0,.8);
   --shadow-2:0 2px 8px rgba(0,0,0,.5),0 26px 54px -28px rgba(0,0,0,.9);
@@ -378,6 +382,7 @@ html[data-accent="eternity"]{ --accent:#2b64ab; --accent-fg:#ffffff; --accent-in
 html[data-accent="huangmeic"]{ --accent:#9c642c; --accent-fg:#ffffff; --accent-ink:#70471f; }
 html[data-accent="whitenight"]{ --accent:#96825a; --accent-fg:#141011; --accent-ink:#6b5c3f; }
 html[data-accent="blueplanet"]{ --accent:#1b8ab2; --accent-fg:#141011; --accent-ink:#146880; }
+html[data-accent="catgirl"]{ --accent:#b247aa; --accent-fg:#ffffff; --accent-ink:#8a2f83; }
 
 html[data-accent="tiny"][data-theme="dark"]{ --accent:#8ed65a; --accent-fg:#14200a; --accent-ink:#b6e88f; }
 html[data-accent="galgod"][data-theme="dark"]{ --accent:#956efa; --accent-fg:#12062e; --accent-ink:#c0aaff; }
@@ -385,6 +390,7 @@ html[data-accent="eternity"][data-theme="dark"]{ --accent:#589df2; --accent-fg:#
 html[data-accent="huangmeic"][data-theme="dark"]{ --accent:#e39e58; --accent-fg:#2b1600; --accent-ink:#f0c391; }
 html[data-accent="whitenight"][data-theme="dark"]{ --accent:#dec592; --accent-fg:#1d1707; --accent-ink:#efdfbe; }
 html[data-accent="blueplanet"][data-theme="dark"]{ --accent:#45cafa; --accent-fg:#04222e; --accent-ink:#8de0fb; }
+html[data-accent="catgirl"][data-theme="dark"]{ --accent:#e67edd; --accent-fg:#2b0728; --accent-ink:#f4b6ee; }
 
 /* 默认（未设 data-accent 或 =blue）沿用 :root 里的品牌蓝，无需重复定义 */
 
@@ -741,7 +747,7 @@ body.cursor-hidden .cursor-dot,body.cursor-hidden .cursor-ring{opacity:0}
 /* 顶栏里的 GitHub 胶囊按钮：和主题/菜单按钮同一档透明度，
    三块按钮在玻璃板上保持一致，不会有一块特别实。 */
 .pill-btn{
-  display:inline-flex;align-items:center;gap:6px;
+  display:inline-flex;align-items:center;gap:5px;
   height:34px;padding:0 12px;border-radius:9px;
   border:1px solid var(--line);
   background:color-mix(in srgb, var(--surface) 16%, transparent);
@@ -1183,14 +1189,16 @@ html.fx-lite .hero-inner::after{animation:none}
    所以徽标自带两套固定配色，用 data-flag-tone="dark" 指定黑底那几张。 */
 .product-card-flag{
   /* 横幅放右上角。封面的作品标题多在左上（小小的身影、黄莓C都是），
-     放左边会把它们遮住；六张封面的右上角都是空的（最多是头发与星空）。
+     放左边会把它们遮住；七张封面的右上角基本是空的（最多是头发、星空或标题上方的留白）。
      用物理右而不用 inset-inline-end：封面是图片，不随语言镜像，
      RTL 下也应该贴着图片的右上角。 */
   position:absolute;z-index:3;top:14px;right:14px;left:auto;
-  display:inline-flex;align-items:center;gap:6px;
-  padding:5px 11px;border-radius:var(--r-s);
+  display:inline-flex;align-items:center;gap:5px;
+  /* 徽标整体缩一号：内距 5/11 -> 3/9、字号 11.5 -> 11、图标 13 -> 12、圆角 10 -> 8。
+     缩小后右上角的占用更少，即使封面右上印了作品标题也不容易压到。 */
+  padding:3px 9px;border-radius:8px;
   /* 只留 16% 底色 —— 84% 透光，封面上原本的标题能透出来。
-     这个值不是拍脑子：六张封面逐个算过（模糊后取均色再叠底色），
+     这个值不是拍脑子：七张封面逐个算过（模糊后取均色再叠底色），
      最暗的那张（黄莓C）仍有 5.95:1，其余 7~14:1。 */
   background:color-mix(in srgb,#fff 16%,transparent);
   backdrop-filter:var(--fx-glass-28);
@@ -1201,7 +1209,7 @@ html.fx-lite .hero-inner::after{animation:none}
     0 1px 4px -1px rgba(20,16,17,.18);
   color:#1a1517;
   text-shadow:0 1px 0 rgba(255,255,255,.55);
-  font-size:11.5px;font-weight:700;letter-spacing:.02em;
+  font-size:11px;font-weight:700;letter-spacing:.01em;
 }
 .product-card-flag[data-flag-tone="dark"]{
   /* 黑底封面用深色玻璃 + 白字，22% 底色（更透）下仍有 12~18:1 */
@@ -1221,7 +1229,7 @@ html.fx-lite .hero-inner::after{animation:none}
 }
 html.fx-noblur .product-card-flag{background:color-mix(in srgb,#fff 92%,transparent)}
 html.fx-noblur .product-card-flag[data-flag-tone="dark"]{background:color-mix(in srgb,#141011 90%,transparent)}
-.product-card-flag .ic{font-size:13px;color:var(--card-accent,var(--accent))}
+.product-card-flag .ic{font-size:12px;color:var(--card-accent,var(--accent))}
 /* 黑底封面上卡片主色（深青/深绣）接近背景，图标会几乎看不见 —— 跟字一起转白 */
 .product-card-flag[data-flag-tone="dark"] .ic{color:#fff;opacity:.92}
 
@@ -1270,6 +1278,7 @@ html.fx-noblur .product-card-flag[data-flag-tone="dark"]{background:color-mix(in
 .product-card[data-tone="rose"]{--card-accent:var(--rose);--card-soft:var(--rose-soft)}
 .product-card[data-tone="night"]{--card-accent:var(--night);--card-soft:var(--night-soft)}
 .product-card[data-tone="ocean"]{--card-accent:var(--ocean);--card-soft:var(--ocean-soft)}
+.product-card[data-tone="lilac"]{--card-accent:var(--lilac);--card-soft:var(--lilac-soft)}
 
 /* ---------- 作品下载卡（Astrobox 安装入口） ----------------------------
    在 .product-card 骨架上加两样：底部的按钮行（安装 + 源码）、以及下面那行安装说明。
@@ -1874,6 +1883,7 @@ html:has(#ginkaBanner) .hero{padding-top:168px}
 .accent-proj[data-accent="huangmeic"] .pj-dot{background:#9c642c}
 .accent-proj[data-accent="whitenight"] .pj-dot{background:#96825a}
 .accent-proj[data-accent="blueplanet"] .pj-dot{background:#1b8ab2}
+.accent-proj[data-accent="catgirl"] .pj-dot{background:#b247aa}
 .pj-nm{font-size:11.5px;font-weight:600;color:var(--ink);flex:none}
 .pj-src{
   margin-inline-start:auto;min-width:0;
@@ -1941,6 +1951,7 @@ html:has(#ginkaBanner) .hero{padding-top:168px}
 .accent-swatch[data-accent="huangmeic"]{background-color:#9c642c}
 .accent-swatch[data-accent="whitenight"]{background-color:#96825a}
 .accent-swatch[data-accent="blueplanet"]{background-color:#1b8ab2}
+.accent-swatch[data-accent="catgirl"]{background-color:#b247aa}
 
 /* ---------- 自由取色（网页内嵌取色器）------------------------------------
    为什么不用 <input type="color">：它弹出的是**操作系统**的取色对话框

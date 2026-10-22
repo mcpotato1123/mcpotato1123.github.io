@@ -186,7 +186,7 @@
     var VALID = ['blue', 'sky', 'teal', 'emerald', 'olive', 'amber',
                  'coral', 'rose', 'magenta', 'violet', 'indigo', 'graphite',
                  /* 主题配色：从六部作品封面提取的主色 */
-                 'tiny', 'galgod', 'eternity', 'huangmeic', 'whitenight', 'blueplanet'];
+                 'tiny', 'galgod', 'eternity', 'huangmeic', 'whitenight', 'blueplanet', 'catgirl'];
     var root = document.documentElement;
 
     /* ---- 先把顶栏开关接好 ------------------------------------------------
@@ -371,6 +371,7 @@
       else if (cur === 'huangmeic') projSrc = 'w4';
       else if (cur === 'whitenight') projSrc = 'w5';
       else if (cur === 'blueplanet') projSrc = 'w6';
+      else if (cur === 'catgirl') projSrc = 'w7';
 
       var shownName;
       if (custom) {
@@ -395,7 +396,7 @@
         var nmLabel = I2 && I2.t('accent.' + k);
         if (nm && nmLabel) nm.textContent = nmLabel;
         if (src) {
-          var map = { tiny: 'w1', galgod: 'w2', eternity: 'w3', huangmeic: 'w4', whitenight: 'w5', blueplanet: 'w6' };
+          var map = { tiny: 'w1', galgod: 'w2', eternity: 'w3', huangmeic: 'w4', whitenight: 'w5', blueplanet: 'w6', catgirl: 'w7' };
           var s2 = I2 && map[k] ? I2.t(map[k] + '.short') : null;
           if (s2) src.textContent = s2;
         }

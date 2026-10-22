@@ -105,9 +105,9 @@ window.I18N = (function () {
     'works.kicker': { zh: '作品下载', en: 'Downloads', ja: 'ダウンロード' },
     'works.title':  { zh: '已经<em>戴得上手的作品。</em>', en: 'Ports you can <em>wear right now.</em>', ja: 'もう<em>身につけられる作品。</em>' },
     'works.lede': {
-      zh: '目前公开的六款小米手环移植作品，均为非官方个人移植、免费提供。点下面的按钮会唤起 Astrobox 直接安装。',
-      en: 'Six Mi Band ports are public so far — unofficial, made by one person, free of charge. The buttons below hand off to Astrobox to install.',
-      ja: '現在公開中のスマートバンド移植は6作品。いずれも個人による非公式移植で、無料です。下のボタンから Astrobox を呼び出してインストールできます。'
+      zh: '目前公开的七款小米手环移植作品，均为非官方个人移植、免费提供。点下面的按钮会唤起 Astrobox 直接安装。',
+      en: 'Seven Mi Band ports are public so far — unofficial, made by one person, free of charge. The buttons below hand off to Astrobox to install.',
+      ja: '現在公開中のスマートバンド移植は7作品。いずれも個人による非公式移植で、無料です。下のボタンから Astrobox を呼び出してインストールできます。'
     },
     'works.install':  { zh: '前往 Astrobox 安装', en: 'Install via Astrobox', ja: 'Astrobox でインストール' },
     'works.source':   { zh: '查看源码', en: 'View source', ja: 'ソースを見る' },
@@ -192,7 +192,7 @@ window.I18N = (function () {
     'collage.prev':   { zh: '上一部作品', en: 'Previous work', ja: '前の作品' },
     'collage.next':   { zh: '下一部作品', en: 'Next work', ja: '次の作品' },
     'collage.p1':     { zh: 'Galgame 移植合集', en: 'Galgame port collection', ja: 'ギャルゲー移植コレクション' },
-    'collage.p1meta': { zh: '6 部作品 · 手环 9 Pro/10 Pro', en: '6 works · Band 9 Pro / 10 Pro', ja: '6作品 · バンド 9 Pro / 10 Pro' },
+    'collage.p1meta': { zh: '7 部作品 · 手环 9 Pro/10 Pro', en: '7 works · Band 9 Pro / 10 Pro', ja: '7作品 · バンド 9 Pro / 10 Pro' },
     'collage.p3meta': { zh: '快应用 · 手环 9 Pro', en: 'Quick app · Band 9 Pro', ja: 'クイックアプリ · バンド 9 Pro' },
     'collage.p2meta': { zh: '快应用 · 手环 9 Pro/10 Pro', en: 'Quick app · Band 9 Pro / 10 Pro', ja: 'クイックアプリ · バンド 9 Pro / 10 Pro' },
     'collage.p4meta': { zh: '待上传 · 源码已公开', en: 'Pending · source available', ja: '未アップロード · ソース公開中' },
@@ -339,13 +339,13 @@ window.I18N = (function () {
 
     'footer.disclaimer': { zh: '免责声明', en: 'Disclaimer', ja: '免責事項' },
     'footer.disclaimer1': {
-      zh: '「作品下载」中的六款移植均为面向小米 Vela 设备的<strong>非官方个人移植</strong>，并非原作官方版本或授权衍生产品，与原作者、小米（Xiaomi）及 Astrobox 官方均无关联。《小小的身影，重叠的内心》《想成为 Galgame 领域大神！！！》（GalGod）《永恒与星辰与日常》《黄莓C》《夏末白夜》《海蓝星之梦》的名称、角色、剧情与美术资源，著作权均归各自原作者及相关权利人所有，本站不主张任何原作权利。',
-      en: 'The six ports under “Downloads” are <strong>unofficial personal ports</strong> for Xiaomi Vela devices. They are not official releases or licensed derivatives, and are unaffiliated with the original authors, Xiaomi, or Astrobox. Rights to the titles, characters, story and artwork of Tiny Shadows, Overlapping Hearts; I Want to Be a Galgame Master!!! (GalGod); Eternity, the Stars, and Everyday; HUANGMEI C; The White Night in Late Summer; and Dream of BluePlanet belong to their respective authors and rights holders; this site claims no rights over the original works.',
-      ja: '「ダウンロード」に掲載している6作品の移植は、Xiaomi Vela デバイス向けの<strong>非公式な個人移植</strong>であり、原作の公式版や許諾を得た派生作品ではありません。原作者、Xiaomi、Astrobox のいずれとも関係ありません。『小さな影、重なる心』『ギャルゲーの神になりたい！！！』（GalGod）『永遠と星々と日常』『黄莓C』『夏末白夜』『海藍星の夢』の名称・キャラクター・シナリオ・美術素材の著作権は、それぞれの原作者および権利者に帰属し、当サイトはいかなる原作の権利も主張しません。'
+      zh: '「作品下载」中的七款移植均为面向小米 Vela 设备的<strong>非官方个人移植</strong>，并非原作官方版本或授权衍生产品，与原作者、小米（Xiaomi）及 Astrobox 官方均无关联。《小小的身影，重叠的内心》《想成为 Galgame 领域大神！！！》（GalGod）《永恒与星辰与日常》《黄莓C》《夏末白夜》《海蓝星之梦》《我的猫娘恋人》的名称、角色、剧情与美术资源，著作权均归各自原作者及相关权利人所有，本站不主张任何原作权利。',
+      en: 'The seven ports under “Downloads” are <strong>unofficial personal ports</strong> for Xiaomi Vela devices. They are not official releases or licensed derivatives, and are unaffiliated with the original authors, Xiaomi, or Astrobox. Rights to the titles, characters, story and artwork of Tiny Shadows, Overlapping Hearts; I Want to Be a Galgame Master!!! (GalGod); Eternity, the Stars, and Everyday; HUANGMEI C; The White Night in Late Summer; Dream of BluePlanet; and My Cat Girl Lover belong to their respective authors and rights holders; this site claims no rights over the original works.',
+      ja: '「ダウンロード」に掲載している7作品の移植は、Xiaomi Vela デバイス向けの<strong>非公式な個人移植</strong>であり、原作の公式版や許諾を得た派生作品ではありません。原作者、Xiaomi、Astrobox のいずれとも関係ありません。『小さな影、重なる心』『ギャルゲーの神になりたい！！！』（GalGod）『永遠と星々と日常』『黄莓C』『夏末白夜』『海藍星の夢』『僕の猫娘恋人』の名称・キャラクター・シナリオ・美術素材の著作権は、それぞれの原作者および権利者に帰属し、当サイトはいかなる原作の権利も主張しません。'
     },
     'footer.disclaimer2': {
-      zh: '六款移植均免费提供，不收取任何费用，也不代表原作售价；请通过正规渠道支持原作。使用、修改或传播本站所涉内容所产生的<strong>风险与责任由使用者自行承担</strong>。',
-      en: 'All six ports are provided free of charge, and this does not reflect the price of the original works; please support the originals through official channels. <strong>Any risk or liability arising from using, modifying or redistributing content referenced here rests with the user.</strong>',
+      zh: '七款移植均免费提供，不收取任何费用，也不代表原作售价；请通过正规渠道支持原作。使用、修改或传播本站所涉内容所产生的<strong>风险与责任由使用者自行承担</strong>。',
+      en: 'All seven ports are provided free of charge, and this does not reflect the price of the original works; please support the originals through official channels. <strong>Any risk or liability arising from using, modifying or redistributing content referenced here rests with the user.</strong>',
       ja: '移植はいずれも無料で提供しており、費用は一切かかりません。原作の価格を示すものでもありません。原作は正規の手段でご支援ください。当サイトの内容を利用・改変・配布することで生じる<strong>リスクと責任は利用者ご自身が負うものとします</strong>。'
     },
     'footer.copyright': { zh: '持续更新中', en: 'updated regularly', ja: '随時更新中' },
@@ -431,9 +431,9 @@ window.I18N = (function () {
     'works.kicker': { ko: '작품 다운로드', es: 'Descargas', ar: 'التنزيلات' },
     'works.title':  { ko: '지금 <em>손목에 차는 작품.</em>', es: 'Ports que puedes <em>llevar puestos.</em>', ar: 'أعمال <em>يمكنك ارتداؤها الآن.</em>' },
     'works.lede': {
-      ko: '현재 공개된 샤오미 밴드 이식 작품 여섯 개입니다. 모두 개인이 만든 비공식 이식이며 무료입니다. 아래 버튼을 누르면 Astrobox가 열려 바로 설치할 수 있습니다.',
-      es: 'Hasta ahora hay seis ports para Xiaomi Smart Band, todos no oficiales, hechos por una persona y gratis. Los botones de abajo abren Astrobox para instalarlos.',
-      ar: 'ست نُسخ منقولة لساعة Xiaomi Smart Band منشورة حتى الآن، وكلها غير رسمية وبجهد فردي ومجانية. الأزرار أدناه تفتح Astrobox للتثبيت.'
+      ko: '현재 공개된 샤오미 밴드 이식 작품 일곱 개입니다. 모두 개인이 만든 비공식 이식이며 무료입니다. 아래 버튼을 누르면 Astrobox가 열려 바로 설치할 수 있습니다.',
+      es: 'Hasta ahora hay siete ports para Xiaomi Smart Band, todos no oficiales, hechos por una persona y gratis. Los botones de abajo abren Astrobox para instalarlos.',
+      ar: 'سبع نُسخ منقولة لساعة Xiaomi Smart Band منشورة حتى الآن، وكلها غير رسمية وبجهد فردي ومجانية. الأزرار أدناه تفتح Astrobox للتثبيت.'
     },
     'works.install':  { ko: 'Astrobox로 설치', es: 'Instalar con Astrobox', ar: 'التثبيت عبر Astrobox' },
     'works.source':   { ko: '소스 보기', es: 'Ver código', ar: 'عرض المصدر' },
@@ -504,7 +504,7 @@ window.I18N = (function () {
     'collage.prev':   { ko: '이전 작품', es: 'Obra anterior', ar: 'العمل السابق' },
     'collage.next':   { ko: '다음 작품', es: 'Obra siguiente', ar: 'العمل التالي' },
     'collage.p1':     { ko: '갸루게 이식 모음', es: 'Colección de ports de galgame', ar: 'مجموعة نقل الغالغيم' },
-    'collage.p1meta': { ko: '작품 6종 · 밴드 9 Pro/10 Pro', es: '6 obras · Band 9 Pro / 10 Pro', ar: '6 أعمال · Band 9 Pro / 10 Pro' },
+    'collage.p1meta': { ko: '작품 7종 · 밴드 9 Pro/10 Pro', es: '7 obras · Band 9 Pro / 10 Pro', ar: '7 أعمال · Band 9 Pro / 10 Pro' },
     'collage.p3meta': { ko: '퀵 앱 · 밴드 9 Pro', es: 'Quick app · Band 9 Pro', ar: 'تطبيق سريع · Band 9 Pro' },
     'collage.p2meta': { ko: '퀵 앱 · 밴드 9 Pro/10 Pro', es: 'Quick app · Band 9 Pro / 10 Pro', ar: 'تطبيق سريع · Band 9 Pro / 10 Pro' },
     'collage.p4meta': { ko: '업로드 대기 · 소스 공개됨', es: 'Pendiente · código disponible', ar: 'قيد الرفع · المصدر متاح' },
@@ -676,14 +676,14 @@ window.I18N = (function () {
     'footer.relGhListSub': { ko: '전체 오픈 소스 프로젝트', es: 'Todos los proyectos abiertos', ar: 'كل المشاريع مفتوحة المصدر' },
     'footer.disclaimer': { ko: '면책 조항', es: 'Aviso legal', ar: 'إخلاء المسؤولية' },
     'footer.disclaimer1': {
-      ko: '「작품 다운로드」의 여섯 이식판은 모두 샤오미 Vela 기기를 위한 <strong>비공식 개인 이식</strong>이며, 원작의 공식 버전이나 허가받은 파생물이 아닙니다. 원작자, 샤오미(Xiaomi), Astrobox 공식과도 무관합니다. 《작은 모습, 겹치는 마음》《갸루게 장르의 신이 되고 싶어!!!》(GalGod)《영원과 별과 일상》《황메이C》《여름 끝의 백야》《바다빛 별의 꿈》의 이름, 캐릭터, 시나리오, 미술 자원의 저작권은 각 원작자와 권리자에게 있으며, 본 사이트는 어떤 원작 권리도 주장하지 않습니다.',
-      es: 'Los seis ports de «Descargas» son <strong>ports personales no oficiales</strong> para dispositivos Xiaomi Vela. No son versiones oficiales ni derivados con licencia, y no tienen relación con los autores originales, Xiaomi ni Astrobox. Los derechos sobre títulos, personajes, historia y arte de Pequeñas sombras, corazones que se cruzan; ¡Quiero ser un maestro del galgame! (GalGod); Eternidad, las estrellas y lo cotidiano; HUANGMEI C; La noche blanca del final del verano y Dream of BluePlanet pertenecen a sus respectivos autores y titulares; este sitio no reclama ningún derecho sobre las obras originales.',
-      ar: 'النُسخ الست في «التنزيلات» هي <strong>نُسخ شخصية غير رسمية</strong> لأجهزة Xiaomi Vela، وليست إصدارات رسمية ولا مشتقات مرخّصة، ولا علاقة لها بأصحاب الأعمال الأصلية ولا بـ Xiaomi ولا بـ Astrobox. حقوق العناوين والشخصيات والقصة والرسوم في «ظلال صغيرة وقلوب متقاطعة» و«أريد أن أصبح سيد الغالغيم!!!» (GalGod) و«الأبد والنجوم واليومي» وHUANGMEI C و«الليلة البيضاء في آخر الصيف» و«Dream of BluePlanet» تعود لأصحابها؛ وهذا الموقع لا يدّعي أي حق على الأعمال الأصلية.'
+      ko: '「작품 다운로드」의 일곱 이식판은 모두 샤오미 Vela 기기를 위한 <strong>비공식 개인 이식</strong>이며, 원작의 공식 버전이나 허가받은 파생물이 아닙니다. 원작자, 샤오미(Xiaomi), Astrobox 공식과도 무관합니다. 《작은 모습, 겹치는 마음》《갸루게 장르의 신이 되고 싶어!!!》(GalGod)《영원과 별과 일상》《황메이C》《여름 끝의 백야》《바다빛 별의 꿈》《나의 고양이 소녀 연인》의 이름, 캐릭터, 시나리오, 미술 자원의 저작권은 각 원작자와 권리자에게 있으며, 본 사이트는 어떤 원작 권리도 주장하지 않습니다.',
+      es: 'Los siete ports de «Descargas» son <strong>ports personales no oficiales</strong> para dispositivos Xiaomi Vela. No son versiones oficiales ni derivados con licencia, y no tienen relación con los autores originales, Xiaomi ni Astrobox. Los derechos sobre títulos, personajes, historia y arte de Pequeñas sombras, corazones que se cruzan; ¡Quiero ser un maestro del galgame! (GalGod); Eternidad, las estrellas y lo cotidiano; HUANGMEI C; La noche blanca del final del verano, Dream of BluePlanet y My Cat Girl Lover pertenecen a sus respectivos autores y titulares; este sitio no reclama ningún derecho sobre las obras originales.',
+      ar: 'النُسخ السبع في «التنزيلات» هي <strong>نُسخ شخصية غير رسمية</strong> لأجهزة Xiaomi Vela، وليست إصدارات رسمية ولا مشتقات مرخّصة، ولا علاقة لها بأصحاب الأعمال الأصلية ولا بـ Xiaomi ولا بـ Astrobox. حقوق العناوين والشخصيات والقصة والرسوم في «ظلال صغيرة وقلوب متقاطعة» و«أريد أن أصبح سيد الغالغيم!!!» (GalGod) و«الأبد والنجوم واليومي» وHUANGMEI C و«الليلة البيضاء في آخر الصيف» و«Dream of BluePlanet» و«My Cat Girl Lover» تعود لأصحابها؛ وهذا الموقع لا يدّعي أي حق على الأعمال الأصلية.'
     },
     'footer.disclaimer2': {
-      ko: '여섯 이식판 모두 무료로 제공되며 어떤 비용도 받지 않습니다. 이는 원작의 가격을 뜻하지 않으니 정식 경로로 원작을 응원해 주세요. 본 사이트가 다루는 내용을 사용·수정·배포함으로써 발생하는 <strong>위험과 책임은 이용자 본인에게 있습니다</strong>.',
-      es: 'Los seis ports se ofrecen gratis y no suponen ningún coste, ni reflejan el precio de las obras originales; apoya a los originales por canales oficiales. <strong>Cualquier riesgo o responsabilidad derivada de usar, modificar o redistribuir el contenido aquí referido recae en el usuario.</strong>',
-      ar: 'تُقدَّم النُسخ الست مجانًا دون أي مقابل، وهذا لا يعبّر عن سعر الأعمال الأصلية؛ ادعم الأعمال الأصلية عبر القنوات الرسمية. <strong>أي مخاطر أو مسؤولية تنشأ عن استخدام محتوى هذا الموقع أو تعديله أو إعادة توزيعه تقع على المستخدم.</strong>'
+      ko: '일곱 이식판 모두 무료로 제공되며 어떤 비용도 받지 않습니다. 이는 원작의 가격을 뜻하지 않으니 정식 경로로 원작을 응원해 주세요. 본 사이트가 다루는 내용을 사용·수정·배포함으로써 발생하는 <strong>위험과 책임은 이용자 본인에게 있습니다</strong>.',
+      es: 'Los siete ports se ofrecen gratis y no suponen ningún coste, ni reflejan el precio de las obras originales; apoya a los originales por canales oficiales. <strong>Cualquier riesgo o responsabilidad derivada de usar, modificar o redistribuir el contenido aquí referido recae en el usuario.</strong>',
+      ar: 'تُقدَّم النُسخ السبع مجانًا دون أي مقابل، وهذا لا يعبّر عن سعر الأعمال الأصلية؛ ادعم الأعمال الأصلية عبر القنوات الرسمية. <strong>أي مخاطر أو مسؤولية تنشأ عن استخدام محتوى هذا الموقع أو تعديله أو إعادة توزيعه تقع على المستخدم.</strong>'
     },
     'footer.copyright': { ko: '계속 업데이트 중', es: 'actualizado con frecuencia', ar: 'يُحدَّث باستمرار' },
     'footer.builtWith': { ko: 'HTML / CSS / JS로 직접 작성, 프레임워크 없음', es: 'Escrito a mano en HTML / CSS / JS, sin frameworks', ar: 'مكتوب يدويًا بـ HTML / CSS / JS دون أي إطار عمل' },
@@ -763,7 +763,7 @@ window.I18N = (function () {
     'marquee.7': '開源 · 共建',
     'works.kicker': '作品下載',
     'works.title': '已經<em>戴得上手的作品。</em>',
-    'works.lede': '目前公開的六款小米手環移植作品，皆為非官方個人移植、免費提供。點下面的按鈕會喚起 Astrobox 直接安裝。',
+    'works.lede': '目前公開的七款小米手環移植作品，皆為非官方個人移植、免費提供。點下面的按鈕會喚起 Astrobox 直接安裝。',
     'works.install': '前往 Astrobox 安裝',
     'works.source': '查看原始碼',
     'works.pending': '待上傳',
@@ -796,7 +796,7 @@ window.I18N = (function () {
     'collage.prev': '上一部作品',
     'collage.next': '下一部作品',
     'collage.p1': 'Galgame 移植合集',
-    'collage.p1meta': '6 部作品 · 手環 9 Pro/10 Pro',
+    'collage.p1meta': '7 部作品 · 手環 9 Pro/10 Pro',
     'collage.p3meta': '快應用 · 手環 9 Pro',
     'collage.p2meta': '快應用 · 手環 9 Pro/10 Pro',
     'collage.p4meta': '待上傳 · 原始碼已公開',
@@ -881,8 +881,8 @@ window.I18N = (function () {
     'footer.relGhList': 'GitHub 儲存庫清單',
     'footer.relGhListSub': '全部開源專案',
     'footer.disclaimer': '免責聲明',
-    'footer.disclaimer1': '「作品下載」中的六款移植皆為面向小米 Vela 裝置的<strong>非官方個人移植</strong>，並非原作官方版本或授權衍伸產品，與原作者、小米（Xiaomi）及 Astrobox 官方均無關聯。《小小的身影，重疊的內心》《想成為 Galgame 領域大神！！！》（GalGod）《永恆與星辰與日常》《黃莓C》《夏末白夜》《海藍星之夢》的名稱、角色、劇情與美術資源，著作權均歸各自原作者及相關權利人所有，本站不主張任何原作權利。',
-    'footer.disclaimer2': '六款移植皆免費提供，不收取任何費用，也不代表原作售價；請透過正規管道支持原作。使用、修改或散布本站所涉內容所產生的<strong>風險與責任由使用者自行承擔</strong>。',
+    'footer.disclaimer1': '「作品下載」中的七款移植皆為面向小米 Vela 裝置的<strong>非官方個人移植</strong>，並非原作官方版本或授權衍伸產品，與原作者、小米（Xiaomi）及 Astrobox 官方均無關聯。《小小的身影，重疊的內心》《想成為 Galgame 領域大神！！！》（GalGod）《永恆與星辰與日常》《黃莓C》《夏末白夜》《海藍星之夢》《我的貓娘戀人》的名稱、角色、劇情與美術資源，著作權均歸各自原作者及相關權利人所有，本站不主張任何原作權利。',
+    'footer.disclaimer2': '七款移植皆免費提供，不收取任何費用，也不代表原作售價；請透過正規管道支持原作。使用、修改或散布本站所涉內容所產生的<strong>風險與責任由使用者自行承擔</strong>。',
     'footer.copyright': '持續更新中',
     'footer.builtWith': '以 HTML / CSS / JS 手寫，沒有框架',
     'ginka.tag': '移植預告',
@@ -1072,6 +1072,40 @@ window.I18N = (function () {
   Object.keys(TUNED3).forEach(function (k) {
     DICT[k] = DICT[k] || {};
     Object.keys(TUNED3[k]).forEach(function (l) { DICT[k][l] = TUNED3[k][l]; });
+  });
+  /* ---------- 第七部：我的猫娘恋人 ---------------------------------------------- */
+  var TUNED4 = {
+    'w7.title': { zh: "我的猫娘恋人", 'zh-hant': "我的貓娘戀人", en: "My Cat Girl Lover", ja: "僕の猫娘恋人", ko: "나의 고양이 소녀 연인", es: "My Cat Girl Lover", ar: "My Cat Girl Lover" },
+    'w7.short': { zh: "我的猫娘恋人", 'zh-hant': "我的貓娘戀人", en: "My Cat Girl Lover", ja: "僕の猫娘恋人", ko: "나의 고양이 소녀", es: "My Cat Girl Lover", ar: "My Cat Girl Lover" },
+    'w7.summary': { zh: "《我的猫娘恋人》的小米手环非官方移植版。原作是一款猫娘题材的视觉小说。安装包已经放进源码仓库的 Releases，可以先从那里下载；Astrobox 那边还没上架。", 'zh-hant': "《我的貓娘戀人》的小米手環非官方移植版。原作是一款貓娘題材的視覺小說。安裝包已經放進原始碼儲存庫的 Releases，可以先從那裡下載；Astrobox 那邊還沒上架。", en: "An unofficial Mi Band port of My Cat Girl Lover. The original is a cat-girl visual novel. The build is already in the repository's Releases, so you can download it there; it is not on Astrobox yet.", ja: "『僕の猫娘恋人』のスマートバンド非公式移植版。原作は猫娘もののビジュアルノベルです。ビルドはすでにリポジトリの Releases に置いてあるので、そこからダウンロードできます。Astrobox にはまだ掲載されていません。", ko: "《나의 고양이 소녀 연인》의 샤오미 밴드 비공식 이식판입니다. 원작은 고양이 소녀를 다룬 비주얼 노벨입니다. 설치 파일은 이미 저장소의 Releases에 있으니 거기서 받을 수 있습니다. Astrobox에는 아직 등록되지 않았습니다.", es: "Un port no oficial de My Cat Girl Lover para la Mi Band. El original es una novela visual de chicas gato. El paquete ya está en las Releases del repositorio, así que puedes descargarlo desde ahí; todavía no está en Astrobox.", ar: "نسخة منقولة غير رسمية من My Cat Girl Lover إلى ساعة Mi Band. الأصل رواية بصرية عن فتيات قطط. الملف موجود بالفعل في قسم Releases في المستودع ويمكن تنزيله من هناك؛ لكنه ليس على Astrobox بعد." },
+    'collage.p8meta': { zh: "待上架 · Releases 可下载", 'zh-hant': "待上架 · Releases 可下載", en: "Not listed yet · Releases available", ja: "未掲載 · Releases から入手可", ko: "미등록 · Releases에서 받기 가능", es: "Sin publicar · disponible en Releases", ar: "لم يُدرَج بعد · متاح في Releases" },
+    'footer.relMcSrc': { zh: "《我的猫娘恋人》源码 · Release 可下载", 'zh-hant': "《我的貓娘戀人》原始碼 · Release 可下載", en: "My Cat Girl Lover source · Releases available", ja: "『僕の猫娘恋人』ソース · Releases から入手可", ko: "《나의 고양이 소녀 연인》소스 · Releases에서 받기 가능", es: "Código de My Cat Girl Lover · disponible en Releases", ar: "مصدر My Cat Girl Lover · متاح في Releases" },
+    'footer.srcMc': { zh: "mycatgirllover-band 源码", 'zh-hant': "mycatgirllover-band 原始碼", en: "mycatgirllover-band source", ja: "mycatgirllover-band ソース", ko: "mycatgirllover-band 소스", es: "Código de mycatgirllover-band", ar: "مصدر mycatgirllover-band" },
+  };
+  Object.keys(TUNED4).forEach(function (k) {
+    DICT[k] = DICT[k] || {};
+    Object.keys(TUNED4[k]).forEach(function (l) { DICT[k][l] = TUNED4[k][l]; });
+  });
+  var TUNED5 = {
+    'footer.relWnSrc': { zh: "《夏末白夜》源码 · Release 可下载", 'zh-hant': "《夏末白夜》原始碼 · Release 可下載", en: "The White Night in Late Summer source · Releases available", ja: "『夏末白夜』ソース · Releases から入手可", ko: "《여름 끝의 백야》소스 · Releases에서 받기 가능", es: "Código de La noche blanca del final del verano · disponible en Releases", ar: "مصدر «الليلة البيضاء في آخر الصيف» · متاح في Releases" },
+  };
+  Object.keys(TUNED5).forEach(function (k) {
+    DICT[k] = DICT[k] || {};
+    Object.keys(TUNED5[k]).forEach(function (l) { DICT[k][l] = TUNED5[k][l]; });
+  });
+  /* 第七个主题色：从《我的猫娘恋人》封面提取的粉紫，hue 305 ——
+     与「大神紫」（257）、「星梦蓝」（196）都拉开，六个之外再补一个。 */
+  PLANET['accent.catgirl'] = { zh: "猫娘粉", 'zh-hant': "貓娘粉", en: "Catgirl pink", ja: "猫娘ピンク", ko: "고양이 소녀 핑크", es: "Rosa catgirl", ar: "وردي القطط" };
+  DICT['accent.catgirl'] = PLANET['accent.catgirl'];
+  /* 快速链接里的第二张卡从 MCBBS 换成 B 站主页 */
+  var TUNED6 = {
+    'links.biliTitle': { zh: "哔哩哔哩", 'zh-hant': "嗶哩嗶哩", en: "Bilibili", ja: "ビリビリ", ko: "빌리빌리", es: "Bilibili", ar: "Bilibili" },
+    'links.biliDesc': { zh: "视频主要发在这里，移植进度、试玩与日常更新都在这儿。", 'zh-hant': "影片主要發在這裡，移植進度、試玩與日常更新都在這兒。", en: "Where I post videos — port progress, playtests and day-to-day updates all land here.", ja: "動画は主にここで公開しています。移植の進捗や試遊、日々の更新はこちら。", ko: "영상은 주로 여기에 올립니다. 이식 진행 상황과 시연, 일상 업데이트가 모두 이곳에 있습니다.", es: "Aquí publico los vídeos: avances del port, pruebas y novedades del día a día.", ar: "أنشر الفيديوهات هنا: تقدّم النقل والتجارب والمستجدات اليومية." },
+    'links.biliCta': { zh: "去 B 站看看", 'zh-hant': "去 B 站看看", en: "Visit the channel", ja: "チャンネルを見る", ko: "채널 보러 가기", es: "Ver el canal", ar: "زيارة القناة" },
+  };
+  Object.keys(TUNED6).forEach(function (k) {
+    DICT[k] = DICT[k] || {};
+    Object.keys(TUNED6[k]).forEach(function (l) { DICT[k][l] = TUNED6[k][l]; });
   });
   /* 运行时状态 */
   var current = 'zh';
