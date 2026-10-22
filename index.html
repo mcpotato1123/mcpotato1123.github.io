@@ -657,15 +657,10 @@
         </div>
       </article>
 
-      <!-- 《永恒与星辰与日常》：安装包仍为「待上传」，但源码仓库已恢复公开。
-           安装入口仍做成 <span>（没有 href 就没有焦点），源码入口是正常 <a>，
-           与「夏末白夜」「黄莓C」同一种状态：源码先公开，安装等上传。
-           上传完成后只剩两处：
-             1. 把安装那个 <span class="btn btn-primary is-pending"> 换回 <a>，href 为
-                abox.run/open?source=resv2&id=com.ourbriefeternity.band&provider=OfficialV2
-             2. 角标「待上传」改成「已上线」（图标从 i-clock 换成 i-sparkle）
-           合集卡片第 4 页到时也要从 GitHub 换回 abox.run，备注改回「快应用 · 手环 9 Pro」。
-           首屏统计和页脚不用动 —— 它们已经是最终状态。
+      <!-- 《永恒与星辰与日常》：已重新上架 Astrobox，卡片回到「已上线」状态。
+           三处入口同时可用：Astrobox 安装、Releases 下载、查看源码。
+           若将来再次下架，把安装那个 <a> 换成 <span class="btn btn-primary is-pending">、
+           角标改回 flag.pending 并把合集第 4 页指回源码仓库即可。
 
            注意：这段注释里不能出现连续两个连字符（中文破折号、CSS 自定义属性名
            都是那个形状）。HTML 注释遇到连续两个连字符会提前闭合，
@@ -676,7 +671,7 @@
                loading="lazy" decoding="async"
                alt="《永恒与星辰与日常》小米手环移植版封面">
           <figcaption class="product-card-flag" data-flag-tone="dark">
-            <svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg><span data-i18n="flag.pending">待上传</span>
+            <svg class="ic" aria-hidden="true"><use href="#i-sparkle"/></svg><span data-i18n="flag.live">已上线</span>
           </figcaption>
         </figure>
         <div class="product-card-copy">
@@ -690,8 +685,8 @@
             </div>
           </div>
           <p class="product-card-summary" data-i18n="w3.summary">《永恒与星辰与日常》的小米手环非官方移植版。原作是一部视觉小说，
-            讲的是普通日常里慢慢长出来的那点不普通。安装包正在上传，
-            源码已经先公开了。</p>
+            讲的是普通日常里慢慢长出来的那点不普通。已在 Astrobox 上架，
+            也可以从源码仓库的 Releases 下载。</p>
           <div class="card-tags">
             <i data-i18n="tag.band9">小米手环 9 Pro</i>
             <i data-i18n="tag.unofficial">非官方移植</i>
@@ -699,13 +694,11 @@
             <i>com.ourbriefeternity.band</i>
           </div>
           <div class="dl-actions">
-            <span class="btn btn-primary is-pending" aria-disabled="true">
-              <svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>
-              <span data-i18n="works.pending">待上传</span>
-            </span>
-            <!-- 源码仓库已恢复（已公开），安装入口仍为「待上传」。
-                 这和「夏末白夜」「黄莓C」是同一种状态：源码先公开，
-                 安装包等上传。将来安装包上线后，只需把这一个 span 换回 <a>（href 见文件头部注释）并把角标改回「已上线」。 -->
+            <a class="btn btn-primary" href="https://abox.run/open?source=resv2&amp;id=com.ourbriefeternity.band&amp;provider=OfficialV2"
+               target="_blank" rel="noopener noreferrer">
+              <svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>
+              <span data-i18n="works.install">前往 Astrobox 安装</span>
+            </a>
             <a class="btn btn-ghost" href="https://github.com/mcpotato1123/ourbriefeternity-band/releases"
                target="_blank" rel="noopener noreferrer">
               <svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>
@@ -718,7 +711,7 @@
             </a>
           </div>
           <p class="dl-hint">
-            <span data-i18n="works.hintPendingSource">安装包还没上传到 Astrobox，所以暂时装不了；想先看代码点「查看源码」。</span>
+            <span data-i18n="works.hint">链接会唤起已安装的 Astrobox 客户端；还没装的话先去 Astrobox 官网下载。</span>
           </p>
         </div>
       </article>
@@ -971,7 +964,7 @@
               <a class="pc-title" href="#works"><span data-i18n="collage.p1">Galgame 移植合集</span>
                 <svg class="ic" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
               </a>
-              <p class="pc-meta" data-i18n="collage.p1meta">4 部作品 · 手环 9 Pro/10 Pro</p>
+              <p class="pc-meta" data-i18n="collage.p1meta">7 部作品 · 手环 9 Pro/10 Pro</p>
             </article>
 
             <article class="pc-page">
@@ -1009,12 +1002,11 @@
                      alt="《永恒与星辰与日常》小米手环移植版封面">
               </figure>
               <p class="pc-index">4/6</p>
-              <!-- 安装包待上传，所以这一页先指向源码仓库；上传后换回 abox.run 链接 -->
-              <a class="pc-title" href="https://github.com/mcpotato1123/ourbriefeternity-band"
+              <a class="pc-title" href="https://abox.run/open?source=resv2&amp;id=com.ourbriefeternity.band&amp;provider=OfficialV2"
                  target="_blank" rel="noopener noreferrer"><span data-i18n="collage.p4title">永恒与星辰与日常</span>
                 <svg class="ic" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
               </a>
-              <p class="pc-meta" data-i18n="collage.p4meta">待上传 · 源码已公开</p>
+              <p class="pc-meta" data-i18n="collage.p4meta">快应用 · 手环 9 Pro</p>
             </article>
 
             <article class="pc-page">
@@ -1029,7 +1021,7 @@
                  target="_blank" rel="noopener noreferrer"><span data-i18n="w4.title">黄莓C</span>
                 <svg class="ic" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
               </a>
-              <p class="pc-meta" data-i18n="collage.p5meta">每日构建 · 源码已公开</p>
+              <p class="pc-meta" data-i18n="collage.p5meta">每日构建 · Releases 可下载</p>
             </article>
 
             <article class="pc-page">
@@ -1044,7 +1036,7 @@
                  target="_blank" rel="noopener noreferrer"><span data-i18n="w5.title">夏末白夜</span>
                 <svg class="ic" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
               </a>
-              <p class="pc-meta" data-i18n="collage.p6meta">待上传 · 源码已公开</p>
+              <p class="pc-meta" data-i18n="collage.p6meta">待上架 · Releases 可下载</p>
             </article>
 
             <article class="pc-page">
@@ -1059,7 +1051,7 @@
                  target="_blank" rel="noopener noreferrer"><span data-i18n="w6.title">海蓝星之梦</span>
                 <svg class="ic" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
               </a>
-              <p class="pc-meta" data-i18n="collage.p7meta">每日构建 · 源码已公开</p>
+              <p class="pc-meta" data-i18n="collage.p7meta">每日构建 · Releases 可下载</p>
             </article>
 
             <article class="pc-page">

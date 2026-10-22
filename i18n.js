@@ -1142,6 +1142,17 @@ window.I18N = (function () {
     DICT['hero.lede'] = DICT['hero.lede'] || {};
     DICT['hero.lede'][l] = HERO_LEDE[l] || HERO_LEDE.zh;
   });
+  /* ---- 《永恒与星辰与日常》上架 Astrobox ----------------------------------
+     卡片与合集页都从「待上架」改回「已上线」；简介、合集脚注、页脚条目同步改口。 */
+  var TUNED7 = {
+    'w3.summary': { zh: "《永恒与星辰与日常》的小米手环非官方移植版。原作是一部视觉小说，讲的是普通日常里慢慢长出来的那点不普通。已在 Astrobox 上架，也可以从源码仓库的 Releases 下载。", 'zh-hant': "《永恆與星辰與日常》的小米手環非官方移植版。原作是一部視覺小說，講的是平凡日常裡慢慢長出來的那一點不平凡。已在 Astrobox 上架，也可以從原始碼儲存庫的 Releases 下載。", en: "An unofficial Mi Band port of Eternity, the Stars, and Everyday. The original is a visual novel about the small extraordinary things that grow out of ordinary days. It is on Astrobox now, and you can also download it from the repository's Releases.", ja: "『永遠と星々と日常』のスマートバンド非公式移植版。原作は、ありふれた日常の中に少しずつ芽生える「普通でないもの」を描いたビジュアルノベルです。Astrobox に掲載されました。リポジトリの Releases からもダウンロードできます。", ko: "《영원과 별과 일상》의 샤오미 밴드 비공식 이식판입니다. 평범한 일상에서 천천히 자라나는 조금 특별한 무언가를 그린 비주얼 노벨입니다. 이제 Astrobox에 등록되었고, 저장소의 Releases에서도 받을 수 있습니다.", es: "Un port no oficial de Eternidad, las estrellas y lo cotidiano. El original es una novela visual sobre lo extraordinario que crece despacio en los días normales. Ya está en Astrobox, y también puedes descargarlo desde las Releases del repositorio.", ar: "نسخة منقولة غير رسمية من «الأبد والنجوم واليومي» إلى ساعة Mi Band. الأصل رواية بصرية عن الأشياء غير العادية التي تنمو ببطء داخل الأيام العادية. أصبحت متاحة الآن على Astrobox، ويمكن تنزيلها أيضًا من قسم Releases في المستودع." },
+    'collage.p4meta': { zh: "快应用 · 手环 9 Pro", 'zh-hant': "快應用 · 手環 9 Pro", en: "Quick app · Band 9 Pro", ja: "クイックアプリ · バンド 9 Pro", ko: "퀵 앱 · 밴드 9 Pro", es: "Quick app · Band 9 Pro", ar: "تطبيق سريع · Band 9 Pro" },
+    'footer.relObeSrc': { zh: "《永恒与星辰与日常》源码", 'zh-hant': "《永恆與星辰與日常》原始碼", en: "Eternity, the Stars, and Everyday source", ja: "『永遠と星々と日常』ソース", ko: "《영원과 별과 일상》소스", es: "Código de Eternidad, las estrellas y lo cotidiano", ar: "مصدر «الأبد والنجوم واليومي»" },
+  };
+  Object.keys(TUNED7).forEach(function (k) {
+    DICT[k] = DICT[k] || {};
+    Object.keys(TUNED7[k]).forEach(function (l) { DICT[k][l] = TUNED7[k][l]; });
+  });
   /* 运行时状态 */
   var current = 'zh';
 
