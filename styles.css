@@ -15,6 +15,8 @@
      浅色主题下插画本身很亮（天空），薄纱可以薄一些，让插画多露出来；
      深色主题下同一套规则要用厚纱，否则白字压在亮插画上读不出。 */
   --hero-wash-a:58%;--hero-wash-b:40%;--hero-wash-c:10%;
+  /* 手机端文字横跨整宽，用不了一左一右的横向纱，改用竖向两段 */
+  --hero-wash-m1:58%;--hero-wash-m2:66%;
 
   color-scheme: light;
 
@@ -39,7 +41,7 @@
      作用是把「浏览器拿到的到底是哪一版 CSS」变成可读的事实 ——
      否则一遇到「改了没生效」，只能在缓存 / 编码 / 嵌套之间瞎猜。
      **每次改完这个文件记得更新这里的日期。** */
-  --css-rev:"2026-10-22 hero-btn-glow";
+  --css-rev:"2026-10-22 hero-mobile-fix";
 
   /* ---------- 主色 ----------
      站点主色沿用原有品牌蓝 #2563eb。派生令牌一律 color-mix，
@@ -226,6 +228,7 @@
 
 [data-theme="dark"]{
   --hero-wash-a:84%;--hero-wash-b:62%;--hero-wash-c:20%;
+  --hero-wash-m1:76%;--hero-wash-m2:84%;
 
   color-scheme: dark;
 
@@ -2576,13 +2579,18 @@ html[data-vt="theme"]::view-transition-new(root){
   .hero-actions{gap:10px;margin-top:24px}
   .particles,.scroll-cue{display:none}
 
-  /* 首屏背景：窄屏改成横向取景（人物居中偏右），并把整体压暗加强，
-     否则文字会压在人物的浅色区域上、读不清 */
+  /* 首屏背景：窄屏改成横向取景（人物居中偏右）。
+     遮罩这里必须**跟着主题走** —— 早先这里是写死的三层 rgba(20,16,17,…)，
+     浅色主题下首屏文字已改成近黑，却被这层暗纱压住，字直接糊在插画里。
+     现在用 --bg 混合：浅色是纸纱、深色是暗纱，与桌面端同一套机制。
+     手机上文字横跨整宽，所以口径从「左深右浅」改成「上下两段」。 */
   .hero-bg img{object-position:64% 38%}
   .hero-bg::after{
     background:
       linear-gradient(180deg,var(--bg) 0%,transparent 12%,transparent 72%,var(--bg) 100%),
-      linear-gradient(180deg,rgba(20,16,17,.70) 0%,rgba(20,16,17,.74) 46%,rgba(20,16,17,.80) 100%);
+      linear-gradient(180deg,
+        color-mix(in srgb, var(--bg) var(--hero-wash-m1), transparent) 0%,
+        color-mix(in srgb, var(--bg) var(--hero-wash-m2), transparent) 100%);
   }
 
   /* 项目卡：改竖排，主视觉压缩成一条横幅 */
