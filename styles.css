@@ -41,7 +41,7 @@
      作用是把「浏览器拿到的到底是哪一版 CSS」变成可读的事实 ——
      否则一遇到「改了没生效」，只能在缓存 / 编码 / 嵌套之间瞎猜。
      **每次改完这个文件记得更新这里的日期。** */
-  --css-rev:"2026-10-22 strip-removed";
+  --css-rev:"2026-10-24 qianse";
 
   /* ---------- 主色 ----------
      站点主色沿用原有品牌蓝 #2563eb。派生令牌一律 color-mix，
@@ -69,6 +69,8 @@
   --ocean-soft:rgba(29,127,168,.12);
   --lilac:#9f46b8;
   --lilac-soft:rgba(159,70,184,.12);
+  --madder:#a34431;
+  --madder-soft:rgba(163,68,49,.12);
 
   --shadow-1:0 1px 2px rgba(26,21,23,.05),0 4px 14px -8px rgba(26,21,23,.14);
   --shadow-2:0 2px 6px rgba(26,21,23,.06),0 20px 44px -24px rgba(26,21,23,.30);
@@ -269,6 +271,8 @@
   --ocean-soft:rgba(92,196,232,.14);
   --lilac:#d39ae8;
   --lilac-soft:rgba(211,154,232,.14);
+  --madder:#e68673;
+  --madder-soft:rgba(230,134,115,.14);
 
   --shadow-1:0 1px 2px rgba(0,0,0,.55),0 6px 18px -10px rgba(0,0,0,.8);
   --shadow-2:0 2px 8px rgba(0,0,0,.5),0 26px 54px -28px rgba(0,0,0,.9);
@@ -393,6 +397,7 @@ html[data-accent="huangmeic"]{ --accent:#9c642c; --accent-fg:#ffffff; --accent-i
 html[data-accent="whitenight"]{ --accent:#96825a; --accent-fg:#141011; --accent-ink:#6b5c3f; }
 html[data-accent="blueplanet"]{ --accent:#1b8ab2; --accent-fg:#141011; --accent-ink:#146880; }
 html[data-accent="catgirl"]{ --accent:#b247aa; --accent-fg:#ffffff; --accent-ink:#8a2f83; }
+html[data-accent="qianse"]{ --accent:#a34431; --accent-fg:#ffffff; --accent-ink:#7d3324; }
 
 html[data-accent="tiny"][data-theme="dark"]{ --accent:#8ed65a; --accent-fg:#14200a; --accent-ink:#b6e88f; }
 html[data-accent="galgod"][data-theme="dark"]{ --accent:#956efa; --accent-fg:#12062e; --accent-ink:#c0aaff; }
@@ -401,6 +406,7 @@ html[data-accent="huangmeic"][data-theme="dark"]{ --accent:#e39e58; --accent-fg:
 html[data-accent="whitenight"][data-theme="dark"]{ --accent:#dec592; --accent-fg:#1d1707; --accent-ink:#efdfbe; }
 html[data-accent="blueplanet"][data-theme="dark"]{ --accent:#45cafa; --accent-fg:#04222e; --accent-ink:#8de0fb; }
 html[data-accent="catgirl"][data-theme="dark"]{ --accent:#e67edd; --accent-fg:#2b0728; --accent-ink:#f4b6ee; }
+html[data-accent="qianse"][data-theme="dark"]{ --accent:#e68673; --accent-fg:#2b0d07; --accent-ink:#f3b9aa; }
 
 /* 默认（未设 data-accent 或 =blue）沿用 :root 里的品牌蓝，无需重复定义 */
 
@@ -1332,6 +1338,7 @@ html.fx-noblur .product-card-flag[data-flag-tone="dark"]{background:color-mix(in
 .product-card[data-tone="night"]{--card-accent:var(--night);--card-soft:var(--night-soft)}
 .product-card[data-tone="ocean"]{--card-accent:var(--ocean);--card-soft:var(--ocean-soft)}
 .product-card[data-tone="lilac"]{--card-accent:var(--lilac);--card-soft:var(--lilac-soft)}
+.product-card[data-tone="madder"]{--card-accent:var(--madder);--card-soft:var(--madder-soft)}
 
 /* ---------- 作品下载卡（Astrobox 安装入口） ----------------------------
    在 .product-card 骨架上加两样：底部的按钮行（安装 + 源码）、以及下面那行安装说明。
@@ -1937,6 +1944,7 @@ html:has(#ginkaBanner) .hero{padding-top:168px}
 .accent-proj[data-accent="whitenight"] .pj-dot{background:#96825a}
 .accent-proj[data-accent="blueplanet"] .pj-dot{background:#1b8ab2}
 .accent-proj[data-accent="catgirl"] .pj-dot{background:#b247aa}
+.accent-proj[data-accent="qianse"] .pj-dot{background:#a34431}
 .pj-nm{font-size:11.5px;font-weight:600;color:var(--ink);flex:none}
 .pj-src{
   margin-inline-start:auto;min-width:0;
@@ -2005,6 +2013,7 @@ html:has(#ginkaBanner) .hero{padding-top:168px}
 .accent-swatch[data-accent="whitenight"]{background-color:#96825a}
 .accent-swatch[data-accent="blueplanet"]{background-color:#1b8ab2}
 .accent-swatch[data-accent="catgirl"]{background-color:#b247aa}
+.accent-swatch[data-accent="qianse"]{background-color:#a34431}
 
 /* ---------- 自由取色（网页内嵌取色器）------------------------------------
    为什么不用 <input type="color">：它弹出的是**操作系统**的取色对话框
