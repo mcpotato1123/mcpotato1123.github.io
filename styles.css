@@ -41,7 +41,7 @@
      作用是把「浏览器拿到的到底是哪一版 CSS」变成可读的事实 ——
      否则一遇到「改了没生效」，只能在缓存 / 编码 / 嵌套之间瞎猜。
      **每次改完这个文件记得更新这里的日期。** */
-  --css-rev:"2026-10-24 kao-same-glass";
+  --css-rev:"2026-10-24 kao-mobile";
 
   /* ---------- 主色 ----------
      站点主色沿用原有品牌蓝 #2563eb。派生令牌一律 color-mix，
@@ -2445,11 +2445,26 @@ html.kao-off .site-header{padding-bottom:0}
 html.kao-off .kao-pill{display:none}
 
 /* 手机：顶栏只有站名 + 三个按钮，胶囊与那一行一起隐藏 */
+/* 手机：顶栏同样留一行给胶囊（46px），胶囊改成整宽贴在栏内下沿。
+   站名 + 三个按钮那一行是 64px，所以手机顶栏总高 110px。 */
 @media (max-width:900px){
-  .site-header{padding-bottom:0}
-  .kao-pill{display:none}
-  :root{--header-h:64px}
-  html:has(#ginkaBanner) .hero{padding-top:156px}
+  .site-header{padding-bottom:46px}
+  :root{--header-h:110px}
+
+  .kao-pill{
+    left:10px;right:10px;
+    transform:none;                       /* 不再用居中位移，改成左右各留 10px */
+    min-width:0;min-height:38px;
+    padding:3px 30px;
+    border-radius:10px;
+  }
+  .kao-pill:hover{transform:none}
+  .kao-pill .kao-label{font-size:10px}
+  .kao-pill .kao-time{font-size:14px}
+  .kao-x{right:7px;width:18px;height:18px}
+  .kao-x .ic{font-size:11px}
+
+  html:has(#ginkaBanner) .hero{padding-top:200px}
 }
 
 /* ---------- 页脚 -------------------------------------------------------- */
