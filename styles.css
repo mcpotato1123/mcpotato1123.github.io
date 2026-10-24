@@ -41,7 +41,7 @@
      作用是把「浏览器拿到的到底是哪一版 CSS」变成可读的事实 ——
      否则一遇到「改了没生效」，只能在缓存 / 编码 / 嵌套之间瞎猜。
      **每次改完这个文件记得更新这里的日期。** */
-  --css-rev:"2026-10-24 qianse";
+  --css-rev:"2026-10-24 kao-same-glass";
 
   /* ---------- 主色 ----------
      站点主色沿用原有品牌蓝 #2563eb。派生令牌一律 color-mix，
@@ -183,6 +183,12 @@
   --ease:cubic-bezier(.22,1,.36,1);
   --spring:cubic-bezier(.34,1.4,.64,1);
   --shell:1140px;
+  /* 顶栏总高。桌面端 64px 的菜单行 + 56px 的胶囊行 = 120px；
+     胶囊关掉时 html.kao-off 会把它打回 64px。 */
+  --header-h:112px;
+  /* Keep Android Open 官方横幅的底色（取自官方样式）：
+     #B74940 / rgb(183,73,64) / hsl(5,48%,48%) */
+  --kao-red:#b74940;
 
   /* ---------- 标题阶梯 ----------
      首屏大标题（--t-display）已随 h1 一起删除；要加回来时从下面的
@@ -435,7 +441,7 @@ html[data-accent="qianse"][data-theme="dark"]{ --accent:#e68673; --accent-fg:#2b
 
 html{
   scroll-behavior:smooth;
-  scroll-padding-top:88px;
+  scroll-padding-top:calc(var(--header-h) + 10px);
   -webkit-text-size-adjust:100%;
   /* 禁止双指缩放（与 viewport meta 里的 user-scalable=no 同一条策略）。
      pan-x pan-y = 只允许横向和纵向滑动，不允许「捏合缩放」，
@@ -626,6 +632,8 @@ body.cursor-hidden .cursor-dot,body.cursor-hidden .cursor-ring{opacity:0}
 */
 .site-header{
   position:fixed;z-index:50;top:0;left:0;right:0;
+  /* 下沿多留 56px 给倒计时胶囊（桌面）。手机端胶囊隐藏，这段收回。 */
+  padding-bottom:48px;
   /* 底色与高光是两层：底色由令牌给，高光由平台的 --glass-sheen 追加。
      分两层是为了让「同一套模糊与底色，只在表面质感上分平台」成为可能。 */
   background-image:var(--glass-sheen);
@@ -709,6 +717,7 @@ body.cursor-hidden .cursor-dot,body.cursor-hidden .cursor-ring{opacity:0}
 }
 .nav a{
   position:relative;padding:10px 13px;border-radius:8px;
+  white-space:nowrap;
   color:var(--muted);font-size:13.5px;font-weight:500;
   transition:color .22s ease,background .22s ease;
 }
@@ -877,7 +886,8 @@ body.cursor-hidden .cursor-dot,body.cursor-hidden .cursor-ring{opacity:0}
 
 .hero{
   position:relative;display:flex;flex-direction:column;justify-content:center;
-  min-height:100svh;padding:126px 0 90px;
+  /* 上内距要盖住变高的顶栏（120px）+ 一点余量；关掉胶囊后由 .kao-off 收回 126px */
+  min-height:100svh;padding:156px 0 90px;
 }
 .hero-inner{
   width:min(var(--shell),calc(100% - 48px));margin-inline:auto;
@@ -1734,14 +1744,18 @@ a.update-row:hover .update-arrow{transform:translate(3px,-3px);color:var(--accen
 .ginka-banner{
   position:fixed;z-index:45;              /* 顶栏是 50，横幅压在它之下 */
   left:20px;right:20px;
-  top:calc(64px + 10px + env(safe-area-inset-top, 0px));
+  top:calc(var(--header-h) + 10px + env(safe-area-inset-top, 0px));
   border-radius:var(--r-m);
-  border:1px solid var(--glass-rim);
+  /* 与倒计时胶囊同一条发丝线：主色 30% 拌进 --line。
+     早先试过纯白玻璃边（--glass-rim）—— 白线压在插画上是「亮边」，远看像贴纸毛边，
+     所以撤掉了；换成这条带主色倾向的暖灰细线后，只做轮廓、不做反光。 */
+  border:1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
   background-color:var(--glass-tint-bar);
-  background-image:var(--glass-sheen);
-  backdrop-filter:var(--fx-glass-14);
-  -webkit-backdrop-filter:var(--fx-glass-14);
-  box-shadow:inset 0 1px 0 var(--glass-hi-soft), 0 10px 28px -22px rgba(26,21,23,.5);
+  backdrop-filter:var(--fx-glass-16);
+  -webkit-backdrop-filter:var(--fx-glass-16);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--glass-hi-soft) 70%, transparent),
+    0 14px 34px -20px rgba(26,21,23,.5);
   animation:ginkaIn .42s var(--ease) both;
 }
 @keyframes ginkaIn{
@@ -1752,17 +1766,49 @@ a.update-row:hover .update-arrow{transform:translate(3px,-3px);color:var(--accen
   width:min(var(--shell),100%);
   margin-inline:auto;
   display:flex;align-items:center;justify-content:center;gap:12px;
-  min-height:46px;padding:9px 16px;
+  min-height:46px;padding:9px 16px 7px;
   font-size:13.5px;line-height:1.6;color:var(--ink-2);
   text-align:center;
 }
 .ginka-banner .ginka-tag{
-  flex:none;padding:3px 10px;border-radius:999px;
+  flex:none;display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px 3px 8px;border-radius:999px;
   background:var(--accent);color:var(--accent-fg);
   font-size:11.5px;font-weight:700;letter-spacing:.02em;
+  box-shadow:0 2px 10px -4px color-mix(in srgb, var(--accent) 70%, transparent);
 }
+.ginka-banner .ginka-tag .ic{font-size:12px}
 .ginka-banner .ginka-text{min-width:0}
-.ginka-banner strong{color:var(--ink);font-weight:700}
+/* 里程碑进度条：横幅内部、左右各留 14px，不再贴边。
+   轨道用主色 14%，填充用主色到 55% 的渐变，宽度读 --done（由 app.js 写入）。 */
+.ginka-progress{
+  height:4px;margin:0 14px 10px;
+  border-radius:999px;
+  background:color-mix(in srgb, var(--accent) 14%, transparent);
+  overflow:hidden;
+}
+.ginka-progress > i{
+  display:block;height:100%;width:var(--done,80%);
+  border-radius:inherit;
+  background:linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 55%, transparent));
+  transition:width .7s var(--ease);
+}
+.ginka-banner strong{
+  color:var(--accent-ink);font-weight:700;
+  font-variant-numeric:tabular-nums;   /* 数字等宽，倒计时/进度不抖 */
+}
+/* 里程碑计数：8/10。数字由 app.js 按作品卡数量写入 */
+.ginka-banner .ginka-count{
+  flex:none;display:inline-flex;align-items:baseline;gap:1px;
+  padding:2px 8px;border-radius:999px;
+  background:color-mix(in srgb, var(--accent) 12%, transparent);
+  border:1px solid color-mix(in srgb, var(--accent) 26%, transparent);
+  color:var(--accent-ink);
+  font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;
+  letter-spacing:.02em;
+}
+.ginka-banner .ginka-count b{font-size:13px}
+.ginka-banner .ginka-count i{font-style:normal;opacity:.6}
 .ginka-close{
   flex:none;display:grid;place-items:center;
   width:30px;height:30px;border-radius:50%;
@@ -1797,6 +1843,8 @@ a.update-row:hover .update-arrow{transform:translate(3px,-3px);color:var(--accen
     line-clamp:3;
     overflow:hidden;
   }
+  .ginka-banner .ginka-count{display:none}
+  .ginka-progress{height:3px;margin:0 10px 8px}
   .ginka-close{width:24px;height:24px;margin-left:auto;align-self:center}
   .ginka-close .ic{font-size:13px}
 }
@@ -1811,7 +1859,7 @@ a.update-row:hover .update-arrow{transform:translate(3px,-3px);color:var(--accen
    文字若折成两行约到 131px。所以桌面留 168px（余 37px），
    窄屏横条会折行（标签 + 文字 + 关闭按钮），留 156px。
    代价是关闭横幅时首屏高度会变一次，但首屏本来就是整屏高，察觉不到。 */
-html:has(#ginkaBanner) .hero{padding-top:168px}
+html:has(#ginkaBanner) .hero{padding-top:224px}   /* 顶栏 120 + 横幅 ~60 + 余量 */
 @media (max-width:900px){
   html:has(#ginkaBanner) .hero{padding-top:156px}
 }
@@ -1880,9 +1928,12 @@ html:has(#ginkaBanner) .hero{padding-top:168px}
   overscroll-behavior:contain;
   border-radius:var(--r-m);
   border:1px solid var(--glass-rim);
-  background-color:var(--glass-tint-strong);
-  backdrop-filter:var(--fx-glass-14);
-  -webkit-backdrop-filter:var(--fx-glass-14);
+  /* 底色不再用 --glass-tint-strong（78% 的 --bg）：浮动面板下面正好是
+     插画和正文，22% 的透光足够让白色文字透出一层灰影，看着「糊且脏」。
+     面板要的是「能读」，所以提到 96% 的 --surface，只留模糊去做边缘的玻璃感。 */
+  background-color:color-mix(in srgb, var(--surface) 96%, transparent);
+  backdrop-filter:var(--fx-glass-20);
+  -webkit-backdrop-filter:var(--fx-glass-20);
   box-shadow:inset 0 1px 0 var(--glass-hi-soft), var(--elev-2);
 }
 .accent-menu[hidden]{display:none}
@@ -2196,9 +2247,12 @@ html:has(#ginkaBanner) .hero{padding-top:168px}
   min-width:132px;padding:6px;
   border-radius:var(--r-s);
   border:1px solid var(--glass-rim);
-  background-color:var(--glass-tint-strong);
-  backdrop-filter:var(--fx-glass-14);
-  -webkit-backdrop-filter:var(--fx-glass-14);
+  /* 底色不再用 --glass-tint-strong（78% 的 --bg）：浮动面板下面正好是
+     插画和正文，22% 的透光足够让白色文字透出一层灰影，看着「糊且脏」。
+     面板要的是「能读」，所以提到 96% 的 --surface，只留模糊去做边缘的玻璃感。 */
+  background-color:color-mix(in srgb, var(--surface) 96%, transparent);
+  backdrop-filter:var(--fx-glass-20);
+  -webkit-backdrop-filter:var(--fx-glass-20);
   box-shadow:inset 0 1px 0 var(--glass-hi-soft), var(--elev-2);
   display:grid;gap:2px;
 }
@@ -2310,6 +2364,92 @@ html:has(#ginkaBanner) .hero{padding-top:168px}
   .mobile-menu-lang .lang-pick[aria-checked="true"]{
     border-color:var(--accent);color:var(--accent-ink);font-weight:700;
   }
+}
+
+/* ---------- 安卓封闭倒计时胶囊（菜单栏内部 · 靠下居中 · 磨砂玻璃）-------
+   版式对齐 keepandroidopen 官方横幅：上行小标题、下行大号粗体倒计时、右侧 ×。
+   位置在 .site-header 内部（顶栏为它多留了 48px 的一行），水平居中、贴下沿，
+   所以它确实「在菜单栏里面」。
+   材质与 .ginka-banner 同源，颜色跟随主色（--accent / --accent-ink）。 */
+.kao-pill{
+  position:absolute;z-index:2;
+  left:50%;transform:translateX(-50%);
+  bottom:6px;
+  display:flex;align-items:center;
+  justify-content:center;
+  padding:4px 34px;
+  min-width:340px;min-height:40px;
+  border-radius:12px;
+  /* 底色、模糊、内高光都与横幅同源（--glass-tint-bar / --fx-glass-16），
+     另加一层沿横向的主色薄晕。与横幅唯一的差别是**多一条发丝描边**：
+     胶囊压在顶栏那层玻璃上，两层玻璃叠起来边界会糊，得给一条线立住轮廓。 */
+  border:1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+  /* 与顶栏同一份玻璃：同一个底色令牌 + 同一档模糊（--glass-blur）。
+     之前这里是 --fx-glass-16 加一层主色薄晕，两层叠加后比顶栏更“实”，
+     现在直接沿用顶栏的透光度，只有描边和文字是它自己的。 */
+  background-color:var(--glass-tint-bar);
+  backdrop-filter:var(--glass-blur);
+  -webkit-backdrop-filter:var(--glass-blur);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--glass-hi-soft) 70%, transparent),
+    0 10px 26px -18px rgba(26,21,23,.45);
+  color:var(--ink-2);
+  transition:background-color .22s ease,box-shadow .22s ease,transform .22s ease;
+}
+.kao-pill:hover{
+  background-color:color-mix(in srgb, var(--glass-tint-bar) 82%, var(--bg));
+  border-color:color-mix(in srgb, var(--accent) 52%, var(--line));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--glass-hi-soft) 90%, transparent),
+    0 12px 30px -18px rgba(26,21,23,.5);
+  transform:translateX(-50%) translateY(-1px);
+}
+.kao-main{
+  display:flex;flex-direction:column;align-items:center;gap:0;
+  padding:0 6px;
+  text-decoration:none;color:inherit;
+}
+.kao-pill .kao-label{
+  font-size:10.5px;font-weight:600;letter-spacing:.05em;
+  color:var(--ink-2);opacity:.8;line-height:1.35;
+}
+.kao-pill .kao-time{
+  font-size:15px;font-weight:800;letter-spacing:.01em;
+  color:var(--accent-ink);
+  line-height:1.25;
+  font-variant-numeric:tabular-nums;
+}
+/* 右侧关闭：官方那条也是这样一枚淡白的叉 */
+.kao-x{
+  position:absolute;right:9px;top:50%;transform:translateY(-50%);
+  display:grid;place-items:center;
+  width:20px;height:20px;
+  border-radius:50%;
+  color:var(--ink-2);
+  opacity:.6;
+  transition:background .2s ease,color .2s ease,opacity .2s ease;
+}
+.kao-x:hover{
+  background:color-mix(in srgb, var(--accent) 14%, transparent);
+  color:var(--ink);
+  opacity:1;
+}
+.kao-x .ic{font-size:12px}
+.kao-pill.is-over{opacity:.6;pointer-events:none}
+
+/* 关掉胶囊后，顶栏收回那 56px，横幅与首屏一起上移 */
+html.kao-off{--header-h:64px}
+html.kao-off .hero{padding-top:126px}
+html.kao-off:has(#ginkaBanner) .hero{padding-top:168px}
+html.kao-off .site-header{padding-bottom:0}
+html.kao-off .kao-pill{display:none}
+
+/* 手机：顶栏只有站名 + 三个按钮，胶囊与那一行一起隐藏 */
+@media (max-width:900px){
+  .site-header{padding-bottom:0}
+  .kao-pill{display:none}
+  :root{--header-h:64px}
+  html:has(#ginkaBanner) .hero{padding-top:156px}
 }
 
 /* ---------- 页脚 -------------------------------------------------------- */

@@ -99,6 +99,14 @@
     try { until = parseInt(localStorage.getItem(KEY), 10) || 0; } catch (e) {}
     if (until > Date.now()) { el.remove(); return; }
 
+    /* 里程碑进度：数页面上的作品卡，写入「8/10」与底部进度线宽度。
+       加减作品时自动跟着走，不用手改数字。 */
+    var cards = document.querySelectorAll('.product-card').length;
+    var done = Math.max(0, Math.min(cards, 10));
+    el.style.setProperty('--done', (done / 10 * 100).toFixed(1) + '%');
+    var doneEl = document.getElementById('ginkaDone');
+    if (doneEl) doneEl.textContent = String(done);
+
     var btn = document.getElementById('ginkaClose');
     if (!btn) return;
     btn.addEventListener('click', function () {
@@ -107,6 +115,78 @@
       } catch (e) {}
       el.remove();
     });
+  }
+
+  /* ---------- 安卓封闭倒计时胶囊 ------------------------------------------
+     目标：2027-01-01 00:00（北京时间）。依据 Google 的开发者验证时间表：
+     2026-09 先在巴西 / 印尼 / 新加坡 / 泰国强制，2027 年起全球铺开，
+     未验证开发者的应用在认证设备上无法安装或更新 —— 这直接关系到本站的手环移植。
+
+     为什么自绘而不挂 keepandroidopen.org 的 banner.js：
+     那条横幅是满宽红条、样式写死在自己的 DOM 里，塞进 64px 高的菜单栏里
+     要么把导航挤成两行，要么被裁掉开头的字。自绘版是一枚胶囊，
+     颜色全部派生自 --accent，换主色就跟着变，而且有玻璃质感。
+     时区写死在字符串里，避免不同地区看到的天数不一致。 */
+  var CD_TARGET = new Date('2027-01-01T00:00:00+08:00').getTime();
+
+  function initCountdown() {
+    var pill = document.getElementById('kaoPill');
+    var nodes = document.querySelectorAll('[data-cd]');
+    if (!nodes.length) return;
+
+    var I = window.I18N;
+    function t(key, fb) {
+      var v = I && I.t(key);
+      return v == null ? fb : v;
+    }
+    /* 中日韩用「68天05小时16分10秒」的紧凑写法，其它语言用空格分隔 */
+    var CJK = { zh: 1, 'zh-hant': 1, ja: 1, ko: 1 };
+    function pad(n) { return n < 10 ? '0' + n : String(n); }
+
+    function paint() {
+      var left = CD_TARGET - Date.now();
+      if (left <= 0) {
+        var ended = t('alert.ended', '已到期');
+        nodes.forEach(function (n) { n.textContent = ended; });
+        if (pill) pill.classList.add('is-over');
+        return;
+      }
+      var s = Math.floor(left / 1000);
+      var d = Math.floor(s / 86400); s -= d * 86400;
+      var hh = Math.floor(s / 3600); s -= hh * 3600;
+      var mm = Math.floor(s / 60); s -= mm * 60;
+
+      var lang = (I && I.get()) || 'zh';
+      var gap = CJK[lang] ? '' : ' ';
+      var out = [
+        d + t('alert.day', '天'),
+        pad(hh) + t('alert.hour', '小时'),
+        pad(mm) + t('alert.min', '分'),
+        pad(s) + t('alert.sec', '秒')
+      ].join(gap);
+
+      nodes.forEach(function (n) { n.textContent = out; });
+    }
+
+    /* 关闭：记住 7 天（与预告横幅同一套「静默」策略），
+       并把顶栏多留的那 56px 收回去 —— 否则会留一条空白。 */
+    var KEY = 'cenilla-android-alert';
+    var btn = document.getElementById('kaoClose');
+    var until = 0;
+    try { until = parseInt(localStorage.getItem(KEY), 10) || 0; } catch (e) {}
+    if (until > Date.now()) {
+      document.documentElement.classList.add('kao-off');
+    } else if (btn) {
+      btn.addEventListener('click', function () {
+        try { localStorage.setItem(KEY, String(Date.now() + 7 * 864e5)); } catch (e) {}
+        document.documentElement.classList.add('kao-off');
+      });
+    }
+
+    paint();
+    setInterval(paint, 1000);
+    /* 切语言时立刻重画，免得单位停在旧语言上 */
+    document.addEventListener('langchange', paint);
   }
 
   /* ---------- 语言切换 --------------------------------------------------
@@ -149,6 +229,14 @@
         var open = menu.hidden;
         menu.hidden = !open;
         btn.setAttribute('aria-expanded', String(open));
+        /* 与主色面板互斥：两个浮层都贴在右上角，同一时刻只能开一个，
+           否则会像之前那样叠在一起（而且上层把下层挡得只剩一条）。 */
+        if (open) {
+          var am = document.getElementById('accentMenu');
+          if (am) am.hidden = true;
+          var at = document.getElementById('accentToggle');
+          if (at) at.setAttribute('aria-expanded', 'false');
+        }
       });
       menu.addEventListener('click', function (e) {
         var b = e.target.closest ? e.target.closest('button[data-lang]') : null;
@@ -1612,6 +1700,7 @@
   stage('init', init);
   stage('refraction', initRefraction);
   stage('banner', initBanner);
+  stage('countdown', initCountdown);
   stage('i18n', initLang);
   stage('accent', initAccent);
   if (new URLSearchParams(location.search).get('diag') === '1') runDiagnostics();

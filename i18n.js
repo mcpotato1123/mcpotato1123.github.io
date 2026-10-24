@@ -1168,6 +1168,38 @@ window.I18N = (function () {
     DICT[k] = DICT[k] || {};
     Object.keys(TUNED8[k]).forEach(function (l) { DICT[k][l] = TUNED8[k][l]; });
   });
+  /* 横幅改为「十部纪念」里程碑：等 10 部移植全部完成时送出 5 个 Steam CDK */
+  var TUNED_BANNER = {
+    'ginka.tag': { zh: "十部纪念", 'zh-hant': "十部紀念", en: "Ten ports", ja: "10本記念", ko: "10개 기념", es: "Diez ports", ar: "عشرة أعمال" },
+    'ginka.text': { zh: "等 <strong>10 部</strong>移植全部完成，为纪念将送出 <strong>5 个 Steam Galgame CDK</strong>。", 'zh-hant': "等 <strong>10 部</strong>移植全部完成，為紀念將送出 <strong>5 個 Steam Galgame CDK</strong>。", en: "Once all <strong>ten ports</strong> are finished, <strong>5 Steam Galgame keys</strong> will be given away to mark the milestone.", ja: "<strong>10本</strong>の移植がすべて完成したら、記念として<strong>Steam galgame の CD キーを 5 本</strong>配布します。", ko: "<strong>10개</strong> 이식이 모두 완성되면 기념으로 <strong>Steam galgame CD 키 5개</strong>를 증정합니다.", es: "Cuando los <strong>diez ports</strong> estén completos, se sortearán <strong>5 claves Steam de galgame</strong>.", ar: "عندما تكتمل <strong>عشرة</strong> نسخ، ستُمنح <strong>5 مفاتيح Steam لألعاب galgame</strong> احتفاءً بالمناسبة." },
+  };
+  Object.keys(TUNED_BANNER).forEach(function (k) {
+    DICT[k] = DICT[k] || {};
+    Object.keys(TUNED_BANNER[k]).forEach(function (l) { DICT[k][l] = TUNED_BANNER[k][l]; });
+  });
+  /* 《茜色》已过 Astrobox 审核：简介 / 合集第 9 页脚注 / 页脚条目改成上架口径 */
+  var TUNED_QIANSE = {
+    'w8.summary': { zh: "《茜色》的小米手环非官方移植版。原作是一款视觉小说。已在 Astrobox 上架，也可以从源码仓库的 Releases 下载。", 'zh-hant': "《茜色》的小米手環非官方移植版。原作是一款視覺小說。已在 Astrobox 上架，也可以從原始碼儲存庫的 Releases 下載。", en: "An unofficial Mi Band port of Orangia. The original is a visual novel. It is on Astrobox now, and you can also download it from the repository's Releases.", ja: "『茜色』のスマートバンド非公式移植版。原作はビジュアルノベルです。Astrobox に掲載されました。リポジトリの Releases からもダウンロードできます。", ko: "《아카네이로》의 샤오미 밴드 비공식 이식판입니다. 원작은 비주얼 노벨입니다. 이제 Astrobox에 등록되었고, 저장소의 Releases에서도 받을 수 있습니다.", es: "Un port no oficial de Orangia para la Mi Band. El original es una novela visual. Ya está en Astrobox, y también puedes descargarlo desde las Releases del repositorio.", ar: "نسخة منقولة غير رسمية من Orangia إلى ساعة Mi Band. الأصل رواية بصرية. أصبحت متاحة الآن على Astrobox، ويمكن تنزيلها أيضًا من قسم Releases في المستودع." },
+    'collage.p9meta': { zh: "快应用 · 手环 9 Pro", 'zh-hant': "快應用 · 手環 9 Pro", en: "Quick app · Band 9 Pro", ja: "クイックアプリ · バンド 9 Pro", ko: "퀵 앱 · 밴드 9 Pro", es: "Quick app · Band 9 Pro", ar: "تطبيق سريع · Band 9 Pro" },
+    'footer.relQsSrc': { zh: "《茜色》源码", 'zh-hant': "《茜色》原始碼", en: "Orangia source", ja: "『茜色』ソース", ko: "《아카네이로》소스", es: "Código de Orangia", ar: "مصدر Orangia" },
+  };
+  Object.keys(TUNED_QIANSE).forEach(function (k) {
+    DICT[k] = DICT[k] || {};
+    Object.keys(TUNED_QIANSE[k]).forEach(function (l) { DICT[k][l] = TUNED_QIANSE[k][l]; });
+  });
+  /* 顶栏倒计时胶囊：标题与天/时/分/秒分开存，倒计时由 JS 每秒拼 */
+  var TUNED_ALERT = {
+    'alert.androidTitle': { zh: "安卓将成为封闭平台", 'zh-hant': "安卓將成為封閉平台", en: "Android is closing up", ja: "Android が閉鎖へ", ko: "안드로이드가 폐쇄됩니다", es: "Android va a cerrarse", ar: "أندرويد يتحول إلى منصة مغلقة" },
+    'alert.day': { zh: "天", 'zh-hant': "天", en: "d", ja: "日", ko: "일", es: "d", ar: "ي" },
+    'alert.hour': { zh: "小时", 'zh-hant': "小時", en: "h", ja: "時間", ko: "시간", es: "h", ar: "س" },
+    'alert.min': { zh: "分", 'zh-hant': "分", en: "m", ja: "分", ko: "분", es: "m", ar: "د" },
+    'alert.sec': { zh: "秒", 'zh-hant': "秒", en: "s", ja: "秒", ko: "초", es: "s", ar: "ث" },
+    'alert.ended': { zh: "已到期", 'zh-hant': "已到期", en: "Deadline passed", ja: "期限を迎えました", ko: "기한이 지났습니다", es: "Plazo cumplido", ar: "انتهى الموعد" },
+  };
+  Object.keys(TUNED_ALERT).forEach(function (k) {
+    DICT[k] = DICT[k] || {};
+    Object.keys(TUNED_ALERT[k]).forEach(function (l) { DICT[k][l] = TUNED_ALERT[k][l]; });
+  });
   /* 运行时状态 */
   var current = 'zh';
 

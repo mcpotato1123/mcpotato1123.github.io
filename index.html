@@ -177,12 +177,14 @@
      HTML 注释遇到连续两个连字符会提前闭合，后面的内容会变成正文。 -->
 <div class="ginka-banner" id="ginkaBanner" role="status">
   <div class="ginka-inner">
-    <span class="ginka-tag" data-i18n="ginka.tag">移植预告</span>
-    <span class="ginka-text" data-i18n-html="ginka.text">下一部：<strong>海蓝星之梦</strong> —— 将要开始移植，不久就能在手环上看到它。</span>
+    <span class="ginka-tag"><svg class="ic" aria-hidden="true"><use href="#i-sparkle"/></svg><span data-i18n="ginka.tag">十部纪念</span></span>
+    <span class="ginka-text" data-i18n-html="ginka.text">等 <strong>10 部</strong>移植全部完成，为纪念将送出 <strong>5 个 Steam Galgame CDK</strong>。</span>
+    <span class="ginka-count" aria-hidden="true"><b id="ginkaDone">8</b><i>/10</i></span>
     <button class="ginka-close" id="ginkaClose" type="button" aria-label="关闭预告横幅">
       <svg class="ic" aria-hidden="true"><use href="#i-x"/></svg>
     </button>
   </div>
+  <div class="ginka-progress" aria-hidden="true"><i></i></div>
 </div>
 
 <!-- ===================== 顶栏 ===================== -->
@@ -401,7 +403,23 @@
       <button type="button" role="menuitemradio" data-lang="ar">العربية</button>
     </div>
   </div>
+
+  <!-- 安卓封闭倒计时胶囊：菜单栏内部、靠下居中，版式对齐 keepandroidopen 官方横幅
+       （上行小标题、下行大号倒计时、右侧关闭）。颜色用站内茜色红 --madder，
+       玻璃感来自 backdrop-filter + 顶沿内高光。倒计时由 app.js 每秒写入 [data-cd]。 -->
+  <div class="kao-pill" id="kaoPill">
+    <a class="kao-main" href="https://keepandroidopen.org/" target="_blank" rel="noopener noreferrer">
+      <span class="kao-label" data-i18n="alert.androidTitle">安卓将成为封闭平台</span>
+      <b class="kao-time" data-cd>--</b>
+    </a>
+    <button class="kao-x" id="kaoClose" type="button" aria-label="关闭倒计时提示">
+      <svg class="ic" aria-hidden="true"><use href="#i-x"/></svg>
+    </button>
+  </div>
 </header>
+
+
+
 
 <div class="mobile-menu" id="mobileMenu" hidden>
   <!-- 手机上顶栏腾不出空间放主题切换（见 styles.css 顶栏那段宽度预算），
@@ -933,7 +951,7 @@
                loading="lazy" decoding="async"
                alt="《茜色》小米手环移植版封面">
           <figcaption class="product-card-flag" data-flag-tone="dark">
-            <svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg><span data-i18n="flag.pending">待上架</span>
+            <svg class="ic" aria-hidden="true"><use href="#i-sparkle"/></svg><span data-i18n="flag.live">已上线</span>
           </figcaption>
         </figure>
         <div class="product-card-copy">
@@ -946,7 +964,7 @@
               <span data-i18n="tag.subtitle">小米手环非官方移植</span>
             </div>
           </div>
-          <p class="product-card-summary" data-i18n="w8.summary">《茜色》的小米手环非官方移植版。原作是一款视觉小说。安装包已经放进源码仓库的 Releases，可以先从那里下载；Astrobox 那边还没上架。</p>
+          <p class="product-card-summary" data-i18n="w8.summary">《茜色》的小米手环非官方移植版。原作是一款视觉小说。已在 Astrobox 上架，也可以从源码仓库的 Releases 下载。</p>
           <div class="card-tags">
             <i data-i18n="tag.band9">小米手环 9 Pro</i>
             <i data-i18n="tag.unofficial">非官方移植</i>
@@ -954,10 +972,11 @@
             <i>com.qianse.band</i>
           </div>
           <div class="dl-actions">
-            <span class="btn btn-primary is-pending" aria-disabled="true">
-              <svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>
-              <span data-i18n="works.pending">待上架</span>
-            </span>
+            <a class="btn btn-primary" href="https://abox.run/open?source=resv2&amp;id=com.qianse.band&amp;provider=OfficialV2"
+               target="_blank" rel="noopener noreferrer">
+              <svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>
+              <span data-i18n="works.install">前往 Astrobox 安装</span>
+            </a>
             <a class="btn btn-ghost" href="https://github.com/mcpotato1123/qianse-band/releases"
                target="_blank" rel="noopener noreferrer">
               <svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>
@@ -970,7 +989,7 @@
             </a>
           </div>
           <p class="dl-hint">
-            <span data-i18n="works.hintPendingSource">Astrobox 那边还没上架，暂时装不了；安装包在源码仓库的 Releases 里，可以先从那里下载。</span>
+            <span data-i18n="works.hint">链接会唤起已安装的 Astrobox 客户端；还没装的话先去 Astrobox 官网下载。</span>
           </p>
         </div>
       </article>
@@ -1133,12 +1152,11 @@
                      alt="《茜色》小米手环移植版封面">
               </figure>
               <p class="pc-index">9/9</p>
-              <!-- 尚未上架 Astrobox，这一页指向源码仓库 -->
-              <a class="pc-title" href="https://github.com/mcpotato1123/qianse-band"
+              <a class="pc-title" href="https://abox.run/open?source=resv2&amp;id=com.qianse.band&amp;provider=OfficialV2"
                  target="_blank" rel="noopener noreferrer"><span data-i18n="w8.title">茜色</span>
                 <svg class="ic" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
               </a>
-              <p class="pc-meta" data-i18n="collage.p9meta">待上架 · Releases 可下载</p>
+              <p class="pc-meta" data-i18n="collage.p9meta">快应用 · 手环 9 Pro</p>
             </article>
           </div>
         </div>
@@ -1526,7 +1544,7 @@
             <span class="rel-badge" aria-hidden="true"><svg class="ic"><use href="#i-github"/></svg></span>
             <span class="rel-text">
               <strong>qianse-band</strong>
-              <small data-i18n="footer.relQsSrc">《茜色》源码 · Release 可下载</small>
+              <small data-i18n="footer.relQsSrc">《茜色》源码</small>
             </span>
             <svg class="ic rel-arrow" aria-hidden="true"><use href="#i-arrow-ur"/></svg>
           </a>
@@ -1577,5 +1595,6 @@
 
 <script src="i18n.js"></script>
 <script src="app.js" defer></script>
+
 </body>
 </html>
