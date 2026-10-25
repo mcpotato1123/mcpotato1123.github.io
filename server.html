@@ -56,7 +56,6 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: #2c4b32;
             width: 90px;
             height: 90px;
             border-radius: 32px;
@@ -352,7 +351,7 @@
                 <circle cx="12" cy="11" r="1.2" fill="#c97e2a"/>
             </svg>
         </div>
-        <h1>Cenilla  Minecraft</h1>
+        <h1>Cenilla Minecraft</h1>
         <div class="subhead">✦ 纯粹原版生存 · 轻量社群 · 红石自由 ✦</div>
         <div class="ip-badge">
             <span class="green-dot"></span>
@@ -591,25 +590,15 @@
 
     // 动态展示随机在线人数 (仅示意，保持活泼)
     const statusDiv = document.querySelector('.status');
-    if(statusDiv && !statusDiv.innerHTML.includes('在线')) {
-        const fakeCount = Math.floor(Math.random() * (42 - 18 + 1) + 18);
-        const countSpan = document.createElement('span');
-        countSpan.style.marginLeft = '12px';
-        countSpan.style.fontSize = '0.8rem';
-        countSpan.style.fontWeight = '500';
-        countSpan.innerHTML = `✨ 当前在线 ${fakeCount} 人`;
-        statusDiv.appendChild(countSpan);
-    } else if(statusDiv) {
-        // 避免重复
-        if(!statusDiv.querySelector('.dynamic-online')) {
-            const dyn = document.createElement('span');
-            dyn.className = 'dynamic-online';
-            dyn.style.marginLeft = '12px';
-            dyn.style.fontSize = '0.8rem';
-            const onlineNum = Math.floor(Math.random() * (38 - 15 + 1) + 15);
-            dyn.innerHTML = `✨ 当前在线 ${onlineNum} 人`;
-            statusDiv.appendChild(dyn);
-        }
+    if(statusDiv && !statusDiv.querySelector('.dynamic-online')) {
+        const dyn = document.createElement('span');
+        dyn.className = 'dynamic-online';
+        dyn.style.marginLeft = '12px';
+        dyn.style.fontSize = '0.8rem';
+        dyn.style.fontWeight = '500';
+        const onlineNum = Math.floor(Math.random() * (42 - 15 + 1) + 15);
+        dyn.innerHTML = `✨ 当前在线 ${onlineNum} 人`;
+        statusDiv.appendChild(dyn);
     }
 
     // 控制台彩蛋
