@@ -1200,6 +1200,29 @@ window.I18N = (function () {
     DICT[k] = DICT[k] || {};
     Object.keys(TUNED_ALERT[k]).forEach(function (l) { DICT[k][l] = TUNED_ALERT[k][l]; });
   });
+  /* 第 9 部：《拆迁地球及爱情事故》（com.port.vat.band9），顺带把「八款」计数改成九 */
+  var TUNED_VAT = {
+    'w9.title': { zh: "拆迁地球及爱情事故", 'zh-hant': "拆遷地球及愛情事故", en: "Demolishing Earth & a Love Accident", ja: "地球解体と恋の事故", ko: "지구 철거와 사랑의 사고", es: "Demoler la Tierra y un accidente de amor", ar: "هدم الأرض وحادث حب" },
+    'w9.short': { zh: "拆迁地球", 'zh-hant': "拆遷地球", en: "Razing Earth", ja: "地球解体", ko: "지구 철거", es: "Demoler la Tierra", ar: "هدم الأرض" },
+    'w9.summary': { zh: "《拆迁地球及爱情事故》的小米手环非官方移植版。原作是一款视觉小说。安装包已经放进源码仓库的 Releases，可以先从那里下载；Astrobox 那边还没上架。", 'zh-hant': "《拆遷地球及愛情事故》的小米手環非官方移植版。原作是一款視覺小說。安裝包已經放進原始碼儲存庫的 Releases，可以先從那裡下載；Astrobox 那邊還沒上架。", en: "An unofficial Mi Band port of Demolishing Earth & a Love Accident. The original is a visual novel. The install package is already in the repository Releases, so you can grab it there for now; it is not on Astrobox yet.", ja: "『地球解体と恋の事故』のスマートバンド非公式移植版。原作はビジュアルノベルです。インストールパッケージはリポジトリの Releases に置いてあります（Astrobox はまだ未掲載）。", ko: "《지구 철거와 사랑의 사고》의 샤오미 밴드 비공식 이식판입니다. 원작은 비주얼 노벨입니다. 설치 패키지는 저장소의 Releases에 있으며, Astrobox에는 아직 등록되지 않았습니다.", es: "Un port no oficial de Demoler la Tierra y un accidente de amor para la Mi Band. El original es una novela visual. El paquete ya está en las Releases del repositorio; todavía no está en Astrobox.", ar: "نسخة منقولة غير رسمية من Demolishing Earth & a Love Accident إلى ساعة Mi Band. الأصل رواية بصرية. حزمة التثبيت متوفرة في Releases بالمستودع، ولم تُضف بعد إلى Astrobox." },
+    'collage.p10meta': { zh: "待上架 · Releases 可下载", 'zh-hant': "待上架 · Releases 可下載", en: "Coming soon · Releases available", ja: "未掲載 · Releases から取得可", ko: "미등록 · Releases에서 받기 가능", es: "Sin publicar · disponible en Releases", ar: "لم يُدرَج بعد · متاح في Releases" },
+    'footer.relVatSrc': { zh: "《拆迁地球及爱情事故》源码 · Release 可下载", 'zh-hant': "《拆遷地球及愛情事故》原始碼 · Release 可下載", en: "Demolishing Earth source · Releases available", ja: "『地球解体と恋の事故』ソース · Releases から取得可", ko: "《지구 철거와 사랑의 사고》소스 · Releases에서 받기 가능", es: "Código de Demoler la Tierra · Releases disponible", ar: "مصدر Demolishing Earth · متوفر في Releases" },
+    'works.lede': { zh: "目前公开的九款小米手环移植作品，均为非官方个人移植、免费提供。点下面的按钮会唤起 Astrobox 直接安装。", 'zh-hant': "目前公開的九款小米手環移植作品，皆為非官方個人移植、免費提供。點下面的按鈕會喚起 Astrobox 直接安裝。", en: "Nine Mi Band ports are public so far — unofficial, made by one person, free of charge. The buttons below hand off to Astrobox to install.", ja: "現在公開中のスマートバンド移植は9作品。いずれも個人による非公式移植で、無料です。下のボタンから Astrobox を呼び出してインストールできます。", ko: "현재 공개된 샤오미 밴드 이식 작품 아홉 개입니다. 모두 개인이 만든 비공식 이식이며 무료입니다. 아래 버튼을 누르면 Astrobox가 열려 바로 설치할 수 있습니다.", es: "Hasta ahora hay nueve ports para Xiaomi Smart Band, todos no oficiales, hechos por una persona y gratis. Los botones de abajo abren Astrobox para instalarlos.", ar: "تسع نُسخ منقولة لساعة Xiaomi Smart Band منشورة حتى الآن، وكلها غير رسمية وبجهد فردي ومجانية. الأزرار أدناه تفتح Astrobox للتثبيت." },
+    'collage.p1meta': { zh: "9 部作品 · 手环 9 Pro/10 Pro", 'zh-hant': "9 部作品 · 手環 9 Pro/10 Pro", en: "9 works · Band 9 Pro / 10 Pro", ja: "9作品 · バンド 9 Pro / 10 Pro", ko: "9개 작품 · 밴드 9 Pro / 10 Pro", es: "9 obras · Band 9 Pro / 10 Pro", ar: "9 أعمال · Band 9 Pro / 10 Pro" },
+  };
+  Object.keys(TUNED_VAT).forEach(function (k) {
+    DICT[k] = DICT[k] || {};
+    Object.keys(TUNED_VAT[k]).forEach(function (l) { DICT[k][l] = TUNED_VAT[k][l]; });
+  });
+  /* 第 9 套主题配色的色名（调色盘里显示成「拆迁红 · 拆迁地球」） */
+  var TUNED_VAT_NAME = {
+    'accent.vat': { zh: "拆迁红", 'zh-hant': "拆遷紅", en: "Demolition red", ja: "解体レッド", ko: "철거 레드", es: "Rojo demolición", ar: "أحمر الهدم" },
+  };
+  Object.keys(TUNED_VAT_NAME).forEach(function (k) {
+    DICT[k] = DICT[k] || {};
+    Object.keys(TUNED_VAT_NAME[k]).forEach(function (l) { DICT[k][l] = TUNED_VAT_NAME[k][l]; });
+  });
+
   /* 运行时状态 */
   var current = 'zh';
 
